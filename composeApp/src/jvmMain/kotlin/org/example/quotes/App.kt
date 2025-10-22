@@ -2,14 +2,20 @@ package org.example.quotes
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DividerDefaults
@@ -33,14 +39,29 @@ import quotes.composeapp.generated.resources.compose_multiplatform
 @Preview
 fun App() {
     MaterialTheme {
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp).border(1.dp, DividerDefaults.color)) {
-            fakeQuotes().forEach { quote ->
-                item {
-                    Text(quote.first, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
-                    Text(quote.second, fontSize = 12.sp, color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
-                    HorizontalDivider()
+        Box(modifier = Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)) {
+            val state = rememberLazyListState()
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+                    .border(1.dp, DividerDefaults.color), state
+            ) {
+                fakeQuotes().forEach { quote ->
+                    item {
+                        Text(quote.first, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
+                        Text(
+                            quote.second,
+                            fontSize = 12.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                        HorizontalDivider()
+                    }
                 }
             }
+            VerticalScrollbar(
+                modifier = Modifier.fillMaxHeight().align(Alignment.CenterEnd),
+                adapter = rememberScrollbarAdapter(state)
+            )
         }
     }
 }

@@ -33,7 +33,11 @@ fun fakeQuotes(): List<Pair<String, String>> {
         ),
         Pair(
             "Ambition is not a dirty word. Piss on compromise. Go for the throat.",
-            "Deadhouse Gates - Steven Erikson"
+            "Gardens of the Moon - Steven Erikson"
+        ),
+        Pair(
+            "It is better to be hated for what you are than to be loved for what you are not",
+            "Autumn Leaves - Andre Gide"
         )
     )
 }
