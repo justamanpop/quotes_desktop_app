@@ -11,22 +11,28 @@ import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.quotes.fakeQuotes
+import java.util.Locale
+import java.util.Locale.getDefault
 
 @Composable
-fun QuoteTable(modifier: Modifier = Modifier) {
+fun QuoteTable(quotes: List<Pair<String, String>>, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         val state = rememberLazyListState()
+
         LazyColumn(
             modifier = Modifier.fillMaxSize()
                 .border(1.dp, DividerDefaults.color), state
         ) {
-            fakeQuotes().forEach { quote ->
+            quotes.forEach { quote ->
                 item {
                     Text(quote.first, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
                     Text(
@@ -39,6 +45,7 @@ fun QuoteTable(modifier: Modifier = Modifier) {
                 }
             }
         }
+
         VerticalScrollbar(
             modifier = Modifier.fillMaxHeight().align(Alignment.CenterEnd),
             adapter = rememberScrollbarAdapter(state)

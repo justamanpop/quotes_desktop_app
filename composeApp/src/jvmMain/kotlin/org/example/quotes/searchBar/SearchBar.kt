@@ -9,11 +9,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @Composable
-fun SearchBar(modifier: Modifier = Modifier) {
+fun SearchBar(onSearchTermChange: (String) -> Unit,  modifier: Modifier = Modifier) {
     var searchText = remember { mutableStateOf("") }
     TextField(
         value = searchText.value,
         onValueChange = { v ->
+            onSearchTermChange(v)
             searchText.value = v
         },
         placeholder = { Text("Search") },
