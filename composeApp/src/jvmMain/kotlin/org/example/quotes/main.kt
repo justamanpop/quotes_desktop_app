@@ -5,12 +5,18 @@ import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 
+import QuoteCore
+import InMemoryQuoteRepository
+import ports.driven.QuoteRepository
+
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "quotes",
         state = WindowState(placement = WindowPlacement.Maximized)
     ) {
-        App()
+        val quoteRepository: QuoteRepository = InMemoryQuoteRepository()
+        val quoteCore = QuoteCore(quoteRepository)
+        App(quoteCore)
     }
 }

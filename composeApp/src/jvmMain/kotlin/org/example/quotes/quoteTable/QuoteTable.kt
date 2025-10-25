@@ -11,20 +11,14 @@ import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.example.quotes.fakeQuotes
-import java.util.Locale
-import java.util.Locale.getDefault
 
 @Composable
-fun QuoteTable(quotes: List<Pair<String, String>>, modifier: Modifier = Modifier) {
+fun QuoteTable(quotes: List<Quote>, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         val state = rememberLazyListState()
 
@@ -34,9 +28,9 @@ fun QuoteTable(quotes: List<Pair<String, String>>, modifier: Modifier = Modifier
         ) {
             quotes.forEach { quote ->
                 item {
-                    Text(quote.first, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
+                    Text(quote.content, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
                     Text(
-                        quote.second,
+                        quote.source,
                         fontSize = 12.sp,
                         color = Color.Gray,
                         modifier = Modifier.padding(start = 8.dp)

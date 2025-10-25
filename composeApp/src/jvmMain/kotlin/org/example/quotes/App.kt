@@ -1,5 +1,6 @@
 package org.example.quotes
 
+import QuoteCore
 import QuoteTable
 import SearchBar
 import androidx.compose.foundation.layout.Column
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import java.util.Locale.getDefault
@@ -17,18 +17,18 @@ import kotlin.collections.filter
 
 @Composable
 @Preview
-fun App() {
+fun App(quoteCore: QuoteCore) {
     MaterialTheme {
         var currentSearchTerm = remember { mutableStateOf("") }
-        val quotes = remember { mutableStateOf(fakeQuotes()) }
+        val quotes = remember { mutableStateOf(quoteCore.getQuotes()) }
         fun updateSearchTerm(newVal: String) {
             currentSearchTerm.value = newVal
-            quotes.value = fakeQuotes().filter { q ->
+            quotes.value = quoteCore.getQuotes().filter { q ->
                 val filterTerm = newVal.lowercase(getDefault())
-                val lowerCaseQuote = q.first.lowercase(getDefault())
-                val lowerCaseSource = q.second.lowercase(getDefault())
+                val lowerCaseContent = q.content.lowercase(getDefault())
+                val lowerCaseSource = q.source.lowercase(getDefault())
 
-                lowerCaseQuote.contains(filterTerm) || lowerCaseSource.contains(filterTerm)
+                lowerCaseContent.contains(filterTerm) || lowerCaseSource.contains(filterTerm)
             }
         }
 
