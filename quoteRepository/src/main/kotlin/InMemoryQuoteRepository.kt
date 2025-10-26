@@ -6,7 +6,15 @@ class InMemoryQuoteRepository: QuoteRepository {
         return fakeQuotes
     }
 
-    val fakeQuotes = listOf<Quote>(
+    override fun addQuote(quote: Quote) {
+        fakeQuotes.add(quote)
+    }
+
+    override fun addQuotes(quotes: List<Quote>) {
+        fakeQuotes.addAll(quotes)
+    }
+
+    val fakeQuotes = mutableListOf<Quote>(
         Quote(1, "No price is too great to pay for the privilege of owning yourself", "Friedrich Nietzsche"),
         Quote(
             2,
