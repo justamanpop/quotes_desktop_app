@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.quotes.addQuoteModal.AddQuoteModal
@@ -34,7 +36,11 @@ import kotlin.collections.filter
 fun App(quoteCore: QuoteCore) {
     MaterialTheme {
         var currentSearchTerm = remember { mutableStateOf("") }
+
         var openAddQuoteModal = remember { mutableStateOf(false) }
+        fun hideModal() {
+            openAddQuoteModal.value = false
+        }
 
         val quotes = remember { mutableStateOf(quoteCore.getQuotes()) }
         fun updateSearchTerm(newVal: String) {
@@ -66,14 +72,14 @@ fun App(quoteCore: QuoteCore) {
                         Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "")
                         Text(" Add Quote", color = Color.White, fontSize = 24.sp)
                     },
-                    modifier = Modifier.padding(top = 12.dp)
+                    modifier = Modifier.padding(top = 12.dp).pointerHoverIcon(PointerIcon.Hand)
                 )
             }
             QuoteTable(quotes.value, Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp))
         }
 
         if (openAddQuoteModal.value) {
-            AddQuoteModal()
+            AddQuoteModal(::hideModal)
         }
     }
 }
