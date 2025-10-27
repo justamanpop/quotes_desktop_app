@@ -27,11 +27,10 @@ class SqlLiteQuoteRepository(dbName: String): QuoteRepository {
     }
 
     override fun addQuote(quote: Quote) {
-        conn.prepare("INSERT INTO quotes(id, content, source) VALUES(?, ?, ?)").use {
+        conn.prepare("INSERT INTO quotes(content, source) VALUES(?, ?)").use {
             statement ->
-            statement.bindInt(1, quote.id)
-            statement.bindText(2, quote.content)
-            statement.bindText(3, quote.source)
+            statement.bindText(1, quote.content)
+            statement.bindText(2, quote.source)
             statement.step()
         }
     }

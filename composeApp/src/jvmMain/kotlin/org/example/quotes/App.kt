@@ -1,5 +1,6 @@
 package org.example.quotes
 
+import Quote
 import QuoteCore
 import QuoteTable
 import SearchBar
@@ -50,6 +51,10 @@ fun App(quoteCore: QuoteCore) {
             }
         }
 
+        fun addQuoteInModal(quote: Quote) {
+            quoteCore.addQuote(quote)
+            quotes.value = quoteCore.getQuotes()
+        }
 
         Column(modifier = Modifier.fillMaxSize()) {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -75,8 +80,7 @@ fun App(quoteCore: QuoteCore) {
         }
 
         if (openAddQuoteModal.value) {
-            AddQuoteModal()
-//            AddQuoteModal(::hideModal)
+            AddQuoteModal(::addQuoteInModal, ::hideModal)
         }
     }
 }

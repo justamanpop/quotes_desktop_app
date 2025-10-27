@@ -1,5 +1,6 @@
 package org.example.quotes.addQuoteModal
 
+import Quote
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,11 +23,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
-fun AddQuoteModal() {
+fun AddQuoteModal(addQuote: (Quote) -> Unit, onDismissRequest: () -> Unit) {
     var contentText = remember { mutableStateOf("") }
     var sourceText = remember { mutableStateOf("") }
     Dialog(
-        onDismissRequest = { },
+        onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = true,
@@ -50,8 +51,11 @@ fun AddQuoteModal() {
                     modifier = Modifier.fillMaxWidth()
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(content = { Text("Add") }, onClick = {})
-                    Button(content = { Text("Close") }, onClick = {})
+                    Button(content = { Text("Add") }, onClick = {
+                        addQuote(Quote(-1, contentText.value, sourceText.value))
+                        onDismissRequest()
+                    })
+                    Button(content = { Text("Close") }, onClick = { onDismissRequest() })
                 }
             }
         }
