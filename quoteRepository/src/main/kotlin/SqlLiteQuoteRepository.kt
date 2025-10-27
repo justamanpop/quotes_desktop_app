@@ -5,10 +5,10 @@ import androidx.sqlite.execSQL
 import ports.driven.QuoteRepository
 
 class SqlLiteQuoteRepository(dbName: String): QuoteRepository {
-    val conn: SQLiteConnection
+
+    val conn: SQLiteConnection = BundledSQLiteDriver().open(dbName)
 
     init {
-        conn = BundledSQLiteDriver().open(dbName)
         conn.execSQL(
             "CREATE TABLE IF NOT EXISTS quotes (id INTEGER PRIMARY KEY, content TEXT, source TEXT)"
         )
@@ -20,7 +20,6 @@ class SqlLiteQuoteRepository(dbName: String): QuoteRepository {
         ).use {
             statement ->
             while (statement.step()) {
-                println("in a step in get quotes")
                 quotes.add(Quote(statement.getInt(0), statement.getText(1),statement.getText(2)))
             }
         }

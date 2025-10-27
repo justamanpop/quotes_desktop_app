@@ -20,6 +20,7 @@ fun main() = application {
         //val quoteRepository: QuoteRepository = InMemoryQuoteRepository()
         val quoteRepository: QuoteRepository = SqlLiteQuoteRepository("quotes.db")
         val quoteCore = QuoteCore(quoteRepository)
+
         App(quoteCore)
     }
 }
