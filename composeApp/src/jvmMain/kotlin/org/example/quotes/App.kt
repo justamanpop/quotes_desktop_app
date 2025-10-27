@@ -19,11 +19,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import java.util.Locale.getDefault
@@ -32,11 +42,18 @@ import kotlin.collections.filter
 @Composable
 fun App(quoteCore: QuoteCore) {
     MaterialTheme {
-        var currentSearchTerm = remember { mutableStateOf("") }
+        val focusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+        }
 
-        var openAddQuoteModal = remember { mutableStateOf(false) }
+        val currentSearchTerm = remember { mutableStateOf("") }
+
+        val openAddQuoteModal = remember { mutableStateOf(false) }
         fun hideModal() {
             openAddQuoteModal.value = false
+            focusRequester.requestFocus()
+
         }
 
         val quotes = remember { mutableStateOf(quoteCore.getQuotes()) }
@@ -54,11 +71,14 @@ fun App(quoteCore: QuoteCore) {
         fun addQuoteInModal(quote: Quote) {
             quoteCore.addQuote(quote)
             quotes.value = quoteCore.getQuotes()
+            focusRequester.requestFocus()
         }
+
 
         Column(modifier = Modifier.fillMaxSize()) {
             Row(modifier = Modifier.fillMaxWidth()) {
-                SearchBar(::updateSearchTerm, Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp).width(600.dp))
+                SearchBar( ::updateSearchTerm, Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp).width(600.dp).focusRequester(focusRequester).moveFocusOnTab()
+                )
                 Button(
                     onClick = {
                         openAddQuoteModal.value = true
