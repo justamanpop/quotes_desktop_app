@@ -33,7 +33,7 @@ fun AddQuoteModal(addQuote: (Quote) -> Unit, onDismissRequest: () -> Unit) {
             dismissOnClickOutside = true,
         ),
     ) {
-        Card(modifier = Modifier.width(660.dp).height(660.dp)) {
+        Card(modifier = Modifier.width(660.dp)) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.padding(16.dp).fillMaxWidth()

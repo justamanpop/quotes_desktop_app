@@ -7,12 +7,17 @@ class InMemoryQuoteRepository: QuoteRepository {
     }
 
     override fun addQuote(quote: Quote) {
-        fakeQuotes.add(quote)
+        val quoteToAdd = quote.copy(id = maxId + 1)
+        fakeQuotes.add(quoteToAdd)
+        maxId += 1
     }
 
     override fun addQuotes(quotes: List<Quote>) {
-        fakeQuotes.addAll(quotes)
+        quotes.forEach { quote ->
+            addQuote(quote)
+        }
     }
+
 
     val fakeQuotes = mutableListOf<Quote>(
         Quote(1, "No price is too great to pay for the privilege of owning yourself", "Friedrich Nietzsche"),
@@ -61,4 +66,5 @@ class InMemoryQuoteRepository: QuoteRepository {
             "Autumn Leaves - Andre Gide"
         )
     )
+    private var maxId = fakeQuotes.size
 }
