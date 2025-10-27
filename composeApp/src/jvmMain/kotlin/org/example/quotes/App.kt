@@ -3,7 +3,6 @@ package org.example.quotes
 import QuoteCore
 import QuoteTable
 import SearchBar
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
-import androidx.compose.material.icons.filled.AddComment
-import androidx.compose.material.icons.filled.NoteAdd
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -32,7 +29,6 @@ import java.util.Locale.getDefault
 import kotlin.collections.filter
 
 @Composable
-@Preview
 fun App(quoteCore: QuoteCore) {
     MaterialTheme {
         var currentSearchTerm = remember { mutableStateOf("") }
@@ -79,7 +75,8 @@ fun App(quoteCore: QuoteCore) {
         }
 
         if (openAddQuoteModal.value) {
-            AddQuoteModal(::hideModal)
+            AddQuoteModal()
+//            AddQuoteModal(::hideModal)
         }
     }
 }
