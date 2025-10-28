@@ -88,7 +88,12 @@ fun App(quoteCore: QuoteCore) {
             }
 
             fun addQuoteInModal(quote: Quote) {
-                quoteCore.addQuote(quote)
+                try {
+                    quoteCore.addQuote(quote)
+                } catch (error: Exception) {
+                    showSnackbar("Unable to add quote, ${error.message}")
+                    return
+                }
                 showSnackbar("Quote successfully added!")
                 quotes.value = quoteCore.getQuotes()
                 focusRequester.requestFocus()
