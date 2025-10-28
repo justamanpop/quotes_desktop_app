@@ -57,7 +57,8 @@ fun App(quoteCore: QuoteCore) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     SnackbarHost(hostState = snackbarState, snackbar = { snackbarData ->
                         val containerColor = getSnackbarColor(snackbarData.visuals.message)
-                        val updatedSnackbarData = constructSnackbarDataObject(stripSnackbarMessage(snackbarData.visuals.message))
+                        val updatedSnackbarData =
+                            constructSnackbarDataObject(stripSnackbarMessage(snackbarData.visuals.message))
 
                         Snackbar(updatedSnackbarData, containerColor = containerColor)
                     }, modifier = Modifier.align(Alignment.TopCenter))
@@ -93,7 +94,7 @@ fun App(quoteCore: QuoteCore) {
                 try {
                     quoteCore.addQuote(quote)
                 } catch (error: Exception) {
-                    showSnackbar("Error, unable to add quote, ${error.message}")
+                    showSnackbar("Error: Unable to add quote, ${error.message}")
                     return
                 }
                 showSnackbar("Success: Quote successfully added!")
@@ -102,10 +103,14 @@ fun App(quoteCore: QuoteCore) {
             }
 
             fun deleteQuote(quoteId: Int) {
-                quoteCore.deleteQuote(quoteId)
-                val temp = quoteCore.getQuotes()
-                println(temp.map { q -> q.id })
-                quotes.value = temp
+                try {
+                    quoteCore.deleteQuote(quoteId)
+                } catch (error: Exception) {
+                    showSnackbar("Error: Unable to delete quote, ${error.message}")
+                    return
+                }
+                showSnackbar("Success: Quote successfully deleted!")
+                quotes.value = quoteCore.getQuotes()
             }
 
 

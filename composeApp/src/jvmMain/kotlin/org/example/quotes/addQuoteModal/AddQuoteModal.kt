@@ -26,7 +26,6 @@ import moveFocusOnTab
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-@Preview
 fun AddQuoteModal(addQuote: (Quote) -> Unit, onDismissRequest: () -> Unit) {
     var contentText = remember { mutableStateOf("") }
     var sourceText = remember { mutableStateOf("") }

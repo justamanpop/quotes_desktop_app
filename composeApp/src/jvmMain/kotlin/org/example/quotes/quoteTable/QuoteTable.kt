@@ -26,6 +26,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,12 +36,18 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.example.quotes.deleteQuoteConfirmationModal.DeleteQuoteConfirmationModal
 
 @Composable
 fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSnackbar: (message: String) -> Unit, modifier: Modifier = Modifier) {
+    val openDeleteQuoteConfirmationModal = remember { mutableStateOf(false) }
+    fun hideDeleteQuoteConfirmationModal() {
+        openDeleteQuoteConfirmationModal.value = false
+    }
+    val quoteIdToDelete: MutableState<Int?> = remember {mutableStateOf(null)};
+
     Box(modifier = modifier) {
         val state = rememberLazyListState()
-
         LazyColumn(
             modifier = Modifier.fillMaxSize()
                 .border(1.dp, DividerDefaults.color), state
@@ -61,7 +70,9 @@ fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSna
                         Row(Modifier.weight(1f).fillMaxHeight().padding(2.dp), verticalAlignment = Alignment.CenterVertically) {
                             Button(
                                 onClick = {
-                                    deleteQuote(quote.id)
+                                    quoteIdToDelete.value = quote.id
+                                    openDeleteQuoteConfirmationModal.value = true
+
                                 },
                                 colors = ButtonColors(
                                     contentColor = Color.White,
@@ -88,5 +99,8 @@ fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSna
             modifier = Modifier.fillMaxHeight().align(Alignment.CenterEnd),
             adapter = rememberScrollbarAdapter(state)
         )
+    }
+    if (openDeleteQuoteConfirmationModal.value) {
+        DeleteQuoteConfirmationModal(quoteIdToDelete.value,deleteQuote, ::hideDeleteQuoteConfirmationModal)
     }
 }
