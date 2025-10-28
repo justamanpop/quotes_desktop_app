@@ -32,9 +32,12 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import constructSnackbarDataObject
+import getSnackbarColor
 import kotlinx.coroutines.launch
 import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
+import stripSnackbarMessage
 import java.util.Locale.getDefault
 import kotlin.collections.filter
 
@@ -53,12 +56,10 @@ fun App(quoteCore: QuoteCore) {
             snackbarHost = {
                 Box(modifier = Modifier.fillMaxSize()) {
                     SnackbarHost(hostState = snackbarState, snackbar = { snackbarData ->
-                        val containerColor = if (snackbarData.visuals.message.contains("Error")) {
-                            Color.Red
-                        } else {
-                            Color(52, 161, 235)
-                        }
-                        Snackbar(snackbarData, containerColor = containerColor)
+                        val containerColor = getSnackbarColor(snackbarData.visuals.message)
+                        val updatedSnackbarData = constructSnackbarDataObject(stripSnackbarMessage(snackbarData.visuals.message))
+
+                        Snackbar(updatedSnackbarData, containerColor = containerColor)
                     }, modifier = Modifier.align(Alignment.TopCenter))
                 }
             }
@@ -95,7 +96,7 @@ fun App(quoteCore: QuoteCore) {
                     showSnackbar("Error, unable to add quote, ${error.message}")
                     return
                 }
-                showSnackbar("Quote successfully added!")
+                showSnackbar("Success: Quote successfully added!")
                 quotes.value = quoteCore.getQuotes()
                 focusRequester.requestFocus()
             }
@@ -120,14 +121,14 @@ fun App(quoteCore: QuoteCore) {
                             openAddQuoteModal.value = true
                         },
                         colors = ButtonColors(
-                            containerColor = Color.Green,
+                            containerColor = Color(23, 176, 71),
                             contentColor = Color.White,
-                            disabledContainerColor = Color.Green,
+                            disabledContainerColor = Color(23, 176, 71),
                             disabledContentColor = Color.Gray
                         ),
                         content = {
                             Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "")
-                            Text(" Add Quote", color = Color.White, fontSize = 24.sp)
+                            Text(" Add", color = Color.White, fontSize = 24.sp)
                         },
                         modifier = Modifier.padding(top = 12.dp).pointerHoverIcon(PointerIcon.Hand)
                     )

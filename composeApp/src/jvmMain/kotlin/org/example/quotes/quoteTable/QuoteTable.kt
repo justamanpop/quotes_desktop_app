@@ -47,7 +47,7 @@ fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSna
                 item {
                     Row(modifier = Modifier.clickable(enabled = true, onClick = {
                         copyToClipboard(quote.content)
-                        showSnackbar("Quote copied!")
+                        showSnackbar("Info: Quote copied!")
                     }).pointerHoverIcon(PointerIcon.Hand).height(IntrinsicSize.Min)) {
                         Column(modifier = Modifier.weight(16f)) {
                             Text(quote.content, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
