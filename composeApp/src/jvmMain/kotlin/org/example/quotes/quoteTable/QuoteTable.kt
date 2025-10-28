@@ -37,7 +37,7 @@ import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
 @Composable
-fun QuoteTable(quotes: List<Quote>, modifier: Modifier = Modifier) {
+fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         val state = rememberLazyListState()
 
@@ -64,6 +64,7 @@ fun QuoteTable(quotes: List<Quote>, modifier: Modifier = Modifier) {
                         Row(Modifier.weight(1f).fillMaxHeight().padding(2.dp), verticalAlignment = Alignment.CenterVertically) {
                             Button(
                                 onClick = {
+                                    deleteQuote(quote.id)
                                 },
                                 colors = ButtonColors(
                                     contentColor = Color.White,

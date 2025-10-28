@@ -8,7 +8,7 @@ class InMemoryQuoteRepository: QuoteRepository {
 
     override fun addQuote(quote: Quote) {
         val quoteToAdd = quote.copy(id = maxId + 1)
-        fakeQuotes.add(quoteToAdd)
+        fakeQuotes += quoteToAdd
         maxId += 1
     }
 
@@ -18,8 +18,12 @@ class InMemoryQuoteRepository: QuoteRepository {
         }
     }
 
+    override fun deleteQuote(quoteId: Int) {
+        fakeQuotes = fakeQuotes.filterNot { q -> q.id == quoteId }
+    }
 
-    val fakeQuotes = mutableListOf<Quote>(
+
+    var fakeQuotes = listOf<Quote>(
         Quote(1, "No price is too great to pay for the privilege of owning yourself", "Friedrich Nietzsche"),
         Quote(
             2,

@@ -40,4 +40,8 @@ class SqlLiteQuoteRepository(dbName: String): QuoteRepository {
            addQuote(quote)
        }
     }
+
+    override fun deleteQuote(quoteId: Int) {
+        TODO("Not yet implemented")
+    }
 }

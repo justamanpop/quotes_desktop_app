@@ -66,6 +66,12 @@ fun App(quoteCore: QuoteCore) {
             focusRequester.requestFocus()
         }
 
+        fun deleteQuote(quoteId: Int) {
+            quoteCore.deleteQuote(quoteId)
+            val temp = quoteCore.getQuotes()
+            println(temp.map { q -> q.id })
+            quotes.value  = temp
+        }
 
         Column(modifier = Modifier.fillMaxSize()) {
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -88,7 +94,7 @@ fun App(quoteCore: QuoteCore) {
                     modifier = Modifier.padding(top = 12.dp).pointerHoverIcon(PointerIcon.Hand)
                 )
             }
-            QuoteTable(quotes.value, Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp))
+            QuoteTable(quotes.value, ::deleteQuote, Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp))
         }
 
         if (openAddQuoteModal.value) {

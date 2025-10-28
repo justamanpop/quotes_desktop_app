@@ -13,4 +13,8 @@ class QuoteCore(private val quoteRepository: QuoteRepository): ForQuotes {
     override fun addQuotes(quotes: List<Quote>) {
         quoteRepository.addQuotes(quotes)
     }
+
+    override fun deleteQuote(quoteId: Int) {
+        quoteRepository.deleteQuote(quoteId)
+    }
 }
