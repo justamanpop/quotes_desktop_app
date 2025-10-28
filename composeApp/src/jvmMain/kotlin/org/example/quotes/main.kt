@@ -15,7 +15,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "quotes",
-        state = WindowState(placement = WindowPlacement.Maximized)
+        state = WindowState(placement = WindowPlacement.Maximized),
     ) {
 //        val quoteRepository: QuoteRepository = InMemoryQuoteRepository()
         val quoteRepository: QuoteRepository = SqlLiteQuoteRepository("quotes.db")
