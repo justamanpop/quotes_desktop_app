@@ -8,6 +8,8 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 
 fun Modifier.moveFocusOnTab() = composed {
     val focusManager = LocalFocusManager.current
@@ -21,4 +23,10 @@ fun Modifier.moveFocusOnTab() = composed {
             false
         }
     }
+}
+
+fun copyToClipboard(text: String) {
+    val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+    val stringSelection = StringSelection(text)
+    clipboard.setContents(stringSelection, null)
 }

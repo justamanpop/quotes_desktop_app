@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,6 +35,7 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
@@ -93,6 +95,12 @@ fun App(quoteCore: QuoteCore) {
                 quotes.value = temp
             }
 
+            fun showSnackbar(message: String) {
+                scope.launch {
+                    snackbarState.showSnackbar(message = message)
+                }
+            }
+
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SearchBar(
@@ -117,7 +125,12 @@ fun App(quoteCore: QuoteCore) {
                         modifier = Modifier.padding(top = 12.dp).pointerHoverIcon(PointerIcon.Hand)
                     )
                 }
-                QuoteTable(quotes.value, ::deleteQuote, Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp))
+                QuoteTable(
+                    quotes.value,
+                    ::deleteQuote,
+                    ::showSnackbar,
+                    Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)
+                )
             }
 
             if (openAddQuoteModal.value) {

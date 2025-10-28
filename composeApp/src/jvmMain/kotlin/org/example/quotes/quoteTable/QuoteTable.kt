@@ -33,11 +33,9 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.awt.Toolkit
-import java.awt.datatransfer.StringSelection
 
 @Composable
-fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, modifier: Modifier = Modifier) {
+fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSnackbar: (message: String) -> Unit, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         val state = rememberLazyListState()
 
@@ -48,9 +46,8 @@ fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, modifie
             quotes.forEach { quote ->
                 item {
                     Row(modifier = Modifier.clickable(enabled = true, onClick = {
-                        val clipboard = Toolkit.getDefaultToolkit().systemClipboard
-                        val stringSelection = StringSelection(quote.content)
-                        clipboard.setContents(stringSelection, null)
+                        copyToClipboard(quote.content)
+                        showSnackbar("Quote copied!")
                     }).pointerHoverIcon(PointerIcon.Hand).height(IntrinsicSize.Min)) {
                         Column(modifier = Modifier.weight(16f)) {
                             Text(quote.content, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
