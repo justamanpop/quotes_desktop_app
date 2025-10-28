@@ -4,7 +4,6 @@ import Quote
 import QuoteCore
 import QuoteTable
 import SearchBar
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,8 +32,6 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
@@ -57,7 +53,12 @@ fun App(quoteCore: QuoteCore) {
             snackbarHost = {
                 Box(modifier = Modifier.fillMaxSize()) {
                     SnackbarHost(hostState = snackbarState, snackbar = { snackbarData ->
-                        Snackbar(snackbarData)
+                        val containerColor = if (snackbarData.visuals.message.contains("Error")) {
+                            Color.Red
+                        } else {
+                            Color(52, 161, 235)
+                        }
+                        Snackbar(snackbarData, containerColor = containerColor)
                     }, modifier = Modifier.align(Alignment.TopCenter))
                 }
             }
@@ -91,7 +92,7 @@ fun App(quoteCore: QuoteCore) {
                 try {
                     quoteCore.addQuote(quote)
                 } catch (error: Exception) {
-                    showSnackbar("Unable to add quote, ${error.message}")
+                    showSnackbar("Error, unable to add quote, ${error.message}")
                     return
                 }
                 showSnackbar("Quote successfully added!")
