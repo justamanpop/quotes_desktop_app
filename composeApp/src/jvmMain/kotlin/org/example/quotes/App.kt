@@ -47,6 +47,11 @@ fun App(quoteCore: QuoteCore) {
     MaterialTheme {
         val snackbarState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
+        fun showSnackbar(message: String) {
+            scope.launch {
+                snackbarState.showSnackbar(message = message)
+            }
+        }
 
         Scaffold(
             snackbarHost = {
@@ -84,6 +89,7 @@ fun App(quoteCore: QuoteCore) {
 
             fun addQuoteInModal(quote: Quote) {
                 quoteCore.addQuote(quote)
+                showSnackbar("Quote successfully added!")
                 quotes.value = quoteCore.getQuotes()
                 focusRequester.requestFocus()
             }
@@ -95,11 +101,6 @@ fun App(quoteCore: QuoteCore) {
                 quotes.value = temp
             }
 
-            fun showSnackbar(message: String) {
-                scope.launch {
-                    snackbarState.showSnackbar(message = message)
-                }
-            }
 
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
