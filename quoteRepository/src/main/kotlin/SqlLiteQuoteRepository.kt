@@ -42,6 +42,10 @@ class SqlLiteQuoteRepository(dbName: String): QuoteRepository {
     }
 
     override fun deleteQuote(quoteId: Int) {
-        TODO("Not yet implemented")
+        conn.prepare("DELETE FROM quotes WHERE id = ?").use {
+                statement ->
+            statement.bindInt(1, quoteId)
+            statement.step()
+        }
     }
 }
