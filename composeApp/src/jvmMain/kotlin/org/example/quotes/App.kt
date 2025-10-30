@@ -1,7 +1,7 @@
 package org.example.quotes
 
 import Quote
-import QuoteCore
+import AppCore
 import QuoteTable
 import SearchBar
 import androidx.compose.foundation.layout.Box
@@ -42,7 +42,7 @@ import java.util.Locale.getDefault
 import kotlin.collections.filter
 
 @Composable
-fun App(quoteCore: QuoteCore) {
+fun App(appCore: AppCore) {
     MaterialTheme {
         val snackbarState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
@@ -78,10 +78,10 @@ fun App(quoteCore: QuoteCore) {
                 focusRequester.requestFocus()
             }
 
-            val quotes = remember { mutableStateOf(quoteCore.getQuotes()) }
+            val quotes = remember { mutableStateOf(appCore.getQuotes()) }
             fun updateSearchTerm(newVal: String) {
                 currentSearchTerm.value = newVal
-                quotes.value = quoteCore.getQuotes().filter { q ->
+                quotes.value = appCore.getQuotes().filter { q ->
                     val filterTerm = newVal.lowercase(getDefault())
                     val lowerCaseContent = q.content.lowercase(getDefault())
                     val lowerCaseSource = q.source.lowercase(getDefault())
@@ -92,25 +92,25 @@ fun App(quoteCore: QuoteCore) {
 
             fun addQuoteInModal(quote: Quote) {
                 try {
-                    quoteCore.addQuote(quote)
+                    appCore.addQuote(quote)
                 } catch (error: Exception) {
                     showSnackbar("Error: Unable to add quote, ${error.message}")
                     return
                 }
                 showSnackbar("Success: Quote successfully added!")
-                quotes.value = quoteCore.getQuotes()
+                quotes.value = appCore.getQuotes()
                 focusRequester.requestFocus()
             }
 
             fun deleteQuote(quoteId: Int) {
                 try {
-                    quoteCore.deleteQuote(quoteId)
+                    appCore.deleteQuote(quoteId)
                 } catch (error: Exception) {
                     showSnackbar("Error: Unable to delete quote, ${error.message}")
                     return
                 }
                 showSnackbar("Success: Quote successfully deleted!")
-                quotes.value = quoteCore.getQuotes()
+                quotes.value = appCore.getQuotes()
             }
 
 
