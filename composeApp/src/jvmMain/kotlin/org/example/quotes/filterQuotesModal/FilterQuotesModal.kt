@@ -2,6 +2,7 @@ package org.example.quotes.filterQuotesModal
 
 import Tag
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,14 +16,9 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MenuAnchorType
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -36,13 +32,8 @@ import moveFocusOnTab
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
-    var selectedOptionText by remember { mutableStateOf("") }
-
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
-    /*val filterTagTerm = remember { mutableStateOf("") }
-
-    val filteredTags = tags.filter { t -> t.name.lowercase().contains(filterTagTerm.value, ignoreCase = true) }*/
+    val filterTagTerm = remember { mutableStateOf("") }
 
     Dialog(
         onDismissRequest = { onDismissRequest() },
@@ -63,9 +54,9 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                     TextField(
                         // The `menuAnchor` modifier must be passed to the text field for correctness.
                         modifier = Modifier.menuAnchor(),
-                        value = selectedOptionText,
+                        value = filterTagTerm.value,
                         onValueChange = {
-                            selectedOptionText = it
+                            filterTagTerm.value = it
                             setExpanded(true)
                         },
                         label = { Text("Label") },
@@ -73,8 +64,8 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                     )
                     // filter options based on text field value
-                    val filteringOptions = tags.filter { it.name.contains(selectedOptionText, ignoreCase = true) }
-                    if (filteringOptions.isNotEmpty()) {
+                    val filteredTags = tags.filter { it.name.contains(filterTagTerm.value, ignoreCase = true) }
+                    if (filteredTags.isNotEmpty()) {
                         DropdownMenu(
                             modifier = Modifier
                                 .background(Color.White)
@@ -83,11 +74,11 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                             expanded = expanded,
                             onDismissRequest = { setExpanded(false) },
                         ) {
-                            filteringOptions.forEach { selectionOption ->
+                            filteredTags.forEach { tagOption ->
                                 DropdownMenuItem(
-                                    text = { Text(selectionOption.name) },
+                                    text = { Text(tagOption.name) },
                                     onClick = {
-                                        selectedOptionText = selectionOption.name
+                                        filterTagTerm.value = tagOption.name
                                         setExpanded(false)
                                     },
                                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
