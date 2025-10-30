@@ -17,7 +17,7 @@ val fakeTags = mutableMapOf<String, Tag>(
 
 class InMemoryTagRepository: TagRepository {
     override fun getTags(): List<Tag> {
-        return fakeTags.values.toList()
+        return fakeTags.values.toList().sortedBy { t -> t.name }
     }
 
 }

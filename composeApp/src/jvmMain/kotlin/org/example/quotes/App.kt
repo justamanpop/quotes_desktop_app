@@ -181,6 +181,5 @@ fun App(appCore: AppCore) {
                 FilterQuotesModal(tags.value, ::hideFilterQuotesModal)
             }
         }
-
     }
 }
