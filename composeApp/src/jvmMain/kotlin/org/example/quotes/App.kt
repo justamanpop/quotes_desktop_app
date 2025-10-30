@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
+import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -132,10 +134,26 @@ fun App(appCore: AppCore) {
                             disabledContentColor = Color.Gray
                         ),
                         content = {
-                            Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "")
+                            Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add")
                             Text(" Add", color = Color.White, fontSize = 24.sp)
                         },
                         modifier = Modifier.padding(top = 12.dp).pointerHoverIcon(PointerIcon.Hand)
+                    )
+
+                    Button(
+                        onClick = {
+                        },
+                        colors = ButtonColors(
+                            containerColor = Color.LightGray,
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.LightGray,
+                            disabledContentColor = Color.Gray
+                        ),
+                        content = {
+                            Icon(Icons.Default.Tune, contentDescription = "filter")
+                            Text(" Filter", color = Color.White, fontSize = 24.sp)
+                        },
+                        modifier = Modifier.padding(top = 12.dp, start = 8.dp).pointerHoverIcon(PointerIcon.Hand)
                     )
                 }
                 QuoteTable(
