@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
-import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -39,6 +38,7 @@ import getSnackbarColor
 import kotlinx.coroutines.launch
 import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
+import org.example.quotes.filterQuotesModal.FilterQuotesModal
 import stripSnackbarMessage
 import java.util.Locale.getDefault
 import kotlin.collections.filter
@@ -77,6 +77,12 @@ fun App(appCore: AppCore) {
             val openAddQuoteModal = remember { mutableStateOf(false) }
             fun hideAddQuoteModal() {
                 openAddQuoteModal.value = false
+                focusRequester.requestFocus()
+            }
+
+            val openFilterQuotesModal = remember { mutableStateOf(false) }
+            fun hideFilterQuotesModal() {
+                openFilterQuotesModal.value = false
                 focusRequester.requestFocus()
             }
 
@@ -142,6 +148,7 @@ fun App(appCore: AppCore) {
 
                     Button(
                         onClick = {
+                            openFilterQuotesModal.value = true
                         },
                         colors = ButtonColors(
                             containerColor = Color.LightGray,
@@ -166,6 +173,10 @@ fun App(appCore: AppCore) {
 
             if (openAddQuoteModal.value) {
                 AddQuoteModal(::addQuoteInModal, ::hideAddQuoteModal)
+            }
+
+            if (openFilterQuotesModal.value) {
+                FilterQuotesModal(listOf(), ::hideFilterQuotesModal)
             }
         }
 
