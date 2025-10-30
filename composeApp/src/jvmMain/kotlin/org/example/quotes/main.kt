@@ -6,9 +6,10 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 
 import AppCore
-import SqlLiteQuoteRepository
-//import InMemoryQuoteRepository
+import quotes.InMemoryQuoteRepository
 import ports.driven.QuoteRepository
+import ports.driven.TagRepository
+import tags.InMemoryTagRepository
 
 fun main() = application {
     Window(
@@ -16,10 +17,12 @@ fun main() = application {
         title = "quotes",
         state = WindowState(placement = WindowPlacement.Maximized),
     ) {
-//        val quoteRepository: QuoteRepository = InMemoryQuoteRepository()
-        val quoteRepository: QuoteRepository = SqlLiteQuoteRepository("quotes.db")
-        val appCore = AppCore(quoteRepository)
+        val quoteRepository: QuoteRepository = InMemoryQuoteRepository()
+        val tagRepository: TagRepository = InMemoryTagRepository()
+//        val quoteRepository: QuoteRepository = SqlLiteQuoteRepository("quotes.db")
+//        val tagRepository: TagRepository = SqlLiteTagRepository("quotes.db")
 
+        val appCore = AppCore(quoteRepository, tagRepository)
         App(appCore)
     }
 }

@@ -1,7 +1,9 @@
 import ports.driven.QuoteRepository
+import ports.driven.TagRepository
 import ports.driving.ForQuotes
+import ports.driving.ForTags
 
-class AppCore(private val quoteRepository: QuoteRepository): ForQuotes {
+class AppCore(private val quoteRepository: QuoteRepository, private val tagRepository: TagRepository): ForQuotes, ForTags {
     override fun getQuotes(): List<Quote> {
         return quoteRepository.getQuotes()
     }
@@ -16,5 +18,9 @@ class AppCore(private val quoteRepository: QuoteRepository): ForQuotes {
 
     override fun deleteQuote(quoteId: Int) {
         quoteRepository.deleteQuote(quoteId)
+    }
+
+    override fun getTags(): List<Tag> {
+        return tagRepository.getTags()
     }
 }

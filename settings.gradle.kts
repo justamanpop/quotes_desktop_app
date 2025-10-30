@@ -34,4 +34,4 @@ plugins {
 
 include(":composeApp")
 include(":core")
-include(":quoteRepository")
+include(":repository")

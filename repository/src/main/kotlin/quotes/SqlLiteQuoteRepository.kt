@@ -1,3 +1,5 @@
+package quotes
+
 import Quote
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
