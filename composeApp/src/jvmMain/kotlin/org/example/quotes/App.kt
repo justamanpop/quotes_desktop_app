@@ -121,6 +121,8 @@ fun App(appCore: AppCore) {
                 quotes.value = appCore.getQuotes()
             }
 
+            val tags = remember { mutableStateOf(appCore.getTags()) }
+
 
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -176,7 +178,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openFilterQuotesModal.value) {
-                FilterQuotesModal(listOf(), ::hideFilterQuotesModal)
+                FilterQuotesModal(tags.value, ::hideFilterQuotesModal)
             }
         }
 
