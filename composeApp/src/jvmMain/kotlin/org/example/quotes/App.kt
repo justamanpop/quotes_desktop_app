@@ -88,28 +88,39 @@ fun App(appCore: AppCore) {
             }
 
             val quotes = remember { mutableStateOf(appCore.getQuotes()) }
-            val filteredQuotes = remember { mutableStateOf(quotes.value) }
-            val (tagFilters, setTagFilters) = remember { mutableStateOf(setOf<Tag>()) }
+            val tagFilters = remember { mutableStateOf(setOf<Tag>()) }
+
+            val filteredQuotes by remember(quotes, currentSearchTerm, tagFilters) {
+                derivedStateOf {
+                    val searchTerm = currentSearchTerm.value.lowercase(getDefault())
+                    val tags = tagFilters.value
+
+                    quotes.value.filter { q ->
+                        val matchesSearch = if (searchTerm.isBlank()) {
+                            true
+                        } else {
+                            val lowerCaseContent = q.content.lowercase(getDefault())
+                            val lowerCaseSource = q.source.lowercase(getDefault())
+                            lowerCaseContent.contains(searchTerm) || lowerCaseSource.contains(searchTerm)
+                        }
+
+                        val matchesTags = if (tags.isEmpty()) {
+                            true
+                        } else {
+                            q.tags.containsAll(tags)
+                        }
+
+                        matchesSearch && matchesTags
+                    }
+                }
+            }
 
             fun updateSearchTerm(newVal: String) {
                 currentSearchTerm.value = newVal
-                filteredQuotes.value = quotes.value.filter { q ->
-                    val filterTerm = newVal.lowercase(getDefault())
-                    val lowerCaseContent = q.content.lowercase(getDefault())
-                    val lowerCaseSource = q.source.lowercase(getDefault())
-
-                    lowerCaseContent.contains(filterTerm) || lowerCaseSource.contains(filterTerm)
-                }
             }
+
             fun filterQuotesByTags(tags: Set<Tag>) {
-                setTagFilters(tags)
-               filteredQuotes.value = filteredQuotes.value.filter { q ->
-                   if (tags.isEmpty()) {
-                      true
-                   } else {
-                      q.tags.containsAll(tags)
-                   }
-               }
+                tagFilters.value = tags
             }
 
             fun addQuoteInModal(quote: Quote) {
@@ -179,7 +190,7 @@ fun App(appCore: AppCore) {
                     )
                 }
                 QuoteTable(
-                    filteredQuotes.value,
+                    filteredQuotes,
                     ::deleteQuote,
                     ::showSnackbar,
                     Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)
@@ -191,7 +202,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openFilterQuotesModal.value) {
-                FilterQuotesModal(tags.value, ::filterQuotesByTags, ::hideFilterQuotesModal)
+                FilterQuotesModal(tags.value, tagFilters.value,::filterQuotesByTags, ::hideFilterQuotesModal)
             }
         }
     }

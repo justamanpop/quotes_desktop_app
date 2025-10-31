@@ -32,16 +32,13 @@ import org.example.quotes.selectedTags.SelectedTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterQuotesModal(tags: List<Tag>, setTagFilters: (Set<Tag>) -> Unit, onDismissRequest: () -> Unit) {
+fun FilterQuotesModal(tags: List<Tag>, existingTagFilters: Set<Tag>, setTagFilters: (Set<Tag>) -> Unit, onDismissRequest: () -> Unit) {
     val inputFieldFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         inputFieldFocusRequester.requestFocus()
     }
 
-    val selectedTags = remember { mutableStateOf(setOf<Tag>()) }
-
-    val (selectedTag, setSelectedTag) = remember { mutableStateOf<Tag?>(null) }
-
+    val selectedTags = remember { mutableStateOf(existingTagFilters) }
 
     val (dropdownInputValue, setDropdownInputValue) = remember { mutableStateOf("") }
     var dropdownTextFieldValue by remember {
@@ -55,6 +52,13 @@ fun FilterQuotesModal(tags: List<Tag>, setTagFilters: (Set<Tag>) -> Unit, onDism
 
     fun setDropdownTextFieldState(value: TextFieldValue) {
         dropdownTextFieldValue = value
+    }
+
+    fun selectTagFilter(tag: Tag) {
+        selectedTags.value = selectedTags.value.plus(tag)
+        setDropdownInputValue("")
+        dropdownTextFieldValue = TextFieldValue("")
+        inputFieldFocusRequester.requestFocus()
     }
 
     Dialog(
@@ -72,25 +76,16 @@ fun FilterQuotesModal(tags: List<Tag>, setTagFilters: (Set<Tag>) -> Unit, onDism
             ) {
                 Row {
                     SearchableDropdown(
-                        tags,
+                        tags.minus(selectedTags.value),
                         dropdownTextFieldValue,
                         ::setDropdownTextFieldState,
                         setDropdownInputValue,
-                        setSelectedTag,
+                        ::selectTagFilter,
                         inputFieldFocusRequester,
                     )
                     Button(
                         content = { Text("+") },
                         onClick = {
-                            selectedTag?.let {
-                                selectedTags.value = selectedTags.value.plus(selectedTag)
-                            }
-                            setSelectedTag(null)
-
-                            setDropdownInputValue("")
-                            dropdownTextFieldValue = TextFieldValue("")
-
-                            inputFieldFocusRequester.requestFocus()
                         },
                         colors = ButtonColors(
                             containerColor = Color(52, 161, 235),
@@ -98,7 +93,6 @@ fun FilterQuotesModal(tags: List<Tag>, setTagFilters: (Set<Tag>) -> Unit, onDism
                             disabledContainerColor = Color.Gray,
                             disabledContentColor = Color.White,
                         ),
-                        enabled = selectedTag != null,
                         modifier = Modifier.padding(start = 24.dp)
                     )
                     SelectedTags(selectedTags.value, Modifier.padding(start = 12.dp))
@@ -107,6 +101,9 @@ fun FilterQuotesModal(tags: List<Tag>, setTagFilters: (Set<Tag>) -> Unit, onDism
                     Button(content = { Text("Filter") }, onClick = {
                         setTagFilters(selectedTags.value)
                         onDismissRequest()
+                    })
+                    Button(content = { Text("Reset") }, onClick = {
+                        selectedTags.value = setOf()
                     })
                     Button(content = { Text("Close") }, onClick = { onDismissRequest() })
                 }
