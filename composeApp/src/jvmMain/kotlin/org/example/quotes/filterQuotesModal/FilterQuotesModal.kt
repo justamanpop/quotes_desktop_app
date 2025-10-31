@@ -44,6 +44,9 @@ fun FilterQuotesModal(
     }
 
     val selectedTags = remember { mutableStateOf(existingTagFilters) }
+    fun unselectTag(tag: Tag) {
+        selectedTags.value = selectedTags.value.minus(tag)
+    }
 
     val (dropdownInputValue, setDropdownInputValue) = remember { mutableStateOf("") }
     var dropdownTextFieldValue by remember {
@@ -100,7 +103,7 @@ fun FilterQuotesModal(
                         ),
                         modifier = Modifier.padding(start = 24.dp)
                     )
-                    SelectedTags(selectedTags.value, Modifier.padding(start = 12.dp))
+                    SelectedTags(selectedTags.value, ::unselectTag, Modifier.padding(start = 12.dp))
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(
