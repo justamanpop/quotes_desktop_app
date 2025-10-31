@@ -32,7 +32,12 @@ import org.example.quotes.selectedTags.SelectedTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterQuotesModal(tags: List<Tag>, existingTagFilters: Set<Tag>, setTagFilters: (Set<Tag>) -> Unit, onDismissRequest: () -> Unit) {
+fun FilterQuotesModal(
+    tags: List<Tag>,
+    existingTagFilters: Set<Tag>,
+    setTagFilters: (Set<Tag>) -> Unit,
+    onDismissRequest: () -> Unit
+) {
     val inputFieldFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         inputFieldFocusRequester.requestFocus()
@@ -98,14 +103,25 @@ fun FilterQuotesModal(tags: List<Tag>, existingTagFilters: Set<Tag>, setTagFilte
                     SelectedTags(selectedTags.value, Modifier.padding(start = 12.dp))
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(content = { Text("Filter") }, onClick = {
-                        setTagFilters(selectedTags.value)
+                    Button(
+                        content = { Text("Apply Filter") }, colors = ButtonColors(
+                            containerColor = Color(52, 161, 235),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color(52, 161, 235),
+                            disabledContentColor = Color.White,
+                            ), onClick = {
+                            setTagFilters(selectedTags.value)
+                            onDismissRequest()
+                        })
+                    Button(content = { Text("Reset All") }, colors = ButtonColors(
+                        containerColor = Color.Red,
+                        contentColor = Color.White,
+                        disabledContainerColor = Color.Red,
+                        disabledContentColor = Color.White,
+                    ), onClick = {
+                        setTagFilters(setOf())
                         onDismissRequest()
                     })
-                    Button(content = { Text("Reset") }, onClick = {
-                        selectedTags.value = setOf()
-                    })
-                    Button(content = { Text("Close") }, onClick = { onDismissRequest() })
                 }
             }
         }
