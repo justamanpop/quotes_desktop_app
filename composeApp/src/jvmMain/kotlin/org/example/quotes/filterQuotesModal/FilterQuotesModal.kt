@@ -84,13 +84,13 @@ fun FilterQuotesModal(tags: List<Tag>, existingTagFilters: Set<Tag>, setTagFilte
                         inputFieldFocusRequester,
                     )
                     Button(
-                        content = { Text("+") },
+                        content = { Text("+ Create Tag") },
                         onClick = {
                         },
                         colors = ButtonColors(
-                            containerColor = Color(52, 161, 235),
+                            containerColor = Color(23, 176, 71),
                             contentColor = Color.White,
-                            disabledContainerColor = Color.Gray,
+                            disabledContainerColor = Color(23, 176, 71),
                             disabledContentColor = Color.White,
                         ),
                         modifier = Modifier.padding(start = 24.dp)

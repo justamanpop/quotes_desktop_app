@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -172,22 +174,36 @@ fun App(appCore: AppCore) {
                         modifier = Modifier.padding(top = 12.dp).pointerHoverIcon(PointerIcon.Hand)
                     )
 
-                    Button(
-                        onClick = {
-                            openFilterQuotesModal.value = true
+                    BadgedBox(
+                        badge = {
+                            if (tagFilters.value.isNotEmpty()) {
+                                Badge(
+                                    containerColor = Color.Red,
+                                    contentColor = Color.White
+                                ) {
+                                    Text(tagFilters.value.size.toString())
+                                }
+                            }
                         },
-                        colors = ButtonColors(
-                            containerColor = Color.LightGray,
-                            contentColor = Color.White,
-                            disabledContainerColor = Color.LightGray,
-                            disabledContentColor = Color.Gray
-                        ),
-                        content = {
-                            Icon(Icons.Default.Tune, contentDescription = "filter")
-                            Text(" Filter", color = Color.White, fontSize = 24.sp)
-                        },
-                        modifier = Modifier.padding(top = 12.dp, start = 8.dp).pointerHoverIcon(PointerIcon.Hand)
-                    )
+                        modifier = Modifier.padding(top = 12.dp, start = 8.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                openFilterQuotesModal.value = true
+                            },
+                            colors = ButtonColors(
+                                containerColor = Color.LightGray,
+                                contentColor = Color.White,
+                                disabledContainerColor = Color.LightGray,
+                                disabledContentColor = Color.Gray
+                            ),
+                            content = {
+                                Icon(Icons.Default.Tune, contentDescription = "filter")
+                                Text(" Filter", color = Color.White, fontSize = 24.sp)
+                            },
+                            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+                        )
+                    }
                 }
                 QuoteTable(
                     filteredQuotes,
@@ -202,7 +218,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openFilterQuotesModal.value) {
-                FilterQuotesModal(tags.value, tagFilters.value,::filterQuotesByTags, ::hideFilterQuotesModal)
+                FilterQuotesModal(tags.value, tagFilters.value, ::filterQuotesByTags, ::hideFilterQuotesModal)
             }
         }
     }
