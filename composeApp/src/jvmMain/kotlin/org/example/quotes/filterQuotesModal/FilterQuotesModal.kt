@@ -14,12 +14,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -38,6 +41,20 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
 
     val (selectedTag, setSelectedTag) = remember { mutableStateOf<Tag?>(null) }
 
+
+    val (dropdownInputValue, setDropdownInputValue) = remember { mutableStateOf("") }
+    var dropdownTextFieldValue by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = dropdownInputValue,
+                selection = TextRange(dropdownInputValue.length)
+            )
+        )
+    }
+    fun setDropdownTextFieldState(value: TextFieldValue) {
+        dropdownTextFieldValue = value
+    }
+
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
@@ -55,12 +72,13 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                 }
 
                 Row {
-                    SearchableDropdown(tags, ::getTagDisplay, setSelectedTag)
+                    SearchableDropdown(tags, dropdownTextFieldValue, ::setDropdownTextFieldState, setDropdownInputValue,setSelectedTag)
                     Button(
                         content = { Text("+") }, onClick = {
                             selectedTag?.let {
                                 selectedTags.value += selectedTag
                             }
+
                         }, colors = ButtonColors(
                             containerColor = Color(52, 161, 235),
                             contentColor = Color.White,
