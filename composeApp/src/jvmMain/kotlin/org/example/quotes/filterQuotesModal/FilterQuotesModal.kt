@@ -32,7 +32,7 @@ import org.example.quotes.selectedTags.SelectedTags
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
+fun FilterQuotesModal(tags: List<Tag>, setTagFilters: (Set<Tag>) -> Unit, onDismissRequest: () -> Unit) {
     val inputFieldFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         inputFieldFocusRequester.requestFocus()
@@ -105,6 +105,7 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(content = { Text("Filter") }, onClick = {
+                        setTagFilters(selectedTags.value)
                         onDismissRequest()
                     })
                     Button(content = { Text("Close") }, onClick = { onDismissRequest() })

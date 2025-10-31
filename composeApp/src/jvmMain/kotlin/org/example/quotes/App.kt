@@ -4,6 +4,7 @@ import Quote
 import AppCore
 import QuoteTable
 import SearchBar
+import Tag
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -87,15 +88,28 @@ fun App(appCore: AppCore) {
             }
 
             val quotes = remember { mutableStateOf(appCore.getQuotes()) }
+            val filteredQuotes = remember { mutableStateOf(quotes.value) }
+            val (tagFilters, setTagFilters) = remember { mutableStateOf(setOf<Tag>()) }
+
             fun updateSearchTerm(newVal: String) {
                 currentSearchTerm.value = newVal
-                quotes.value = appCore.getQuotes().filter { q ->
+                filteredQuotes.value = quotes.value.filter { q ->
                     val filterTerm = newVal.lowercase(getDefault())
                     val lowerCaseContent = q.content.lowercase(getDefault())
                     val lowerCaseSource = q.source.lowercase(getDefault())
 
                     lowerCaseContent.contains(filterTerm) || lowerCaseSource.contains(filterTerm)
                 }
+            }
+            fun filterQuotesByTags(tags: Set<Tag>) {
+                setTagFilters(tags)
+               filteredQuotes.value = filteredQuotes.value.filter { q ->
+                   if (tags.isEmpty()) {
+                      true
+                   } else {
+                      q.tags.containsAll(tags)
+                   }
+               }
             }
 
             fun addQuoteInModal(quote: Quote) {
@@ -122,7 +136,6 @@ fun App(appCore: AppCore) {
             }
 
             val tags = remember { mutableStateOf(appCore.getTags()) }
-
 
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -166,7 +179,7 @@ fun App(appCore: AppCore) {
                     )
                 }
                 QuoteTable(
-                    quotes.value,
+                    filteredQuotes.value,
                     ::deleteQuote,
                     ::showSnackbar,
                     Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)
@@ -178,7 +191,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openFilterQuotesModal.value) {
-                FilterQuotesModal(tags.value, ::hideFilterQuotesModal)
+                FilterQuotesModal(tags.value, ::filterQuotesByTags, ::hideFilterQuotesModal)
             }
         }
     }
