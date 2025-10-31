@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun SelectedTags(tags: List<Tag>) {
+fun SelectedTags(tags: Set<Tag>) {
     FlowRow(maxItemsInEachRow = 2) {
         tags.forEach { tag ->
             Text(tag.name)

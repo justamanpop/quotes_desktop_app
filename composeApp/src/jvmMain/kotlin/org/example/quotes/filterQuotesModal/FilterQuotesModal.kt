@@ -37,7 +37,7 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
         focusRequester.requestFocus()
     }
 
-    val selectedTags = remember { mutableStateOf(listOf<Tag>()) }
+    val selectedTags = remember { mutableStateOf(setOf<Tag>()) }
 
     val (selectedTag, setSelectedTag) = remember { mutableStateOf<Tag?>(null) }
 
@@ -81,7 +81,7 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                         content = { Text("+") },
                         onClick = {
                             selectedTag?.let {
-                                selectedTags.value += selectedTag
+                                selectedTags.value = selectedTags.value.plus(selectedTag)
                             }
                             setSelectedTag(null)
 
