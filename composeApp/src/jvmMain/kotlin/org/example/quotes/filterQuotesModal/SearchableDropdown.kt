@@ -28,14 +28,11 @@ fun SearchableDropdown(
     textFieldValueState: TextFieldValue,
     setTextFieldValue: (TextFieldValue) -> Unit,
     setDropdownValue: (String) -> Unit,
-    onSelect: (Tag) -> Unit
+    onSelect: (Tag) -> Unit,
+    focusRequester: FocusRequester,
 ) {
     val (showDropdown, setShowDropdown) = remember { mutableStateOf(false) }
 
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-    }
     ExposedDropdownMenuBox(
         expanded = showDropdown,
         onExpandedChange = setShowDropdown,

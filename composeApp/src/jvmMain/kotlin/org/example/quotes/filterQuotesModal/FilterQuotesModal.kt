@@ -51,6 +51,7 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
             )
         )
     }
+
     fun setDropdownTextFieldState(value: TextFieldValue) {
         dropdownTextFieldValue = value
     }
@@ -67,24 +68,35 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.padding(16.dp).fillMaxWidth().moveFocusOnTab()
             ) {
-                fun getTagDisplay(tag: Tag): String {
-                    return tag.name
-                }
-
                 Row {
-                    SearchableDropdown(tags, dropdownTextFieldValue, ::setDropdownTextFieldState, setDropdownInputValue,setSelectedTag)
+                    SearchableDropdown(
+                        tags,
+                        dropdownTextFieldValue,
+                        ::setDropdownTextFieldState,
+                        setDropdownInputValue,
+                        setSelectedTag,
+                        focusRequester
+                    )
                     Button(
-                        content = { Text("+") }, onClick = {
+                        content = { Text("+") },
+                        onClick = {
                             selectedTag?.let {
                                 selectedTags.value += selectedTag
                             }
+                            setSelectedTag(null)
 
-                        }, colors = ButtonColors(
+                            setDropdownInputValue("")
+                            dropdownTextFieldValue = TextFieldValue("")
+
+                            focusRequester.requestFocus()
+                        },
+                        colors = ButtonColors(
                             containerColor = Color(52, 161, 235),
                             contentColor = Color.White,
-                            disabledContainerColor = Color(23, 176, 71),
-                            disabledContentColor = Color.Gray
+                            disabledContainerColor = Color.Gray,
+                            disabledContentColor = Color.White,
                         ),
+                        enabled = selectedTag != null,
                         modifier = Modifier.padding(start = 24.dp)
                     )
                     SelectedTags(selectedTags.value)
