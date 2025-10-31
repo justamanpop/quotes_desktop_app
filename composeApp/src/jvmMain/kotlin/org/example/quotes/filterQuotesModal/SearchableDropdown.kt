@@ -10,7 +10,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -29,7 +28,7 @@ fun SearchableDropdown(
     setTextFieldValue: (TextFieldValue) -> Unit,
     setDropdownValue: (String) -> Unit,
     onSelect: (Tag) -> Unit,
-    focusRequester: FocusRequester,
+    inputFieldFocusRequester: FocusRequester,
 ) {
     val (showDropdown, setShowDropdown) = remember { mutableStateOf(false) }
 
@@ -39,7 +38,7 @@ fun SearchableDropdown(
     ) {
         TextField(
             // The `menuAnchor` modifier must be passed to the text field for correctness.
-            modifier = Modifier.menuAnchor().focusRequester(focusRequester),
+            modifier = Modifier.menuAnchor().focusRequester(inputFieldFocusRequester),
             value = textFieldValueState,
             onValueChange = {
                 setDropdownValue(it.text)

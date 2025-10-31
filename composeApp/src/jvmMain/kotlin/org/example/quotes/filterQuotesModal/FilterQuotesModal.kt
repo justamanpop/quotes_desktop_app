@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -32,9 +33,9 @@ import org.example.quotes.selectedTags.SelectedTags
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
-    val focusRequester = remember { FocusRequester() }
+    val inputFieldFocusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        inputFieldFocusRequester.requestFocus()
     }
 
     val selectedTags = remember { mutableStateOf(setOf<Tag>()) }
@@ -61,6 +62,7 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
         properties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false,
         ),
     ) {
         Card(modifier = Modifier.width(660.dp)) {
@@ -75,7 +77,7 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                         ::setDropdownTextFieldState,
                         setDropdownInputValue,
                         setSelectedTag,
-                        focusRequester
+                        inputFieldFocusRequester,
                     )
                     Button(
                         content = { Text("+") },
@@ -88,7 +90,7 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                             setDropdownInputValue("")
                             dropdownTextFieldValue = TextFieldValue("")
 
-                            focusRequester.requestFocus()
+                            inputFieldFocusRequester.requestFocus()
                         },
                         colors = ButtonColors(
                             containerColor = Color(52, 161, 235),
@@ -99,7 +101,7 @@ fun FilterQuotesModal(tags: List<Tag>, onDismissRequest: () -> Unit) {
                         enabled = selectedTag != null,
                         modifier = Modifier.padding(start = 24.dp)
                     )
-                    SelectedTags(selectedTags.value)
+                    SelectedTags(selectedTags.value, Modifier.padding(start = 12.dp))
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(content = { Text("Filter") }, onClick = {
