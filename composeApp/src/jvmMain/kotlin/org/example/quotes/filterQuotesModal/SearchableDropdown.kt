@@ -24,7 +24,7 @@ import androidx.compose.ui.window.PopupProperties
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> SearchableDropdown(options: List<T>, optionDisplayFunction: (T) -> String) {
+fun <T> SearchableDropdown(options: List<T>, optionDisplayFunction: (T) -> String, onSelect: (T) -> Unit) {
     val (showDropdown, setShowDropdown) = remember { mutableStateOf(false) }
 
     val filterTagTerm = remember { mutableStateOf("") }
@@ -75,6 +75,7 @@ fun <T> SearchableDropdown(options: List<T>, optionDisplayFunction: (T) -> Strin
                                                 val optionText = optionDisplayFunction(option)
                                                 filterTagTerm.value = optionText
                                                 textFieldValueState = TextFieldValue(optionText, TextRange(optionText.length))
+                                                onSelect(option)
                                                 setShowDropdown(false)
                                             },
                                             contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
