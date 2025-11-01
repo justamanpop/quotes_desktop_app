@@ -21,6 +21,8 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,14 +39,21 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.quotes.deleteQuoteConfirmationModal.DeleteQuoteConfirmationModal
+import kotlin.collections.forEach
 
 @Composable
-fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSnackbar: (message: String) -> Unit, modifier: Modifier = Modifier) {
+fun QuoteTable(
+    quotes: List<Quote>,
+    deleteQuote: (quoteId: Int) -> Unit,
+    showSnackbar: (message: String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val openDeleteQuoteConfirmationModal = remember { mutableStateOf(false) }
     fun hideDeleteQuoteConfirmationModal() {
         openDeleteQuoteConfirmationModal.value = false
     }
-    val quoteIdToDelete: MutableState<Int?> = remember {mutableStateOf(null)};
+
+    val quoteIdToDelete: MutableState<Int?> = remember { mutableStateOf(null) };
 
     Box(modifier = modifier) {
         val state = rememberLazyListState()
@@ -60,14 +69,33 @@ fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSna
                     }).pointerHoverIcon(PointerIcon.Hand).height(IntrinsicSize.Min)) {
                         Column(modifier = Modifier.weight(16f)) {
                             Text(quote.content, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
-                            Text(
-                                quote.source,
-                                fontSize = 12.sp,
-                                color = Color.Gray,
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
+                            Row {
+                                Text(
+                                    quote.source,
+                                    fontSize = 12.sp,
+                                    color = Color.Gray,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                                quote.tags.forEach { tag ->
+                                    Card(
+                                        colors = CardColors(
+                                            containerColor = Color.LightGray,
+                                            contentColor = Color(64, 126, 201),
+                                            disabledContainerColor = Color.LightGray,
+                                            disabledContentColor = Color.White,
+                                        ),
+                                        modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
+                                    ) {
+                                        Text(tag.name, fontSize = 12.sp, modifier = Modifier.padding(2.dp))
+                                    }
+                                }
+                            }
                         }
-                        Row(Modifier.weight(1f).fillMaxHeight().padding(2.dp), verticalAlignment = Alignment.CenterVertically) {
+
+                        Row(
+                            Modifier.weight(1f).fillMaxHeight().padding(2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Button(
                                 onClick = {
                                     quoteIdToDelete.value = quote.id
@@ -86,7 +114,11 @@ fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSna
                                         PointerIcon.Hand
                                     ).defaultMinSize(minWidth = 1.dp, minHeight = 1.dp)
                             ) {
-                                Icon(Icons.Default.Delete, contentDescription = "delete", modifier = Modifier.height(24.dp).width(24.dp))
+                                Icon(
+                                    Icons.Default.Delete,
+                                    contentDescription = "delete",
+                                    modifier = Modifier.height(24.dp).width(24.dp)
+                                )
                             }
                         }
                     }
@@ -101,6 +133,6 @@ fun QuoteTable(quotes: List<Quote>, deleteQuote: (quoteId: Int) -> Unit, showSna
         )
     }
     if (openDeleteQuoteConfirmationModal.value) {
-        DeleteQuoteConfirmationModal(quoteIdToDelete.value,deleteQuote, ::hideDeleteQuoteConfirmationModal)
+        DeleteQuoteConfirmationModal(quoteIdToDelete.value, deleteQuote, ::hideDeleteQuoteConfirmationModal)
     }
 }
