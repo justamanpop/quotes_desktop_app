@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import moveFocusOnTab
+import org.example.quotes.addTagModal.AddTagModal
 import org.example.quotes.selectedTags.SelectedTags
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +36,7 @@ fun FilterQuotesModal(
     tags: List<Tag>,
     existingTagFilters: Set<Tag>,
     setTagFilters: (Set<Tag>) -> Unit,
+    addTag: (Tag) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     val inputFieldFocusRequester = remember { FocusRequester() }
@@ -68,6 +70,13 @@ fun FilterQuotesModal(
         inputFieldFocusRequester.requestFocus()
     }
 
+
+    val openAddTagModal = remember { mutableStateOf(false) }
+    fun hideAddTagModal() {
+        openAddTagModal.value = false
+        inputFieldFocusRequester.requestFocus()
+    }
+
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
@@ -93,6 +102,7 @@ fun FilterQuotesModal(
                     Button(
                         content = { Text("+ Create Tag") },
                         onClick = {
+                            openAddTagModal.value = true
                         },
                         colors = ButtonColors(
                             containerColor = Color(23, 176, 71),
@@ -126,6 +136,10 @@ fun FilterQuotesModal(
                     })
                 }
             }
+        }
+
+        if (openAddTagModal.value) {
+            AddTagModal(addTag, ::hideAddTagModal)
         }
     }
 }

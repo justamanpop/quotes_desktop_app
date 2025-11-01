@@ -23,4 +23,8 @@ class AppCore(private val quoteRepository: QuoteRepository, private val tagRepos
     override fun getTags(): List<Tag> {
         return tagRepository.getTags()
     }
+
+    override fun addTag(tag: Tag) {
+        return tagRepository.addTag(tag)
+    }
 }

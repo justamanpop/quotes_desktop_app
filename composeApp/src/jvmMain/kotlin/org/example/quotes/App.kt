@@ -149,6 +149,16 @@ fun App(appCore: AppCore) {
             }
 
             val tags = remember { mutableStateOf(appCore.getTags()) }
+            fun addTagInModal(tag: Tag) {
+                try {
+                    appCore.addTag(tag)
+                } catch (error: Exception) {
+                    showSnackbar("Error: Unable to add tag, ${error.message}")
+                    return
+                }
+                showSnackbar("Success: Tag successfully added!")
+                tags.value = appCore.getTags()
+            }
 
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -218,7 +228,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openFilterQuotesModal.value) {
-                FilterQuotesModal(tags.value, tagFilters.value, ::filterQuotesByTags, ::hideFilterQuotesModal)
+                FilterQuotesModal(tags.value, tagFilters.value, ::filterQuotesByTags, ::addTagInModal, ::hideFilterQuotesModal)
             }
         }
     }

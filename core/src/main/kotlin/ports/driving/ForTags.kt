@@ -4,6 +4,6 @@ import Tag
 
 interface ForTags {
     fun getTags(): List<Tag>
-//    fun addQuote(quote: Quote)
+    fun addTag(tag: Tag)
 //    fun deleteQuote(quoteId: Int)
 }
