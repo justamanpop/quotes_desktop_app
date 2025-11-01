@@ -44,6 +44,7 @@ import kotlin.collections.forEach
 @Composable
 fun QuoteTable(
     quotes: List<Quote>,
+    onRowClick: (Quote) -> Unit,
     deleteQuote: (quoteId: Int) -> Unit,
     showSnackbar: (message: String) -> Unit,
     modifier: Modifier = Modifier
@@ -64,8 +65,9 @@ fun QuoteTable(
             quotes.forEach { quote ->
                 item {
                     Row(modifier = Modifier.clickable(enabled = true, onClick = {
-                        copyToClipboard(quote.content)
-                        showSnackbar("Info: Quote copied!")
+                        onRowClick(quote)
+                        /*copyToClipboard(quote.content)
+                        showSnackbar("Info: Quote copied!")*/
                     }).pointerHoverIcon(PointerIcon.Hand).height(IntrinsicSize.Min)) {
                         Column(modifier = Modifier.weight(16f)) {
                             Text(quote.content, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))

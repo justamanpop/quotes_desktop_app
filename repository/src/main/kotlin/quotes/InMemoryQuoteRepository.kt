@@ -22,6 +22,17 @@ class InMemoryQuoteRepository : QuoteRepository {
         }
     }
 
+    override fun updateQuote(quote: Quote) {
+        fakeQuotes = fakeQuotes.map {
+            q ->
+            if (q.id == quote.id) {
+                quote
+            } else {
+                q
+            }
+        }
+    }
+
     override fun deleteQuote(quoteId: Int) {
         fakeQuotes = fakeQuotes.filterNot { q -> q.id == quoteId }
     }

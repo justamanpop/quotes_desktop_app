@@ -13,10 +13,11 @@ val fakeTags = mutableMapOf<String, Tag>(
     "No one cares" to Tag(7, "No one cares"),
     "Nietzsche" to Tag(8, "Nietzsche"),
     "Dorian Grey" to Tag(9, "Dorian Grey"),
+    "Beauty" to Tag(10, "Dorian Grey"),
 )
 
 class InMemoryTagRepository: TagRepository {
-    private var maxId = 9;
+    private var maxId = 10;
 
     override fun getTags(): List<Tag> {
         return fakeTags.values.toList().sortedBy { t -> t.name }

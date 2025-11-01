@@ -41,6 +41,7 @@ import getSnackbarColor
 import kotlinx.coroutines.launch
 import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
+import org.example.quotes.editQuoteModal.EditQuoteModal
 import org.example.quotes.filterQuotesModal.FilterQuotesModal
 import stripSnackbarMessage
 import java.util.Locale.getDefault
@@ -88,6 +89,13 @@ fun App(appCore: AppCore) {
                 openFilterQuotesModal.value = false
                 focusRequester.requestFocus()
             }
+            val editQuote = remember { mutableStateOf<Quote?>(null) }
+
+            val openEditQuotesModal = remember { mutableStateOf(false) }
+            fun hideEditQuotesModal() {
+                openEditQuotesModal.value = false
+                focusRequester.requestFocus()
+            }
 
             val quotes = remember { mutableStateOf(appCore.getQuotes()) }
             val tagFilters = remember { mutableStateOf(setOf<Tag>()) }
@@ -133,6 +141,18 @@ fun App(appCore: AppCore) {
                     return
                 }
                 showSnackbar("Success: Quote successfully added!")
+                quotes.value = appCore.getQuotes()
+                focusRequester.requestFocus()
+            }
+
+            fun updateQuoteInModal(quote: Quote) {
+                try {
+                    appCore.updateQuote(quote)
+                } catch (error: Exception) {
+                    showSnackbar("Error: Unable to update quote, ${error.message}")
+                    return
+                }
+                showSnackbar("Success: Quote successfully updated!")
                 quotes.value = appCore.getQuotes()
                 focusRequester.requestFocus()
             }
@@ -217,6 +237,11 @@ fun App(appCore: AppCore) {
                 }
                 QuoteTable(
                     filteredQuotes,
+                    {
+                        q ->
+                        editQuote.value = q
+                        openEditQuotesModal.value = true
+                    },
                     ::deleteQuote,
                     ::showSnackbar,
                     Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)
@@ -229,6 +254,10 @@ fun App(appCore: AppCore) {
 
             if (openFilterQuotesModal.value) {
                 FilterQuotesModal(tags.value, tagFilters.value, ::filterQuotesByTags, ::addTagInModal, ::hideFilterQuotesModal)
+            }
+
+            if (openEditQuotesModal.value && editQuote.value != null) {
+                EditQuoteModal(editQuote.value!!, ::updateQuoteInModal, tags.value, ::hideEditQuotesModal)
             }
         }
     }

@@ -16,6 +16,10 @@ class AppCore(private val quoteRepository: QuoteRepository, private val tagRepos
         quoteRepository.addQuotes(quotes)
     }
 
+    override fun updateQuote(quote: Quote) {
+        quoteRepository.updateQuote(quote)
+    }
+
     override fun deleteQuote(quoteId: Int) {
         quoteRepository.deleteQuote(quoteId)
     }
