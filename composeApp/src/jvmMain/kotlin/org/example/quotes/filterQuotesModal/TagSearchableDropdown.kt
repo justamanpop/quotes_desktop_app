@@ -22,7 +22,7 @@ import androidx.compose.ui.window.PopupProperties
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchableDropdown(
+fun TagSearchableDropdown(
     options: List<Tag>,
     textFieldValueState: TextFieldValue,
     setTextFieldValue: (TextFieldValue) -> Unit,

@@ -214,7 +214,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openAddQuoteModal.value) {
-                AddQuoteModal(::addQuoteInModal, ::hideAddQuoteModal)
+                AddQuoteModal(::addQuoteInModal, tags.value, ::hideAddQuoteModal)
             }
 
             if (openFilterQuotesModal.value) {
