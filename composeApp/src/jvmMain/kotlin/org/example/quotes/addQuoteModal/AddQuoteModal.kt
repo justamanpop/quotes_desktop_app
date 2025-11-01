@@ -99,7 +99,7 @@ fun AddQuoteModal(addQuote: (Quote) -> Unit, tags: List<Tag>, onDismissRequest: 
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(content = { Text("Add") }, onClick = {
-                        addQuote(Quote(-1, contentText.value, sourceText.value))
+                        addQuote(Quote(-1, contentText.value, sourceText.value, selectedTags.value.toList()))
                         onDismissRequest()
                     })
                     Button(content = { Text("Close") }, onClick = { onDismissRequest() })
