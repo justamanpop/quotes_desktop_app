@@ -14,7 +14,7 @@ class SqlLiteQuoteRepository(dbName: String) : QuoteRepository {
         val quotesMap = mutableMapOf<Int, Quote>()
         val tagsMap = mutableMapOf<Int, MutableList<Tag>>()
         conn.prepare(
-            "SELECT * FROM quotes INNER JOIN quote_tag_mapping ON quotes.id = quote_tag_mapping.quote_id INNER JOIN tags ON quote_tag_mapping.tag_id = tags.id"
+            "SELECT * FROM quotes LEFT JOIN quote_tag_mapping ON quotes.id = quote_tag_mapping.quote_id LEFT JOIN tags ON quote_tag_mapping.tag_id = tags.id"
         ).use { statement ->
             while (statement.step()) {
                 val quoteId = statement.getInt(0)
@@ -27,9 +27,9 @@ class SqlLiteQuoteRepository(dbName: String) : QuoteRepository {
                 val tagName = statement.getText(6)
                 val tag = Tag(tagId, tagName)
 
-                // This is the idiomatic way to add to a list in a map.
-                // It gets the existing list or puts a new empty one, then adds to it.
-                tagsMap.getOrPut(quoteId) { mutableListOf() }.add(tag)
+                if (tagId != 0) {
+                    tagsMap.getOrPut(quoteId) { mutableListOf() }.add(tag)
+                }
             }
         }
 
@@ -78,7 +78,35 @@ class SqlLiteQuoteRepository(dbName: String) : QuoteRepository {
     }
 
     override fun updateQuote(quote: Quote) {
-        TODO("Not yet implemented")
+        println(quote)
+        conn.execSQL("BEGIN TRANSACTION;")
+        try {
+            conn.prepare("UPDATE quotes SET content = ?, source = ? WHERE id = ?").use { statement ->
+                statement.bindText(1, quote.content)
+                statement.bindText(2, quote.source)
+                statement.bindInt(3, quote.id)
+                statement.step()
+            }
+
+
+            conn.prepare("DELETE FROM quote_tag_mapping where quote_id = ?").use { statement ->
+                statement.bindInt(1, quote.id)
+                statement.step()
+            }
+
+            quote.tags.forEach { tag ->
+                conn.prepare("INSERT INTO quote_tag_mapping(quote_id, tag_id) VALUES (?, ?)").use { statement ->
+                    statement.bindInt(1, quote.id)
+                    statement.bindInt(2, tag.id)
+                    statement.step()
+                }
+            }
+
+            conn.execSQL("COMMIT;")
+        } catch(e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
+        }
     }
 
     override fun deleteQuote(quoteId: Int) {

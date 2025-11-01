@@ -23,12 +23,12 @@ fun main() = application {
         title = "quotes",
         state = WindowState(placement = WindowPlacement.Maximized),
     ) {
-        val quoteRepository: QuoteRepository = InMemoryQuoteRepository()
-        val tagRepository: TagRepository = InMemoryTagRepository()
+//        val quoteRepository: QuoteRepository = InMemoryQuoteRepository()
+//        val tagRepository: TagRepository = InMemoryTagRepository()
 
-//        initializeDb("quotes.db")
-//        val quoteRepository: QuoteRepository = SqlLiteQuoteRepository("quotes.db")
-//        val tagRepository: TagRepository = SqlLiteTagRepository("quotes.db")
+        initializeDb("quotes.db")
+        val quoteRepository: QuoteRepository = SqlLiteQuoteRepository("quotes.db")
+        val tagRepository: TagRepository = SqlLiteTagRepository("quotes.db")
 
         val appCore = AppCore(quoteRepository, tagRepository)
         App(appCore)

@@ -105,7 +105,7 @@ fun EditQuoteModal(quote: Quote, updateQuote: (Quote) -> Unit, tags: List<Tag>, 
                 SelectedTags(selectedTags.value, ::unselectTag)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(content = { Text("Add") }, onClick = {
+                    Button(content = { Text("Update") }, onClick = {
                         updateQuote(
                             quote.copy(
                                 content = contentText.value,
