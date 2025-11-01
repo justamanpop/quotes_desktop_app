@@ -1,9 +1,9 @@
-package quotes
+package repository.quotes
 
 import Quote
 import Tag
 import ports.driven.QuoteRepository
-import tags.fakeTags
+import repository.tags.fakeTags
 
 class InMemoryQuoteRepository : QuoteRepository {
     override fun getQuotes(): List<Quote> {

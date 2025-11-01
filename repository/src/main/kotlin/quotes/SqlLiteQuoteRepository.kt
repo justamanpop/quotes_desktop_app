@@ -1,4 +1,4 @@
-package quotes
+package repository.quotes
 
 import Quote
 import androidx.sqlite.SQLiteConnection
@@ -7,18 +7,12 @@ import androidx.sqlite.execSQL
 import ports.driven.QuoteRepository
 
 class SqlLiteQuoteRepository(dbName: String): QuoteRepository {
-
     val conn: SQLiteConnection = BundledSQLiteDriver().open(dbName)
 
-    init {
-        conn.execSQL(
-            "CREATE TABLE IF NOT EXISTS quotes (id INTEGER PRIMARY KEY, content TEXT, source TEXT)"
-        )
-    }
     override fun getQuotes(): List<Quote> {
         val quotes = mutableListOf<Quote>()
         conn.prepare(
-            "SELECT * FROM quotes"
+            "SELECT * FROM quotes "
         ).use {
             statement ->
             while (statement.step()) {

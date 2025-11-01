@@ -1,4 +1,4 @@
-package tags
+package repository.tags
 
 import Tag
 import ports.driven.TagRepository
@@ -16,8 +16,15 @@ val fakeTags = mutableMapOf<String, Tag>(
 )
 
 class InMemoryTagRepository: TagRepository {
+    private var maxId = 9;
+
     override fun getTags(): List<Tag> {
         return fakeTags.values.toList().sortedBy { t -> t.name }
+    }
+
+    override fun addTag(tag: Tag) {
+        maxId +=1;
+        fakeTags[tag.name] = tag.copy(id = maxId)
     }
 
 }
