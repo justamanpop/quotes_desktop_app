@@ -66,10 +66,8 @@ fun QuoteTable(
                 item {
                     Row(modifier = Modifier.clickable(enabled = true, onClick = {
                         onRowClick(quote)
-                        /*copyToClipboard(quote.content)
-                        showSnackbar("Info: Quote copied!")*/
                     }).pointerHoverIcon(PointerIcon.Hand).height(IntrinsicSize.Min)) {
-                        Column(modifier = Modifier.weight(16f)) {
+                        Column(modifier = Modifier.weight(14f)) {
                             Text(quote.content, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
                             Row {
                                 Text(
@@ -98,6 +96,29 @@ fun QuoteTable(
                             Modifier.weight(1f).fillMaxHeight().padding(2.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Button(
+                                onClick = {
+                                    copyToClipboard(quote.content)
+                                    showSnackbar("Info: Quote copied!")
+                                },
+                                colors = ButtonColors(
+                                    contentColor = Color.White,
+                                    containerColor = Color.LightGray,
+                                    disabledContentColor = Color.White,
+                                    disabledContainerColor = Color.LightGray
+                                ),
+                                contentPadding = PaddingValues(8.dp),
+                                modifier = Modifier.padding(top = 8.dp, end = 8.dp)
+                                    .pointerHoverIcon(
+                                        PointerIcon.Hand
+                                    ).defaultMinSize(minWidth = 1.dp, minHeight = 1.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.ContentCopy,
+                                    contentDescription = "copy",
+                                    modifier = Modifier.height(24.dp).width(24.dp)
+                                )
+                            }
                             Button(
                                 onClick = {
                                     quoteIdToDelete.value = quote.id
