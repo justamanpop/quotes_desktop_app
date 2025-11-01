@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -89,11 +90,18 @@ fun App(appCore: AppCore) {
                 openFilterQuotesModal.value = false
                 focusRequester.requestFocus()
             }
+
             val editQuote = remember { mutableStateOf<Quote?>(null) }
 
             val openEditQuotesModal = remember { mutableStateOf(false) }
             fun hideEditQuotesModal() {
                 openEditQuotesModal.value = false
+                focusRequester.requestFocus()
+            }
+
+            val openManageTagsModal = remember { mutableStateOf(false) }
+            fun hideManageTagsModal() {
+                openManageTagsModal.value = false
                 focusRequester.requestFocus()
             }
 
@@ -187,23 +195,6 @@ fun App(appCore: AppCore) {
                         Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp).width(600.dp).focusRequester(focusRequester)
                             .moveFocusOnTab()
                     )
-                    Button(
-                        onClick = {
-                            openAddQuoteModal.value = true
-                        },
-                        colors = ButtonColors(
-                            containerColor = Color(23, 176, 71),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color(23, 176, 71),
-                            disabledContentColor = Color.Gray
-                        ),
-                        content = {
-                            Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add")
-                            Text(" Add", color = Color.White, fontSize = 24.sp)
-                        },
-                        modifier = Modifier.padding(top = 12.dp).pointerHoverIcon(PointerIcon.Hand)
-                    )
-
                     BadgedBox(
                         badge = {
                             if (tagFilters.value.isNotEmpty()) {
@@ -227,18 +218,50 @@ fun App(appCore: AppCore) {
                                 disabledContainerColor = Color.LightGray,
                                 disabledContentColor = Color.Gray
                             ),
-                            content = {
-                                Icon(Icons.Default.Tune, contentDescription = "filter")
-                                Text(" Filter", color = Color.White, fontSize = 24.sp)
-                            },
                             modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
-                        )
+                        ) {
+                            Icon(Icons.Default.Tune, contentDescription = "filter")
+                            Text(" Filter", color = Color.White, fontSize = 24.sp)
+                        }
+                    }
+
+                    Button(
+                        onClick = {
+                            openManageTagsModal.value = true
+                        },
+                        colors = ButtonColors(
+                            containerColor = Color(23, 176, 71),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color(23, 176, 71),
+                            disabledContentColor = Color.Gray
+                        ),
+                        content = {
+                            Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add quote")
+                            Text(" Add Quote", color = Color.White, fontSize = 24.sp)
+                        },
+                        modifier = Modifier.padding(top = 12.dp, start = 680.dp).pointerHoverIcon(PointerIcon.Hand)
+                    )
+
+
+                    Button(
+                        onClick = {
+                            openFilterQuotesModal.value = true
+                        },
+                        colors = ButtonColors(
+                            containerColor = Color.LightGray,
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.LightGray,
+                            disabledContentColor = Color.Gray
+                        ),
+                        modifier = Modifier.padding(top = 12.dp, start = 8.dp).pointerHoverIcon(PointerIcon.Hand)
+                    ) {
+                        Icon(Icons.Default.Edit, contentDescription = "manage tags")
+                        Text(" Manage Tags", color = Color.White, fontSize = 24.sp)
                     }
                 }
                 QuoteTable(
                     filteredQuotes,
-                    {
-                        q ->
+                    { q ->
                         editQuote.value = q
                         openEditQuotesModal.value = true
                     },
@@ -248,15 +271,25 @@ fun App(appCore: AppCore) {
                 )
             }
 
-            if (openAddQuoteModal.value) {
+            if (openManageTagsModal.value) {
                 AddQuoteModal(::addQuoteInModal, tags.value, ::hideAddQuoteModal)
             }
 
             if (openFilterQuotesModal.value) {
-                FilterQuotesModal(tags.value, tagFilters.value, ::filterQuotesByTags, ::addTagInModal, ::hideFilterQuotesModal)
+                FilterQuotesModal(
+                    tags.value,
+                    tagFilters.value,
+                    ::filterQuotesByTags,
+                    ::addTagInModal,
+                    ::hideFilterQuotesModal
+                )
             }
 
             if (openEditQuotesModal.value && editQuote.value != null) {
+                EditQuoteModal(editQuote.value!!, ::updateQuoteInModal, tags.value, ::hideEditQuotesModal)
+            }
+
+            if (openManageTagsModal.value) {
                 EditQuoteModal(editQuote.value!!, ::updateQuoteInModal, tags.value, ::hideEditQuotesModal)
             }
         }
