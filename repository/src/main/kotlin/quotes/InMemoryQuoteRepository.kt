@@ -86,7 +86,7 @@ class InMemoryQuoteRepository : QuoteRepository {
             9,
             "It is better to be hated for what you are than to be loved for what you are not",
             "Autumn Leaves - Andre Gide",
-            listOf(fakeTags.get("Congruence"), fakeTags.get("Inspirational")) as List<Tag>
+            listOf(fakeTags.get("Congruence")) as List<Tag>
         ),
         Quote(
             10,

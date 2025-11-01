@@ -1,6 +1,7 @@
 package repository.quotes
 
 import Quote
+import Tag
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
@@ -10,15 +11,33 @@ class SqlLiteQuoteRepository(dbName: String) : QuoteRepository {
     val conn: SQLiteConnection = BundledSQLiteDriver().open(dbName)
 
     override fun getQuotes(): List<Quote> {
-        val quotes = mutableListOf<Quote>()
+        val quotesMap = mutableMapOf<Int, Quote>()
+        val tagsMap = mutableMapOf<Int, MutableList<Tag>>()
         conn.prepare(
-            "SELECT * FROM quotes "
+            "SELECT * FROM quotes INNER JOIN quote_tag_mapping ON quotes.id = quote_tag_mapping.quote_id INNER JOIN tags ON quote_tag_mapping.tag_id = tags.id"
         ).use { statement ->
             while (statement.step()) {
-                quotes.add(Quote(statement.getInt(0), statement.getText(1), statement.getText(2)))
+                val quoteId = statement.getInt(0)
+                val quoteContent = statement.getText(1)
+                val quoteSource = statement.getText(2)
+
+                quotesMap.getOrPut(quoteId) { Quote(quoteId, quoteContent, quoteSource) }
+
+                val tagId = statement.getInt(5)
+                val tagName = statement.getText(6)
+                val tag = Tag(tagId, tagName)
+
+                // This is the idiomatic way to add to a list in a map.
+                // It gets the existing list or puts a new empty one, then adds to it.
+                tagsMap.getOrPut(quoteId) { mutableListOf() }.add(tag)
             }
         }
-        return quotes
+
+
+        val res = quotesMap.values.map { quote ->
+            quote.copy(tags = tagsMap[quote.id] ?: emptyList())
+        }
+        return res
     }
 
     override fun addQuote(quote: Quote) {

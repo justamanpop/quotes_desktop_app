@@ -66,7 +66,7 @@ fun App(appCore: AppCore) {
                             constructSnackbarDataObject(stripSnackbarMessage(snackbarData.visuals.message))
 
                         Snackbar(updatedSnackbarData, containerColor = containerColor)
-                    }, modifier = Modifier.align(Alignment.TopCenter))
+                    }, modifier = Modifier.align(Alignment.BottomCenter))
                 }
             }
         ) {
