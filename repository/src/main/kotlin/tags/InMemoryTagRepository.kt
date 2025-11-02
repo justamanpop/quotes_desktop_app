@@ -13,7 +13,7 @@ val fakeTags = mutableMapOf<String, Tag>(
     "No one cares" to Tag(7, "No one cares"),
     "Nietzsche" to Tag(8, "Nietzsche"),
     "Dorian Grey" to Tag(9, "Dorian Grey"),
-    "Beauty" to Tag(10, "Dorian Grey"),
+    "Beauty" to Tag(10, "Beauty"),
 )
 
 class InMemoryTagRepository: TagRepository {
@@ -31,7 +31,8 @@ class InMemoryTagRepository: TagRepository {
     override fun updateTag(tagId: Int, newName: String) {
         val entry = fakeTags.values.find { t -> t.id == tagId }
         if (entry != null) {
-            fakeTags[entry.name] = Tag(entry.id, newName)
+            fakeTags[newName] = Tag(entry.id, newName)
+            fakeTags.remove(entry.name)
         }
     }
 
