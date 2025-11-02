@@ -100,7 +100,7 @@ fun EditQuoteModal(quote: Quote, updateQuote: (Quote) -> Unit, tags: List<Tag>, 
                     ::setDropdownTextFieldState,
                     setDropdownInputValue,
                     ::selectTagFilter,
-                    inputFieldFocusRequester
+                    inputFieldFocusRequester,
                 )
                 SelectedTags(selectedTags.value, ::unselectTag)
 

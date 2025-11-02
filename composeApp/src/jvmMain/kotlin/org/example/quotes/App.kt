@@ -249,9 +249,9 @@ fun App(appCore: AppCore) {
                             openManageTagsModal.value = true
                         },
                         colors = ButtonColors(
-                            containerColor = Color.LightGray,
+                            containerColor = Color(52, 161, 235),
                             contentColor = Color.White,
-                            disabledContainerColor = Color.LightGray,
+                            disabledContainerColor = Color.Gray,
                             disabledContentColor = Color.Gray
                         ),
                         modifier = Modifier.padding(top = 12.dp, start = 8.dp).pointerHoverIcon(PointerIcon.Hand)

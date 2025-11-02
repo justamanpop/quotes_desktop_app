@@ -52,6 +52,7 @@ fun AddQuoteModal(addQuote: (Quote) -> Unit, tags: List<Tag>, onDismissRequest: 
             )
         )
     }
+
     fun setDropdownTextFieldState(value: TextFieldValue) {
         dropdownTextFieldValue = value
     }
@@ -94,7 +95,14 @@ fun AddQuoteModal(addQuote: (Quote) -> Unit, tags: List<Tag>, onDismissRequest: 
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                TagSearchableDropdown(tags.minus(selectedTags.value), dropdownTextFieldValue,::setDropdownTextFieldState, setDropdownInputValue, ::selectTagFilter, inputFieldFocusRequester)
+                TagSearchableDropdown(
+                    tags.minus(selectedTags.value),
+                    dropdownTextFieldValue,
+                    ::setDropdownTextFieldState,
+                    setDropdownInputValue,
+                    ::selectTagFilter,
+                    inputFieldFocusRequester,
+                )
                 SelectedTags(selectedTags.value, ::unselectTag)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {

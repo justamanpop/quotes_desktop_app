@@ -2,9 +2,15 @@ package org.example.quotes.manageTagsModal
 
 import Tag
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,9 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import moveFocusOnTab
@@ -54,6 +63,7 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, deleteTag: (Tag) -> 
                 )
             )
         }
+
         fun setDropdownTextFieldState(value: TextFieldValue) {
             dropdownTextFieldValue = value
         }
@@ -61,8 +71,6 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, deleteTag: (Tag) -> 
         val (selectedTag, setSelectedTag) = remember { mutableStateOf<Tag?>(null) }
         fun selectTag(tag: Tag) {
             setSelectedTag(tag)
-            setDropdownInputValue("")
-            dropdownTextFieldValue = TextFieldValue("")
         }
 
         Card(modifier = Modifier.width(660.dp)) {
@@ -81,16 +89,50 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, deleteTag: (Tag) -> 
                         disabledContainerColor = Color(23, 176, 71),
                         disabledContentColor = Color.White,
                     ),
-                    modifier = Modifier.padding(start = 24.dp)
                 )
+                HorizontalDivider()
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    TagSearchableDropdown(tags, dropdownTextFieldValue, ::setDropdownTextFieldState, setDropdownInputValue, ::selectTag, inputFieldFocusRequester)
-                    Button(content = { Text("Edit") }, onClick = {
+                    TagSearchableDropdown(
+                        tags,
+                        dropdownTextFieldValue,
+                        ::setDropdownTextFieldState,
+                        setDropdownInputValue,
+                        ::selectTag,
+                        inputFieldFocusRequester,
+                        "Search Tags"
+                    )
+                    Button(
+                        onClick = {
 //                        onDismissRequest()
-                    })
-                    Button(content = { Text("Delete") }, onClick = {
+                        },
+                        colors = ButtonColors(
+                            containerColor = Color(52, 161, 235),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.Gray,
+                            disabledContentColor = Color.White
+                        ),
+                        enabled = selectedTag != null && (tags.find { t -> t.name == dropdownInputValue } != null),
+                        modifier = Modifier.padding(top = 16.dp, start = 16.dp).pointerHoverIcon(PointerIcon.Hand)
+                    ) {
+                        Icon(Icons.Default.Edit, contentDescription = "edit")
+                        Text(" Edit", color = Color.White, fontSize = 16.sp)
+                    }
+                    Button(
+                        onClick = {
 //                        onDismissRequest()
-                    })
+                        },
+                        colors = ButtonColors(
+                            contentColor = Color.White,
+                            containerColor = Color(186, 22, 39),
+                            disabledContentColor = Color.White,
+                            disabledContainerColor = Color.Gray
+                        ),
+                        enabled = selectedTag != null && (tags.find { t -> t.name == dropdownInputValue } != null),
+                        modifier = Modifier.padding(top = 16.dp).pointerHoverIcon(PointerIcon.Hand)
+                    ) {
+                        Icon(Icons.Default.Delete, contentDescription = "delete")
+                        Text(" Delete", color = Color.White, fontSize = 16.sp)
+                    }
                 }
             }
         }

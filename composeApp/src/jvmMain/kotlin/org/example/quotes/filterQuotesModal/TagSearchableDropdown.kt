@@ -29,6 +29,7 @@ fun TagSearchableDropdown(
     setDropdownValue: (String) -> Unit,
     onSelect: (Tag) -> Unit,
     inputFieldFocusRequester: FocusRequester,
+    inputFieldLabel: String = "Tags"
 ) {
     val (showDropdown, setShowDropdown) = remember { mutableStateOf(false) }
 
@@ -45,7 +46,7 @@ fun TagSearchableDropdown(
                 setTextFieldValue(it)
                 setShowDropdown(true)
             },
-            label = { Text("Tags") },
+            label = { Text(inputFieldLabel) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
         )
         // filter options based on text field value
