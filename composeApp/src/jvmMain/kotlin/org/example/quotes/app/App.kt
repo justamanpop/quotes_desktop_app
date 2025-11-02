@@ -85,12 +85,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
         ) {
             val editQuote = remember { mutableStateOf<Quote?>(null) }
 
-            val openEditQuotesModal = remember { mutableStateOf(false) }
-            fun hideEditQuotesModal() {
-                openEditQuotesModal.value = false
-                focusRequester.requestFocus()
-            }
-
             val openManageTagsModal = remember { mutableStateOf(false) }
             fun hideManageTagsModal() {
                 openManageTagsModal.value = false
@@ -296,7 +290,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     filteredQuotes,
                     { q ->
                         editQuote.value = q
-                        openEditQuotesModal.value = true
+                        viewModel.showEditQuoteModal()
                     },
                     ::deleteQuote,
                     ::showSnackbar,
@@ -318,8 +312,8 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 )
             }
 
-            if (openEditQuotesModal.value && editQuote.value != null) {
-                EditQuoteModal(editQuote.value!!, ::updateQuoteInModal, tags.value, ::hideEditQuotesModal)
+            if (state.isEditQuoteModalOpen && editQuote.value != null) {
+                EditQuoteModal(editQuote.value!!, ::updateQuoteInModal, tags.value, viewModel::hideEditQuoteModal)
             }
 
             if (openManageTagsModal.value) {

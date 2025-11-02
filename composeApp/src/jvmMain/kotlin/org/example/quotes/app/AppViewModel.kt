@@ -11,7 +11,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class AppViewModelState(val searchTerm: String = "", val isAddQuoteModalOpen: Boolean = false, val isFilterQuotesModalOpen: Boolean = false)
+data class AppViewModelState(
+    val searchTerm: String = "",
+    val isAddQuoteModalOpen: Boolean = false,
+    val isFilterQuotesModalOpen: Boolean = false,
+    val isEditQuoteModalOpen: Boolean = false
+)
 
 class AppViewModel(private val appCore: AppCore) : ViewModel() {
     private val _state = MutableStateFlow(AppViewModelState())
@@ -38,6 +43,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     fun showAddQuoteModal() {
         _state.update { currState -> currState.copy(isAddQuoteModalOpen = true) }
     }
+
     fun hideAddQuoteModal() {
         _state.update { currState -> currState.copy(isAddQuoteModalOpen = false) }
         viewModelScope.launch {
@@ -51,6 +57,16 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     }
     fun hideFilterQuotesModal() {
         _state.update { currState -> currState.copy(isFilterQuotesModalOpen = false) }
+        viewModelScope.launch {
+            _focusRequest.emit(Unit)
+        }
+    }
+
+    fun showEditQuoteModal() {
+        _state.update { currState -> currState.copy(isEditQuoteModalOpen = true) }
+    }
+    fun hideEditQuoteModal() {
+        _state.update { currState -> currState.copy(isEditQuoteModalOpen = false) }
         viewModelScope.launch {
             _focusRequest.emit(Unit)
         }
