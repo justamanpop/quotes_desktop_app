@@ -45,7 +45,7 @@ fun TagSearchableDropdown(
                 setTextFieldValue(it)
                 setShowDropdown(true)
             },
-            label = { Text("Tag") },
+            label = { Text("Tags") },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
         )
         // filter options based on text field value

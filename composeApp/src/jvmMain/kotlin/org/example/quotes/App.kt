@@ -44,6 +44,7 @@ import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
 import org.example.quotes.editQuoteModal.EditQuoteModal
 import org.example.quotes.filterQuotesModal.FilterQuotesModal
+import org.example.quotes.manageTagsModal.ManageTagsModal
 import stripSnackbarMessage
 import java.util.Locale.getDefault
 import kotlin.collections.filter
@@ -227,7 +228,7 @@ fun App(appCore: AppCore) {
 
                     Button(
                         onClick = {
-                            openManageTagsModal.value = true
+                            openAddQuoteModal.value = true
                         },
                         colors = ButtonColors(
                             containerColor = Color(23, 176, 71),
@@ -245,7 +246,7 @@ fun App(appCore: AppCore) {
 
                     Button(
                         onClick = {
-                            openFilterQuotesModal.value = true
+                            openManageTagsModal.value = true
                         },
                         colors = ButtonColors(
                             containerColor = Color.LightGray,
@@ -271,7 +272,7 @@ fun App(appCore: AppCore) {
                 )
             }
 
-            if (openManageTagsModal.value) {
+            if (openAddQuoteModal.value) {
                 AddQuoteModal(::addQuoteInModal, tags.value, ::hideAddQuoteModal)
             }
 
@@ -290,7 +291,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openManageTagsModal.value) {
-                EditQuoteModal(editQuote.value!!, ::updateQuoteInModal, tags.value, ::hideEditQuotesModal)
+                ManageTagsModal(::addTagInModal, {}, ::hideManageTagsModal)
             }
         }
     }

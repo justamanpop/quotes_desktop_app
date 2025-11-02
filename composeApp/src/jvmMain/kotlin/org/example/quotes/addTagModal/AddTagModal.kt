@@ -47,7 +47,7 @@ fun AddTagModal(addTag: (Tag) -> Unit, onDismissRequest: () -> Unit) {
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(content = { Text("Add") }, onClick = {
+                    Button(content = { Text("Create Tag") }, onClick = {
                         addTag(Tag(-1, tagName.value))
                         onDismissRequest()
                     })
