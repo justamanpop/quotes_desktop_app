@@ -1,15 +1,11 @@
 package repository.tags
 
-import Quote
 import Tag
 import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
 import ports.driven.TagRepository
 
-class SqlLiteTagRepository(dbName: String) : TagRepository {
-    val conn: SQLiteConnection = BundledSQLiteDriver().open(dbName)
-
+class SqlLiteTagRepository(val conn: SQLiteConnection) : TagRepository {
     override fun getTags(): List<Tag> {
         val tags = mutableListOf<Tag>()
         conn.prepare(

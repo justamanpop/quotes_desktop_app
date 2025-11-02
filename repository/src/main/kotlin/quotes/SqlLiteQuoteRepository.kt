@@ -3,13 +3,10 @@ package repository.quotes
 import Quote
 import Tag
 import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
 import ports.driven.QuoteRepository
 
-class SqlLiteQuoteRepository(dbName: String) : QuoteRepository {
-    val conn: SQLiteConnection = BundledSQLiteDriver().open(dbName)
-
+class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
     override fun getQuotes(): List<Quote> {
         val quotesMap = mutableMapOf<Int, Quote>()
         val tagsMap = mutableMapOf<Int, MutableList<Tag>>()

@@ -24,6 +24,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
+
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.androidx.sqlite)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

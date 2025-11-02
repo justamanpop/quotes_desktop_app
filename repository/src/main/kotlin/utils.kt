@@ -1,11 +1,9 @@
 package repository
 
 import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
 
-fun initializeDb(dbName: String) {
-    val conn: SQLiteConnection = BundledSQLiteDriver().open(dbName)
+fun initializeDb(conn: SQLiteConnection) {
     conn.execSQL("PRAGMA foreign_keys = ON;")
     conn.execSQL("BEGIN TRANSACTION;")
 
