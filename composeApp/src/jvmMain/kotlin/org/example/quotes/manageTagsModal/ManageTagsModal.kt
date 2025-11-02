@@ -5,23 +5,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
@@ -34,10 +30,10 @@ import androidx.compose.ui.window.DialogProperties
 import moveFocusOnTab
 import org.example.quotes.addTagModal.AddTagModal
 import org.example.quotes.filterQuotesModal.TagSearchableDropdown
-import kotlin.collections.plus
+import org.example.quotes.updateTagModal.UpdateTagModal
 
 @Composable
-fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, deleteTag: (Tag) -> Unit, onDismissRequest: () -> Unit) {
+fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: Int, newName: String) -> Unit, deleteTag: (Tag) -> Unit, onDismissRequest: () -> Unit) {
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
@@ -50,6 +46,12 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, deleteTag: (Tag) -> 
         val openAddTagModal = remember { mutableStateOf(false) }
         fun hideAddTagModal() {
             openAddTagModal.value = false
+            inputFieldFocusRequester.requestFocus()
+        }
+
+        val openUpdateTagModal = remember { mutableStateOf(false) }
+        fun hideUpdateTagModal() {
+            openUpdateTagModal.value = false
             inputFieldFocusRequester.requestFocus()
         }
 
@@ -71,6 +73,12 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, deleteTag: (Tag) -> 
         val (selectedTag, setSelectedTag) = remember { mutableStateOf<Tag?>(null) }
         fun selectTag(tag: Tag) {
             setSelectedTag(tag)
+        }
+
+        fun updateTagInModal(tagId: Int, newName: String) {
+            updateTag(tagId, newName)
+            setDropdownInputValue("")
+            setDropdownTextFieldState(TextFieldValue())
         }
 
         Card(modifier = Modifier.width(660.dp)) {
@@ -103,7 +111,7 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, deleteTag: (Tag) -> 
                     )
                     Button(
                         onClick = {
-//                        onDismissRequest()
+                            openUpdateTagModal.value = true
                         },
                         colors = ButtonColors(
                             containerColor = Color(52, 161, 235),
@@ -139,6 +147,9 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, deleteTag: (Tag) -> 
 
         if (openAddTagModal.value) {
             AddTagModal(addTag, ::hideAddTagModal)
+        }
+        if (openUpdateTagModal.value) {
+            UpdateTagModal(selectedTag, ::updateTagInModal, ::hideUpdateTagModal)
         }
     }
 }

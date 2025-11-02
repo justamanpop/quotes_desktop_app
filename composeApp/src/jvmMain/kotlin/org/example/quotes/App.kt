@@ -188,6 +188,16 @@ fun App(appCore: AppCore) {
                 showSnackbar("Success: Tag successfully added!")
                 tags.value = appCore.getTags()
             }
+            fun updateTagInModal(tagId: Int, newName: String) {
+                try {
+                    appCore.updateTag(tagId, newName)
+                } catch (error: Exception) {
+                    showSnackbar("Error: Unable to update tag, ${error.message}")
+                    return
+                }
+                showSnackbar("Success: Tag successfully updated!")
+                tags.value = appCore.getTags()
+            }
 
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -291,7 +301,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openManageTagsModal.value) {
-                ManageTagsModal(tags.value,::addTagInModal, {}, ::hideManageTagsModal)
+                ManageTagsModal(tags.value,::addTagInModal, ::updateTagInModal, {}, ::hideManageTagsModal)
             }
         }
     }
