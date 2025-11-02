@@ -35,9 +35,19 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     //later, when I move functions that need to trigger a snackbar notif, emit to above. Put a LaunchedEffect in UI that listens to messages and just calls showSnackbar
     private val _snackbarMessage = MutableSharedFlow<String>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
+    private fun emitSnackbarMessage(message: String) {
+        viewModelScope.launch {
+            _snackbarMessage.emit(message)
+        }
+    }
 
     private val _focusRequest = MutableSharedFlow<Unit>()
     val focusRequest = _focusRequest.asSharedFlow()
+    private fun requestFocus() {
+        viewModelScope.launch {
+            _focusRequest.emit(Unit)
+        }
+    }
 
     init {
         viewModelScope.launch {
@@ -47,7 +57,26 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     }
 
     fun fetchQuotes() {
-        _state.update { currState -> currState.copy(quotes = appCore.getQuotes()) }
+        try {
+            val quotes = appCore.getQuotes()
+            _state.update { currState -> currState.copy(quotes = quotes) }
+        } catch (error: Exception) {
+            emitSnackbarMessage("Error: Unable to fetch quotes, ${error.message}")
+            return
+        }
+    }
+
+    fun addQuote(quote: Quote) {
+        try {
+            appCore.addQuote(quote)
+        } catch (error: Exception) {
+            emitSnackbarMessage("Error: Unable to add quote, ${error.message}")
+            return
+        }
+        
+        emitSnackbarMessage("Success: Quote successfully added!")
+        fetchQuotes()
+        requestFocus()
     }
 
     fun syncUpdatedTagForEachQuote(idOfUpdatedTag: Int, newTagName: String) {
@@ -62,6 +91,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         }
         _state.update { currState -> currState.copy(quotes = updatedQuotes) }
     }
+
     fun removeDeletedTagForEachQuote(idOfDeletedTag: Int) {
         val updatedQuotes = state.value.quotes.map { quote ->
             quote.copy(tags = quote.tags.filterNot { tag ->
@@ -74,6 +104,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     fun updateSearchTerm(newVal: String) {
         _state.update { currState -> currState.copy(searchTerm = newVal) }
     }
+
     fun updateFilterTags(filterTags: Set<Tag>) {
         _state.update { currState -> currState.copy(filterTags = filterTags) }
     }
@@ -85,9 +116,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
 
     fun hideAddQuoteModal() {
         _state.update { currState -> currState.copy(isAddQuoteModalOpen = false) }
-        viewModelScope.launch {
-            _focusRequest.emit(Unit)
-        }
+        requestFocus()
     }
 
 
@@ -97,9 +126,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
 
     fun hideFilterQuotesModal() {
         _state.update { currState -> currState.copy(isFilterQuotesModalOpen = false) }
-        viewModelScope.launch {
-            _focusRequest.emit(Unit)
-        }
+        requestFocus()
     }
 
     fun showEditQuoteModal(quote: Quote) {
@@ -108,9 +135,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
 
     fun hideEditQuoteModal() {
         _state.update { currState -> currState.copy(isEditQuoteModalOpen = false) }
-        viewModelScope.launch {
-            _focusRequest.emit(Unit)
-        }
+        requestFocus()
     }
 
     fun showManageTagsModal() {
@@ -119,8 +144,6 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
 
     fun hideManageTagsModal() {
         _state.update { currState -> currState.copy(isManageTagsModalOpen = false) }
-        viewModelScope.launch {
-            _focusRequest.emit(Unit)
-        }
+        requestFocus()
     }
 }

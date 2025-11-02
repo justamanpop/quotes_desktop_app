@@ -98,16 +98,28 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
             }
 
             conn.execSQL("COMMIT;")
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             conn.execSQL("ROLLBACK;")
             throw e;
         }
     }
 
     override fun deleteQuote(quoteId: Int) {
-        conn.prepare("DELETE FROM quotes WHERE id = ?").use { statement ->
-            statement.bindInt(1, quoteId)
-            statement.step()
+        conn.execSQL("BEGIN TRANSACTION;")
+        try {
+            conn.prepare("DELETE FROM quote_tag_mapping WHERE quote_id = ?").use { statement ->
+                statement.bindInt(1, quoteId)
+                statement.step()
+            }
+
+            conn.prepare("DELETE FROM quotes WHERE id = ?").use { statement ->
+                statement.bindInt(1, quoteId)
+                statement.step()
+            }
+            conn.execSQL("COMMIT;")
+        } catch (e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
         }
     }
 }

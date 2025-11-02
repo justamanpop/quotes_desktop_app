@@ -69,6 +69,12 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 snackbarState.showSnackbar(message = message)
             }
         }
+        LaunchedEffect(Unit) {
+            viewModel.snackbarMessage.collect {
+                    message ->
+                snackbarState.showSnackbar(message)
+            }
+        }
 
         Scaffold(
             snackbarHost = {
@@ -108,20 +114,8 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
 
-            fun filterQuotesByTags(tags: Set<Tag>) {
-                viewModel.updateFilterTags(tags)
-            }
-
             fun addQuoteInModal(quote: Quote) {
-                try {
-                    appCore.addQuote(quote)
-                } catch (error: Exception) {
-                    showSnackbar("Error: Unable to add quote, ${error.message}")
-                    return
-                }
-                showSnackbar("Success: Quote successfully added!")
-                viewModel.fetchQuotes()
-                focusRequester.requestFocus()
+                viewModel.addQuote(quote)
             }
 
             fun updateQuoteInModal(quote: Quote) {
@@ -267,14 +261,14 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             }
 
             if (state.isAddQuoteModalOpen) {
-                AddQuoteModal(::addQuoteInModal, tags.value, viewModel::hideAddQuoteModal)
+                AddQuoteModal(viewModel::addQuote, tags.value, viewModel::hideAddQuoteModal)
             }
 
             if (state.isFilterQuotesModalOpen) {
                 FilterQuotesModal(
                     tags.value,
                     state.filterTags,
-                    ::filterQuotesByTags,
+                    viewModel::updateFilterTags,
                     ::addTagInModal,
                     viewModel::hideFilterQuotesModal
                 )
