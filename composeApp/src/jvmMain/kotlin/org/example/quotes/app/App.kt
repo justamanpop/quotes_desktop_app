@@ -54,6 +54,13 @@ import kotlin.collections.filter
 fun App(viewModel: AppViewModel, appCore: AppCore) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        viewModel.focusRequest.collect {
+            focusRequester.requestFocus()
+        }
+    }
+
     MaterialTheme {
         val snackbarState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
@@ -76,17 +83,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
         ) {
-            val focusRequester = remember { FocusRequester() }
-            LaunchedEffect(Unit) {
-                focusRequester.requestFocus()
-            }
-
-            val openAddQuoteModal = remember { mutableStateOf(false) }
-            fun hideAddQuoteModal() {
-                openAddQuoteModal.value = false
-                focusRequester.requestFocus()
-            }
-
             val openFilterQuotesModal = remember { mutableStateOf(false) }
             fun hideFilterQuotesModal() {
                 openFilterQuotesModal.value = false
@@ -187,17 +183,17 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             }
 
             fun updateTagForQuotes(tagId: Int, newName: String) {
-                quotes.value = quotes.value.map {
-                    quote -> quote.copy(tags = quote.tags.map {
-                        tag ->
+                quotes.value = quotes.value.map { quote ->
+                    quote.copy(tags = quote.tags.map { tag ->
                         if (tag.id == tagId) {
                             tag.copy(name = newName)
                         } else {
                             tag
                         }
-                })
+                    })
                 }
             }
+
             fun updateTagInModal(tagId: Int, newName: String) {
                 try {
                     appCore.updateTag(tagId, newName)
@@ -211,13 +207,13 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             }
 
             fun removeTagFromQuotes(tagId: Int) {
-                quotes.value = quotes.value.map {
-                        quote -> quote.copy(tags = quote.tags.filterNot {
-                        tag ->
+                quotes.value = quotes.value.map { quote ->
+                    quote.copy(tags = quote.tags.filterNot { tag ->
                         tag.id == tagId
-                })
+                    })
                 }
             }
+
             fun deleteTagInModal(tagId: Int) {
                 try {
                     appCore.deleteTag(tagId)
@@ -270,7 +266,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
 
                     Button(
                         onClick = {
-                            openAddQuoteModal.value = true
+                            viewModel.showAddQuoteModal()
                         },
                         colors = ButtonColors(
                             containerColor = Color(23, 176, 71),
@@ -314,8 +310,8 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 )
             }
 
-            if (openAddQuoteModal.value) {
-                AddQuoteModal(::addQuoteInModal, tags.value, ::hideAddQuoteModal)
+            if (state.isAddQuoteModalOpen) {
+                AddQuoteModal(::addQuoteInModal, tags.value, viewModel::hideAddQuoteModal)
             }
 
             if (openFilterQuotesModal.value) {
@@ -333,7 +329,13 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             }
 
             if (openManageTagsModal.value) {
-                ManageTagsModal(tags.value,::addTagInModal, ::updateTagInModal, ::deleteTagInModal, ::hideManageTagsModal)
+                ManageTagsModal(
+                    tags.value,
+                    ::addTagInModal,
+                    ::updateTagInModal,
+                    ::deleteTagInModal,
+                    ::hideManageTagsModal
+                )
             }
         }
     }
