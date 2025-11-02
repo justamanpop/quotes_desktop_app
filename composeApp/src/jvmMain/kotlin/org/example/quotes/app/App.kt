@@ -83,12 +83,10 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
         ) {
-            val tagFilters = remember { mutableStateOf(setOf<Tag>()) }
-
-            val filteredQuotes by remember(state.quotes, state.searchTerm, tagFilters) {
+            val filteredQuotes by remember(state.quotes, state.searchTerm, state.filterTags) {
                 derivedStateOf {
                     val searchTerm = state.searchTerm.lowercase(getDefault())
-                    val tags = tagFilters.value
+                    val tags = state.filterTags
 
                     state.quotes.filter { q ->
                         val matchesSearch = if (searchTerm.isBlank()) {
@@ -111,7 +109,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             }
 
             fun filterQuotesByTags(tags: Set<Tag>) {
-                tagFilters.value = tags
+                viewModel.updateFilterTags(tags)
             }
 
             fun addQuoteInModal(quote: Quote) {
@@ -195,12 +193,12 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     )
                     BadgedBox(
                         badge = {
-                            if (tagFilters.value.isNotEmpty()) {
+                            if (state.filterTags.isNotEmpty()) {
                                 Badge(
                                     containerColor = Color.Red,
                                     contentColor = Color.White
                                 ) {
-                                    Text(tagFilters.value.size.toString())
+                                    Text(state.filterTags.size.toString())
                                 }
                             }
                         },
@@ -275,7 +273,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             if (state.isFilterQuotesModalOpen) {
                 FilterQuotesModal(
                     tags.value,
-                    tagFilters.value,
+                    state.filterTags,
                     ::filterQuotesByTags,
                     ::addTagInModal,
                     viewModel::hideFilterQuotesModal

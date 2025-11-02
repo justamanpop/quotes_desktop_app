@@ -2,6 +2,7 @@ package org.example.quotes.app
 
 import AppCore
 import Quote
+import Tag
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -23,6 +24,8 @@ data class AppViewModelState(
     val searchTerm: String = "",
 
     val quotes: List<Quote> = listOf(),
+
+    val filterTags: Set<Tag> = setOf(),
 )
 
 class AppViewModel(private val appCore: AppCore) : ViewModel() {
@@ -59,7 +62,6 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         }
         _state.update { currState -> currState.copy(quotes = updatedQuotes) }
     }
-
     fun removeDeletedTagForEachQuote(idOfDeletedTag: Int) {
         val updatedQuotes = state.value.quotes.map { quote ->
             quote.copy(tags = quote.tags.filterNot { tag ->
@@ -71,6 +73,9 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
 
     fun updateSearchTerm(newVal: String) {
         _state.update { currState -> currState.copy(searchTerm = newVal) }
+    }
+    fun updateFilterTags(filterTags: Set<Tag>) {
+        _state.update { currState -> currState.copy(filterTags = filterTags) }
     }
 
 
