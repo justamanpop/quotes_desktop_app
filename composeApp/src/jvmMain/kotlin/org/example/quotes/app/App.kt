@@ -114,22 +114,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
 
-            fun addQuoteInModal(quote: Quote) {
-                viewModel.addQuote(quote)
-            }
-
-            fun updateQuoteInModal(quote: Quote) {
-                try {
-                    appCore.updateQuote(quote)
-                } catch (error: Exception) {
-                    showSnackbar("Error: Unable to update quote, ${error.message}")
-                    return
-                }
-                showSnackbar("Success: Quote successfully updated!")
-                viewModel.fetchQuotes()
-                focusRequester.requestFocus()
-            }
-
             fun deleteQuote(quoteId: Int) {
                 try {
                     appCore.deleteQuote(quoteId)
@@ -276,7 +260,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
 
             val quoteToEdit = state.quoteClickedForEdit
             if (state.isEditQuoteModalOpen && quoteToEdit != null) {
-                EditQuoteModal(quoteToEdit, ::updateQuoteInModal, tags.value, viewModel::hideEditQuoteModal)
+                EditQuoteModal(quoteToEdit, viewModel::updateQuote, tags.value, viewModel::hideEditQuoteModal)
             }
 
             if (state.isManageTagsModalOpen) {

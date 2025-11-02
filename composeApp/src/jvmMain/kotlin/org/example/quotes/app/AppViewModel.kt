@@ -73,8 +73,21 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
             emitSnackbarMessage("Error: Unable to add quote, ${error.message}")
             return
         }
-        
+
         emitSnackbarMessage("Success: Quote successfully added!")
+        fetchQuotes()
+        requestFocus()
+    }
+
+    fun updateQuote(quote: Quote) {
+        try {
+            appCore.updateQuote(quote)
+        } catch (error: Exception) {
+            emitSnackbarMessage("Error: Unable to update quote, ${error.message}")
+            return
+        }
+
+        emitSnackbarMessage("Success: Quote successfully updated!")
         fetchQuotes()
         requestFocus()
     }
