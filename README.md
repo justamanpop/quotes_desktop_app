@@ -1,14 +1,19 @@
-This is a Kotlin Multiplatform project targeting Desktop (JVM).
+This is a Kotlin Multiplatform project targeting only the Desktop (JVM).
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-    - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-    - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-      For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-      the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-      Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-      folder is the appropriate location.
+### Summary
+This is a quote management application, where you can CRUD quotes. It also supports associating multiple tags with quotes, CRUD for tags, and filtering quotes by tags.
 
+I built it for me because I wanted a place to collect and look at all the memorable quotes and excerpts I came across. It was also a good chance to try out KMP for desktop
+
+I used hexagonal architecture to help me understand the concept better, and it's used to easily swap between using a SqlLite and InMemory repository.
+That alone makes it pretty useful, but I can see how if I had more complicated business logic than just CRUD, having a separate core would also be a big plus
+
+The app is feature complete, I wanted to just finish everything I wanted in a personal quotes app for me first. I have too many projects I abandoned early because I got hung up on polishing and perfecting instead of finishing.
+
+### Next steps
+There's a lot of messy code and a not so polished UI, so the changes from now on will be focused on fixing that up
+
+---
 ### Build and Run Desktop (JVM) Application
 
 To build and run the development version of the desktop app, use the run configuration from the run widget
@@ -24,5 +29,3 @@ in your IDE’s toolbar or run it directly from the terminal:
   ```
 
 ---
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
