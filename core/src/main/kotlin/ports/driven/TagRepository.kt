@@ -5,5 +5,5 @@ import Tag
 interface TagRepository {
     fun getTags(): List<Tag>
     fun addTag(tag: Tag)
-//    fun deleteQuote(quoteId: Int)
+    fun updateTag(tagId: Int, newName: String)
 }

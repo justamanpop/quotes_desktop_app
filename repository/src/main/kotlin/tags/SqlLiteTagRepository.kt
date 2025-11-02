@@ -23,10 +23,16 @@ class SqlLiteTagRepository(dbName: String) : TagRepository {
     }
 
     override fun addTag(tag: Tag) {
-        println("inserting tag")
-        println(tag)
         conn.prepare("INSERT INTO tags(name) VALUES(?)").use { statement ->
             statement.bindText(1, tag.name)
+            statement.step()
+        }
+    }
+
+    override fun updateTag(tagId: Int, newName: String) {
+        conn.prepare("UPDATE tags set name = ? where id = ?").use { statement ->
+            statement.bindText(1, newName)
+            statement.bindInt(2, tagId)
             statement.step()
         }
     }
