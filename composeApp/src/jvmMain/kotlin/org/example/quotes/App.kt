@@ -291,7 +291,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openManageTagsModal.value) {
-                ManageTagsModal(::addTagInModal, {}, ::hideManageTagsModal)
+                ManageTagsModal(tags.value,::addTagInModal, {}, ::hideManageTagsModal)
             }
         }
     }
