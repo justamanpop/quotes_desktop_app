@@ -1,4 +1,4 @@
-package org.example.quotes
+package org.example.quotes.app
 
 import Quote
 import AppCore
@@ -37,10 +37,12 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import constructSnackbarDataObject
 import getSnackbarColor
 import kotlinx.coroutines.launch
 import moveFocusOnTab
+import org.example.quotes.LocalAppGraph
 import org.example.quotes.addQuoteModal.AddQuoteModal
 import org.example.quotes.editQuoteModal.EditQuoteModal
 import org.example.quotes.filterQuotesModal.FilterQuotesModal
@@ -51,6 +53,8 @@ import kotlin.collections.filter
 
 @Composable
 fun App(appCore: AppCore) {
+    val viewModel: AppViewModel = AppViewModel(LocalAppGraph.current.appCore)
+
     MaterialTheme {
         val snackbarState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
