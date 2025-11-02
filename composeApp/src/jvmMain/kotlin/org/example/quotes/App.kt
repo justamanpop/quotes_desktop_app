@@ -188,6 +188,18 @@ fun App(appCore: AppCore) {
                 showSnackbar("Success: Tag successfully added!")
                 tags.value = appCore.getTags()
             }
+            fun updateTagForQuotes(tagId: Int, newName: String) {
+                quotes.value = quotes.value.map {
+                    quote -> quote.copy(tags = quote.tags.map {
+                        tag ->
+                        if (tag.id == tagId) {
+                            tag.copy(name = newName)
+                        } else {
+                            tag
+                        }
+                })
+                }
+            }
             fun updateTagInModal(tagId: Int, newName: String) {
                 try {
                     appCore.updateTag(tagId, newName)
@@ -197,7 +209,9 @@ fun App(appCore: AppCore) {
                 }
                 showSnackbar("Success: Tag successfully updated!")
                 tags.value = appCore.getTags()
+                updateTagForQuotes(tagId, newName)
             }
+
 
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
