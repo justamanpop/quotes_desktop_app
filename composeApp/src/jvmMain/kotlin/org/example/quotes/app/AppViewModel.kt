@@ -16,6 +16,8 @@ data class AppViewModelState(
     val searchTerm: String = "",
     val isAddQuoteModalOpen: Boolean = false,
     val isFilterQuotesModalOpen: Boolean = false,
+    val isManageTagsModalOpen: Boolean = false,
+
     val isEditQuoteModalOpen: Boolean = false,
     val quoteClickedForEdit: Quote? = null,
 )
@@ -68,6 +70,16 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     }
     fun hideEditQuoteModal() {
         _state.update { currState -> currState.copy(isEditQuoteModalOpen = false) }
+        viewModelScope.launch {
+            _focusRequest.emit(Unit)
+        }
+    }
+
+    fun showManageTagsModal() {
+        _state.update { currState -> currState.copy(isManageTagsModalOpen = true) }
+    }
+    fun hideManageTagsModal() {
+        _state.update { currState -> currState.copy(isManageTagsModalOpen = false) }
         viewModelScope.launch {
             _focusRequest.emit(Unit)
         }

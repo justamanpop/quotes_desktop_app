@@ -83,12 +83,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
         ) {
-            val openManageTagsModal = remember { mutableStateOf(false) }
-            fun hideManageTagsModal() {
-                openManageTagsModal.value = false
-                focusRequester.requestFocus()
-            }
-
             val quotes = remember { mutableStateOf(appCore.getQuotes()) }
             val tagFilters = remember { mutableStateOf(setOf<Tag>()) }
 
@@ -270,7 +264,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
 
                     Button(
                         onClick = {
-                            openManageTagsModal.value = true
+                            viewModel.showManageTagsModal()
                         },
                         colors = ButtonColors(
                             containerColor = Color(52, 161, 235),
@@ -314,13 +308,13 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 EditQuoteModal(quoteToEdit, ::updateQuoteInModal, tags.value, viewModel::hideEditQuoteModal)
             }
 
-            if (openManageTagsModal.value) {
+            if (state.isManageTagsModalOpen) {
                 ManageTagsModal(
                     tags.value,
                     ::addTagInModal,
                     ::updateTagInModal,
                     ::deleteTagInModal,
-                    ::hideManageTagsModal
+                    viewModel::hideManageTagsModal
                 )
             }
         }
