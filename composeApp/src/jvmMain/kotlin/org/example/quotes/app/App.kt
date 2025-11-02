@@ -83,15 +83,14 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
         ) {
-            val quotes = remember { mutableStateOf(appCore.getQuotes()) }
             val tagFilters = remember { mutableStateOf(setOf<Tag>()) }
 
-            val filteredQuotes by remember(quotes, state.searchTerm, tagFilters) {
+            val filteredQuotes by remember(state.quotes, state.searchTerm, tagFilters) {
                 derivedStateOf {
                     val searchTerm = state.searchTerm.lowercase(getDefault())
                     val tags = tagFilters.value
 
-                    quotes.value.filter { q ->
+                    state.quotes.filter { q ->
                         val matchesSearch = if (searchTerm.isBlank()) {
                             true
                         } else {
@@ -123,7 +122,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     return
                 }
                 showSnackbar("Success: Quote successfully added!")
-                quotes.value = appCore.getQuotes()
+                viewModel.fetchQuotes()
                 focusRequester.requestFocus()
             }
 
@@ -135,7 +134,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     return
                 }
                 showSnackbar("Success: Quote successfully updated!")
-                quotes.value = appCore.getQuotes()
+                viewModel.fetchQuotes()
                 focusRequester.requestFocus()
             }
 
@@ -147,7 +146,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     return
                 }
                 showSnackbar("Success: Quote successfully deleted!")
-                quotes.value = appCore.getQuotes()
+                viewModel.fetchQuotes()
             }
 
             val tags = remember { mutableStateOf(appCore.getTags()) }
@@ -162,18 +161,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 tags.value = appCore.getTags()
             }
 
-            fun updateTagForQuotes(tagId: Int, newName: String) {
-                quotes.value = quotes.value.map { quote ->
-                    quote.copy(tags = quote.tags.map { tag ->
-                        if (tag.id == tagId) {
-                            tag.copy(name = newName)
-                        } else {
-                            tag
-                        }
-                    })
-                }
-            }
-
             fun updateTagInModal(tagId: Int, newName: String) {
                 try {
                     appCore.updateTag(tagId, newName)
@@ -183,15 +170,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
                 showSnackbar("Success: Tag successfully updated!")
                 tags.value = appCore.getTags()
-                updateTagForQuotes(tagId, newName)
-            }
-
-            fun removeTagFromQuotes(tagId: Int) {
-                quotes.value = quotes.value.map { quote ->
-                    quote.copy(tags = quote.tags.filterNot { tag ->
-                        tag.id == tagId
-                    })
-                }
+                viewModel.syncUpdatedTagForEachQuote(tagId, newName)
             }
 
             fun deleteTagInModal(tagId: Int) {
@@ -203,7 +182,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
                 showSnackbar("Success: Tag successfully deleted!")
                 tags.value = appCore.getTags()
-                removeTagFromQuotes(tagId)
+                viewModel.removeDeletedTagForEachQuote(tagId)
             }
 
 
