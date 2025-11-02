@@ -83,8 +83,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
         ) {
-            val editQuote = remember { mutableStateOf<Quote?>(null) }
-
             val openManageTagsModal = remember { mutableStateOf(false) }
             fun hideManageTagsModal() {
                 openManageTagsModal.value = false
@@ -289,8 +287,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 QuoteTable(
                     filteredQuotes,
                     { q ->
-                        editQuote.value = q
-                        viewModel.showEditQuoteModal()
+                        viewModel.showEditQuoteModal(q)
                     },
                     ::deleteQuote,
                     ::showSnackbar,
@@ -312,8 +309,9 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 )
             }
 
-            if (state.isEditQuoteModalOpen && editQuote.value != null) {
-                EditQuoteModal(editQuote.value!!, ::updateQuoteInModal, tags.value, viewModel::hideEditQuoteModal)
+            val quoteToEdit = state.quoteClickedForEdit
+            if (state.isEditQuoteModalOpen && quoteToEdit != null) {
+                EditQuoteModal(quoteToEdit, ::updateQuoteInModal, tags.value, viewModel::hideEditQuoteModal)
             }
 
             if (openManageTagsModal.value) {

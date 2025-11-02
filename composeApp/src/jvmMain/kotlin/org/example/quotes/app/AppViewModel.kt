@@ -1,6 +1,7 @@
 package org.example.quotes.app
 
 import AppCore
+import Quote
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -15,7 +16,8 @@ data class AppViewModelState(
     val searchTerm: String = "",
     val isAddQuoteModalOpen: Boolean = false,
     val isFilterQuotesModalOpen: Boolean = false,
-    val isEditQuoteModalOpen: Boolean = false
+    val isEditQuoteModalOpen: Boolean = false,
+    val quoteClickedForEdit: Quote? = null,
 )
 
 class AppViewModel(private val appCore: AppCore) : ViewModel() {
@@ -43,7 +45,6 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     fun showAddQuoteModal() {
         _state.update { currState -> currState.copy(isAddQuoteModalOpen = true) }
     }
-
     fun hideAddQuoteModal() {
         _state.update { currState -> currState.copy(isAddQuoteModalOpen = false) }
         viewModelScope.launch {
@@ -62,8 +63,8 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         }
     }
 
-    fun showEditQuoteModal() {
-        _state.update { currState -> currState.copy(isEditQuoteModalOpen = true) }
+    fun showEditQuoteModal(quote: Quote) {
+        _state.update { currState -> currState.copy(quoteClickedForEdit = quote, isEditQuoteModalOpen = true) }
     }
     fun hideEditQuoteModal() {
         _state.update { currState -> currState.copy(isEditQuoteModalOpen = false) }
