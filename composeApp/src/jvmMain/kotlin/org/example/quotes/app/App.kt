@@ -83,12 +83,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
         ) {
-            val openFilterQuotesModal = remember { mutableStateOf(false) }
-            fun hideFilterQuotesModal() {
-                openFilterQuotesModal.value = false
-                focusRequester.requestFocus()
-            }
-
             val editQuote = remember { mutableStateOf<Quote?>(null) }
 
             val openEditQuotesModal = remember { mutableStateOf(false) }
@@ -249,7 +243,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     ) {
                         Button(
                             onClick = {
-                                openFilterQuotesModal.value = true
+                                viewModel.showFilterQuotesModal()
                             },
                             colors = ButtonColors(
                                 containerColor = Color.LightGray,
@@ -314,13 +308,13 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 AddQuoteModal(::addQuoteInModal, tags.value, viewModel::hideAddQuoteModal)
             }
 
-            if (openFilterQuotesModal.value) {
+            if (state.isFilterQuotesModalOpen) {
                 FilterQuotesModal(
                     tags.value,
                     tagFilters.value,
                     ::filterQuotesByTags,
                     ::addTagInModal,
-                    ::hideFilterQuotesModal
+                    viewModel::hideFilterQuotesModal
                 )
             }
 
