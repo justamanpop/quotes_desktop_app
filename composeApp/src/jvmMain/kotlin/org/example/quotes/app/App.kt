@@ -37,6 +37,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import constructSnackbarDataObject
 import getSnackbarColor
 import kotlinx.coroutines.launch
@@ -51,6 +52,8 @@ import kotlin.collections.filter
 
 @Composable
 fun App(viewModel: AppViewModel, appCore: AppCore) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     MaterialTheme {
         val snackbarState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
@@ -77,8 +80,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
             }
-
-            val currentSearchTerm = remember { mutableStateOf("") }
 
             val openAddQuoteModal = remember { mutableStateOf(false) }
             fun hideAddQuoteModal() {
@@ -109,9 +110,9 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             val quotes = remember { mutableStateOf(appCore.getQuotes()) }
             val tagFilters = remember { mutableStateOf(setOf<Tag>()) }
 
-            val filteredQuotes by remember(quotes, currentSearchTerm, tagFilters) {
+            val filteredQuotes by remember(quotes, state.searchTerm, tagFilters) {
                 derivedStateOf {
-                    val searchTerm = currentSearchTerm.value.lowercase(getDefault())
+                    val searchTerm = state.searchTerm.lowercase(getDefault())
                     val tags = tagFilters.value
 
                     quotes.value.filter { q ->
@@ -132,10 +133,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                         matchesSearch && matchesTags
                     }
                 }
-            }
-
-            fun updateSearchTerm(newVal: String) {
-                currentSearchTerm.value = newVal
             }
 
             fun filterQuotesByTags(tags: Set<Tag>) {
@@ -237,7 +234,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SearchBar(
-                        ::updateSearchTerm,
+                        viewModel::updateSearchTerm,
                         Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp).width(600.dp).focusRequester(focusRequester)
                             .moveFocusOnTab()
                     )
