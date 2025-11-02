@@ -36,4 +36,22 @@ class SqlLiteTagRepository(dbName: String) : TagRepository {
             statement.step()
         }
     }
+
+    override fun deleteTag(tagId: Int) {
+        conn.execSQL("BEGIN TRANSACTION;")
+        try {
+            conn.prepare("DELETE FROM quote_tag_mapping where tag_id = ?").use { statement ->
+                statement.bindInt(1, tagId)
+                statement.step()
+            }
+            conn.prepare("DELETE FROM tags where id = ?").use { statement ->
+                statement.bindInt(1, tagId)
+                statement.step()
+            }
+            conn.execSQL("COMMIT;")
+        } catch (e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
+        }
+    }
 }

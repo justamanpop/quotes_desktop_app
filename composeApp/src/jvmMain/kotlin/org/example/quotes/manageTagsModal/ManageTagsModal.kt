@@ -29,11 +29,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import moveFocusOnTab
 import org.example.quotes.addTagModal.AddTagModal
+import org.example.quotes.deleteConfirmationModal.DeleteConfirmationModal
 import org.example.quotes.filterQuotesModal.TagSearchableDropdown
 import org.example.quotes.updateTagModal.UpdateTagModal
 
 @Composable
-fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: Int, newName: String) -> Unit, deleteTag: (Tag) -> Unit, onDismissRequest: () -> Unit) {
+fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: Int, newName: String) -> Unit, deleteTag: (tagId: Int) -> Unit, onDismissRequest: () -> Unit) {
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
@@ -79,6 +80,17 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: I
             updateTag(tagId, newName)
             setDropdownInputValue("")
             setDropdownTextFieldState(TextFieldValue())
+        }
+        fun deleteTagInModal(tagId: Int) {
+            deleteTag(tagId)
+            setDropdownInputValue("")
+            setDropdownTextFieldState(TextFieldValue())
+        }
+
+
+        val openDeleteTagConfirmationModal = remember { mutableStateOf(false) }
+        fun hideDeleteTagConfirmationModal() {
+            openDeleteTagConfirmationModal.value = false
         }
 
         Card(modifier = Modifier.width(660.dp)) {
@@ -127,7 +139,7 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: I
                     }
                     Button(
                         onClick = {
-//                        onDismissRequest()
+                            openDeleteTagConfirmationModal.value = true
                         },
                         colors = ButtonColors(
                             contentColor = Color.White,
@@ -150,6 +162,10 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: I
         }
         if (openUpdateTagModal.value) {
             UpdateTagModal(selectedTag, ::updateTagInModal, ::hideUpdateTagModal)
+        }
+
+        if (openDeleteTagConfirmationModal.value) {
+            DeleteConfirmationModal(selectedTag?.id, ::deleteTagInModal, "tag", ::hideDeleteTagConfirmationModal)
         }
     }
 }

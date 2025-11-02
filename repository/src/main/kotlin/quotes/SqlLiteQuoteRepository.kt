@@ -42,7 +42,6 @@ class SqlLiteQuoteRepository(dbName: String) : QuoteRepository {
 
     override fun addQuote(quote: Quote) {
         conn.execSQL("BEGIN TRANSACTION;")
-
         try {
             conn.prepare("INSERT INTO quotes(content, source) VALUES(?, ?)").use { statement ->
                 statement.bindText(1, quote.content)

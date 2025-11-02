@@ -35,4 +35,8 @@ class AppCore(private val quoteRepository: QuoteRepository, private val tagRepos
     override fun updateTag(tagId: Int, newName: String) {
         tagRepository.updateTag(tagId, newName)
     }
+
+    override fun deleteTag(tagId: Int) {
+        tagRepository.deleteTag(tagId)
+    }
 }

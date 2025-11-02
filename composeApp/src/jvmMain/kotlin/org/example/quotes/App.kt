@@ -188,6 +188,7 @@ fun App(appCore: AppCore) {
                 showSnackbar("Success: Tag successfully added!")
                 tags.value = appCore.getTags()
             }
+
             fun updateTagForQuotes(tagId: Int, newName: String) {
                 quotes.value = quotes.value.map {
                     quote -> quote.copy(tags = quote.tags.map {
@@ -210,6 +211,26 @@ fun App(appCore: AppCore) {
                 showSnackbar("Success: Tag successfully updated!")
                 tags.value = appCore.getTags()
                 updateTagForQuotes(tagId, newName)
+            }
+
+            fun removeTagFromQuotes(tagId: Int) {
+                quotes.value = quotes.value.map {
+                        quote -> quote.copy(tags = quote.tags.filterNot {
+                        tag ->
+                        tag.id == tagId
+                })
+                }
+            }
+            fun deleteTagInModal(tagId: Int) {
+                try {
+                    appCore.deleteTag(tagId)
+                } catch (error: Exception) {
+                    showSnackbar("Error: Unable to delete tag, ${error.message}")
+                    return
+                }
+                showSnackbar("Success: Tag successfully deleted!")
+                tags.value = appCore.getTags()
+                removeTagFromQuotes(tagId)
             }
 
 
@@ -315,7 +336,7 @@ fun App(appCore: AppCore) {
             }
 
             if (openManageTagsModal.value) {
-                ManageTagsModal(tags.value,::addTagInModal, ::updateTagInModal, {}, ::hideManageTagsModal)
+                ManageTagsModal(tags.value,::addTagInModal, ::updateTagInModal, ::deleteTagInModal, ::hideManageTagsModal)
             }
         }
     }

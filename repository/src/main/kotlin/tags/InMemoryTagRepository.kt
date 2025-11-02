@@ -35,4 +35,10 @@ class InMemoryTagRepository: TagRepository {
         }
     }
 
+    override fun deleteTag(tagId: Int) {
+        val entry = fakeTags.values.find { t -> t.id == tagId }
+        if (entry != null) {
+            fakeTags.remove(entry.name)
+        }
+    }
 }

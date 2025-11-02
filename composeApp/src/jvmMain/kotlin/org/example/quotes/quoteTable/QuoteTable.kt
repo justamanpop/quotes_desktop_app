@@ -1,7 +1,6 @@
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -38,7 +37,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.example.quotes.deleteQuoteConfirmationModal.DeleteQuoteConfirmationModal
+import org.example.quotes.deleteConfirmationModal.DeleteConfirmationModal
 import kotlin.collections.forEach
 
 @Composable
@@ -156,6 +155,6 @@ fun QuoteTable(
         )
     }
     if (openDeleteQuoteConfirmationModal.value) {
-        DeleteQuoteConfirmationModal(quoteIdToDelete.value, deleteQuote, ::hideDeleteQuoteConfirmationModal)
+        DeleteConfirmationModal(quoteIdToDelete.value, deleteQuote, "quote", ::hideDeleteQuoteConfirmationModal)
     }
 }
