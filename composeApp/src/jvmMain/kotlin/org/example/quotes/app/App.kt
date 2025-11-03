@@ -52,6 +52,7 @@ import kotlin.collections.filter
 
 @Composable
 fun App(viewModel: AppViewModel, appCore: AppCore) {
+    //TODO: see if view model can be split into parts. Consider not re-fetching quotes from DB, but updating current list instead, like with tags update on quotes
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
@@ -114,17 +115,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
 
-            fun deleteQuote(quoteId: Int) {
-                try {
-                    appCore.deleteQuote(quoteId)
-                } catch (error: Exception) {
-                    showSnackbar("Error: Unable to delete quote, ${error.message}")
-                    return
-                }
-                showSnackbar("Success: Quote successfully deleted!")
-                viewModel.fetchQuotes()
-            }
-
             val tags = remember { mutableStateOf(appCore.getTags()) }
             fun addTagInModal(tag: Tag) {
                 try {
@@ -145,7 +135,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     return
                 }
                 showSnackbar("Success: Tag successfully updated!")
-                tags.value = appCore.getTags()
+                viewModel.fetchTags()
                 viewModel.syncUpdatedTagForEachQuote(tagId, newName)
             }
 
@@ -157,7 +147,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     return
                 }
                 showSnackbar("Success: Tag successfully deleted!")
-                tags.value = appCore.getTags()
+                viewModel.fetchTags()
                 viewModel.removeDeletedTagForEachQuote(tagId)
             }
 
@@ -238,35 +228,35 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     { q ->
                         viewModel.showEditQuoteModal(q)
                     },
-                    ::deleteQuote,
+                    viewModel::deleteQuote,
                     ::showSnackbar,
                     Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)
                 )
             }
 
             if (state.isAddQuoteModalOpen) {
-                AddQuoteModal(viewModel::addQuote, tags.value, viewModel::hideAddQuoteModal)
+                AddQuoteModal(viewModel::addQuote, state.tags, viewModel::hideAddQuoteModal)
             }
 
             if (state.isFilterQuotesModalOpen) {
                 FilterQuotesModal(
-                    tags.value,
+                    state.tags,
                     state.filterTags,
                     viewModel::updateFilterTags,
-                    ::addTagInModal,
+                    viewModel::addTag,
                     viewModel::hideFilterQuotesModal
                 )
             }
 
             val quoteToEdit = state.quoteClickedForEdit
             if (state.isEditQuoteModalOpen && quoteToEdit != null) {
-                EditQuoteModal(quoteToEdit, viewModel::updateQuote, tags.value, viewModel::hideEditQuoteModal)
+                EditQuoteModal(quoteToEdit, viewModel::updateQuote, state.tags, viewModel::hideEditQuoteModal)
             }
 
             if (state.isManageTagsModalOpen) {
                 ManageTagsModal(
-                    tags.value,
-                    ::addTagInModal,
+                    state.tags,
+                    viewModel::addTag,
                     ::updateTagInModal,
                     ::deleteTagInModal,
                     viewModel::hideManageTagsModal

@@ -24,6 +24,7 @@ data class AppViewModelState(
     val searchTerm: String = "",
 
     val quotes: List<Quote> = listOf(),
+    val tags: List<Tag> = listOf(),
 
     val filterTags: Set<Tag> = setOf(),
 )
@@ -32,7 +33,6 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     private val _state = MutableStateFlow(AppViewModelState(quotes = appCore.getQuotes()))
     val state = _state.asStateFlow()
 
-    //later, when I move functions that need to trigger a snackbar notif, emit to above. Put a LaunchedEffect in UI that listens to messages and just calls showSnackbar
     private val _snackbarMessage = MutableSharedFlow<String>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
     private fun emitSnackbarMessage(message: String) {
@@ -65,7 +65,6 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
             return
         }
     }
-
     fun addQuote(quote: Quote) {
         try {
             appCore.addQuote(quote)
@@ -78,7 +77,6 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         fetchQuotes()
         requestFocus()
     }
-
     fun updateQuote(quote: Quote) {
         try {
             appCore.updateQuote(quote)
@@ -90,6 +88,37 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         emitSnackbarMessage("Success: Quote successfully updated!")
         fetchQuotes()
         requestFocus()
+    }
+    fun deleteQuote(quoteId: Int) {
+        try {
+            appCore.deleteQuote(quoteId)
+        } catch (error: Exception) {
+            emitSnackbarMessage("Error: Unable to delete quote, ${error.message}")
+            return
+        }
+        emitSnackbarMessage("Success: Quote successfully deleted!")
+        fetchQuotes()
+    }
+
+    fun fetchTags() {
+        try {
+            val tags = appCore.getTags()
+            _state.update { currState -> currState.copy(tags = tags) }
+        } catch (error: Exception) {
+            emitSnackbarMessage("Error: Unable to fetch tags, ${error.message}")
+            return
+        }
+    }
+
+    fun addTag(tag: Tag) {
+        try {
+            appCore.addTag(tag)
+        } catch (error: Exception) {
+            emitSnackbarMessage("Error: Unable to add tag, ${error.message}")
+            return
+        }
+        emitSnackbarMessage("Success: Tag successfully added!")
+        fetchTags()
     }
 
     fun syncUpdatedTagForEachQuote(idOfUpdatedTag: Int, newTagName: String) {
