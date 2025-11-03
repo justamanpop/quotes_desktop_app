@@ -41,6 +41,9 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
             _snackbarMessage.emit(message)
         }
     }
+    fun showSnackbarMessage(message: String) {
+        emitSnackbarMessage(message)
+    }
 
     private val _focusRequest = MutableSharedFlow<Unit>()
     val focusRequest = _focusRequest.asSharedFlow()

@@ -53,6 +53,7 @@ import kotlin.collections.filter
 @Composable
 fun App(viewModel: AppViewModel, appCore: AppCore) {
     //TODO: see if view model can be split into parts. Consider not re-fetching quotes from DB, but updating current list instead, like with tags update on quotes
+    //TODO: 2 - should modal open and close logic reside in this component then, since it's UI specific?
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
@@ -62,20 +63,14 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
         }
     }
 
-    MaterialTheme {
-        val snackbarState = remember { SnackbarHostState() }
-        val scope = rememberCoroutineScope()
-        fun showSnackbar(message: String) {
-            scope.launch {
-                snackbarState.showSnackbar(message = message)
-            }
+    val snackbarState = remember { SnackbarHostState() }
+    LaunchedEffect(Unit) {
+        viewModel.snackbarMessage.collect { message ->
+            snackbarState.showSnackbar(message)
         }
-        LaunchedEffect(Unit) {
-            viewModel.snackbarMessage.collect { message ->
-                snackbarState.showSnackbar(message)
-            }
-        }
+    }
 
+    MaterialTheme {
         Scaffold(
             snackbarHost = {
                 Box(modifier = Modifier.fillMaxSize()) {
@@ -89,6 +84,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
         ) {
+            //TODO: see if can move this entirely to view model
             val filteredQuotes by remember(state.quotes, state.searchTerm, state.filterTags) {
                 derivedStateOf {
                     viewModel.deriveFilteredQuotes()
@@ -172,7 +168,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                         viewModel.showEditQuoteModal(q)
                     },
                     viewModel::deleteQuote,
-                    ::showSnackbar,
+                    viewModel::showSnackbarMessage,
                     Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)
                 )
             }
