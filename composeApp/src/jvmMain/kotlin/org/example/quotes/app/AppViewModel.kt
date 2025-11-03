@@ -30,7 +30,7 @@ data class AppViewModelState(
 )
 
 class AppViewModel(private val appCore: AppCore) : ViewModel() {
-    private val _state = MutableStateFlow(AppViewModelState(quotes = appCore.getQuotes()))
+    private val _state = MutableStateFlow(AppViewModelState(quotes = appCore.getQuotes(), tags = appCore.getTags()))
     val state = _state.asStateFlow()
 
     private val _snackbarMessage = MutableSharedFlow<String>()
@@ -130,6 +130,17 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         emitSnackbarMessage("Success: Tag successfully updated!")
         fetchTags()
         syncUpdatedTagForEachQuote(tagId, newName)
+    }
+    fun deleteTag(tagId: Int) {
+        try {
+            appCore.deleteTag(tagId)
+        } catch (error: Exception) {
+            emitSnackbarMessage("Error: Unable to delete tag, ${error.message}")
+            return
+        }
+        emitSnackbarMessage("Success: Tag successfully deleted!")
+        fetchTags()
+        removeDeletedTagForEachQuote(tagId)
     }
 
     fun syncUpdatedTagForEachQuote(idOfUpdatedTag: Int, newTagName: String) {

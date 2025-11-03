@@ -71,8 +71,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
             }
         }
         LaunchedEffect(Unit) {
-            viewModel.snackbarMessage.collect {
-                    message ->
+            viewModel.snackbarMessage.collect { message ->
                 snackbarState.showSnackbar(message)
             }
         }
@@ -234,7 +233,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     state.tags,
                     viewModel::addTag,
                     viewModel::updateTagName,
-                    ::deleteTagInModal,
+                    viewModel::deleteTag,
                     viewModel::hideManageTagsModal
                 )
             }
