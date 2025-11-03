@@ -73,15 +73,13 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
     MaterialTheme {
         Scaffold(
             snackbarHost = {
-                Box(modifier = Modifier.fillMaxSize()) {
                     SnackbarHost(hostState = snackbarState, snackbar = { snackbarData ->
                         val containerColor = getSnackbarColor(snackbarData.visuals.message)
                         val updatedSnackbarData =
                             constructSnackbarDataObject(stripSnackbarMessage(snackbarData.visuals.message))
 
                         Snackbar(updatedSnackbarData, containerColor = containerColor)
-                    }, modifier = Modifier.align(Alignment.BottomCenter))
-                }
+                    })
             }
         ) {
             //TODO: see if can move this entirely to view model
