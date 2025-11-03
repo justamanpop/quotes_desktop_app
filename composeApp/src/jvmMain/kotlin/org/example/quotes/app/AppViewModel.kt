@@ -8,8 +8,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Locale.getDefault
@@ -58,6 +61,38 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
             delay(50)
             _focusRequest.emit(Unit)
         }
+    }
+
+    val filteredQuotes = state.map {
+            state ->
+        val searchTerm = state.searchTerm.lowercase(getDefault())
+        val tags = state.filterTags
+        val quotes = state.quotes
+        deriveFilteredQuotes(searchTerm, tags, quotes)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = _state.value.quotes
+    )
+    fun deriveFilteredQuotes(searchTerm: String, tags: Set<Tag>, quotes: List<Quote>): List<Quote> {
+        val filteredQuotes = quotes.filter { q ->
+            val matchesSearch = if (searchTerm.isBlank()) {
+                true
+            } else {
+                val lowerCaseContent = q.content.lowercase(getDefault())
+                val lowerCaseSource = q.source.lowercase(getDefault())
+                lowerCaseContent.contains(searchTerm) || lowerCaseSource.contains(searchTerm)
+            }
+
+            val matchesTags = if (tags.isEmpty()) {
+                true
+            } else {
+                q.tags.containsAll(tags)
+            }
+            matchesSearch && matchesTags
+        }
+
+        return filteredQuotes
     }
 
     fun fetchQuotes() {
@@ -147,30 +182,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         removeDeletedTagForEachQuote(tagId)
     }
 
-    fun deriveFilteredQuotes(): List<Quote> {
-        val searchTerm = state.value.searchTerm.lowercase(getDefault())
-        val tags = state.value.filterTags
-        val quotes = state.value.quotes
 
-        val filteredQuotes = quotes.filter { q ->
-            val matchesSearch = if (searchTerm.isBlank()) {
-                true
-            } else {
-                val lowerCaseContent = q.content.lowercase(getDefault())
-                val lowerCaseSource = q.source.lowercase(getDefault())
-                lowerCaseContent.contains(searchTerm) || lowerCaseSource.contains(searchTerm)
-            }
-
-            val matchesTags = if (tags.isEmpty()) {
-                true
-            } else {
-                q.tags.containsAll(tags)
-            }
-            matchesSearch && matchesTags
-        }
-
-        return filteredQuotes
-    }
 
     fun syncUpdatedTagForEachQuote(idOfUpdatedTag: Int, newTagName: String) {
         val updatedQuotes = state.value.quotes.map { quote ->

@@ -1,11 +1,8 @@
 package org.example.quotes.app
 
-import Quote
 import AppCore
 import QuoteTable
 import SearchBar
-import Tag
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +25,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -40,21 +36,17 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import constructSnackbarDataObject
 import getSnackbarColor
-import kotlinx.coroutines.launch
 import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
 import org.example.quotes.editQuoteModal.EditQuoteModal
 import org.example.quotes.filterQuotesModal.FilterQuotesModal
 import org.example.quotes.manageTagsModal.ManageTagsModal
 import stripSnackbarMessage
-import java.util.Locale.getDefault
-import kotlin.collections.filter
 
 @Composable
-fun App(viewModel: AppViewModel, appCore: AppCore) {
-    //TODO: see if view model can be split into parts. Consider not re-fetching quotes from DB, but updating current list instead, like with tags update on quotes
-    //TODO: 2 - should modal open and close logic reside in this component then, since it's UI specific?
+fun App(viewModel: AppViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val filteredQuotes by viewModel.filteredQuotes.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -82,13 +74,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                     })
             }
         ) {
-            //TODO: see if can move this entirely to view model
-            val filteredQuotes by remember(state.quotes, state.searchTerm, state.filterTags) {
-                derivedStateOf {
-                    viewModel.deriveFilteredQuotes()
-                }
-            }
-
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SearchBar(

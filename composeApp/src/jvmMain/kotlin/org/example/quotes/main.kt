@@ -21,6 +21,6 @@ fun main() = application {
     ) {
         val graph = createGraph<AppGraph>()
         val appViewModel = AppViewModel(graph.appCore)
-        App(appViewModel, graph.appCore)
+        App(appViewModel)
     }
 }
