@@ -115,30 +115,6 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 }
             }
 
-            val tags = remember { mutableStateOf(appCore.getTags()) }
-            fun addTagInModal(tag: Tag) {
-                try {
-                    appCore.addTag(tag)
-                } catch (error: Exception) {
-                    showSnackbar("Error: Unable to add tag, ${error.message}")
-                    return
-                }
-                showSnackbar("Success: Tag successfully added!")
-                tags.value = appCore.getTags()
-            }
-
-            fun updateTagInModal(tagId: Int, newName: String) {
-                try {
-                    appCore.updateTag(tagId, newName)
-                } catch (error: Exception) {
-                    showSnackbar("Error: Unable to update tag, ${error.message}")
-                    return
-                }
-                showSnackbar("Success: Tag successfully updated!")
-                viewModel.fetchTags()
-                viewModel.syncUpdatedTagForEachQuote(tagId, newName)
-            }
-
             fun deleteTagInModal(tagId: Int) {
                 try {
                     appCore.deleteTag(tagId)
@@ -257,7 +233,7 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
                 ManageTagsModal(
                     state.tags,
                     viewModel::addTag,
-                    ::updateTagInModal,
+                    viewModel::updateTagName,
                     ::deleteTagInModal,
                     viewModel::hideManageTagsModal
                 )

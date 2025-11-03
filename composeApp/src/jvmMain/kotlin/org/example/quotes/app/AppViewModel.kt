@@ -120,6 +120,17 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         emitSnackbarMessage("Success: Tag successfully added!")
         fetchTags()
     }
+    fun updateTagName(tagId: Int, newName: String) {
+        try {
+            appCore.updateTag(tagId, newName)
+        } catch (error: Exception) {
+            emitSnackbarMessage("Error: Unable to update tag, ${error.message}")
+            return
+        }
+        emitSnackbarMessage("Success: Tag successfully updated!")
+        fetchTags()
+        syncUpdatedTagForEachQuote(tagId, newName)
+    }
 
     fun syncUpdatedTagForEachQuote(idOfUpdatedTag: Int, newTagName: String) {
         val updatedQuotes = state.value.quotes.map { quote ->
