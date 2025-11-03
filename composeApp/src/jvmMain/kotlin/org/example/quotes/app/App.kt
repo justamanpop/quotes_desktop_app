@@ -91,41 +91,9 @@ fun App(viewModel: AppViewModel, appCore: AppCore) {
         ) {
             val filteredQuotes by remember(state.quotes, state.searchTerm, state.filterTags) {
                 derivedStateOf {
-                    val searchTerm = state.searchTerm.lowercase(getDefault())
-                    val tags = state.filterTags
-
-                    state.quotes.filter { q ->
-                        val matchesSearch = if (searchTerm.isBlank()) {
-                            true
-                        } else {
-                            val lowerCaseContent = q.content.lowercase(getDefault())
-                            val lowerCaseSource = q.source.lowercase(getDefault())
-                            lowerCaseContent.contains(searchTerm) || lowerCaseSource.contains(searchTerm)
-                        }
-
-                        val matchesTags = if (tags.isEmpty()) {
-                            true
-                        } else {
-                            q.tags.containsAll(tags)
-                        }
-
-                        matchesSearch && matchesTags
-                    }
+                    viewModel.deriveFilteredQuotes()
                 }
             }
-
-            fun deleteTagInModal(tagId: Int) {
-                try {
-                    appCore.deleteTag(tagId)
-                } catch (error: Exception) {
-                    showSnackbar("Error: Unable to delete tag, ${error.message}")
-                    return
-                }
-                showSnackbar("Success: Tag successfully deleted!")
-                viewModel.fetchTags()
-                viewModel.removeDeletedTagForEachQuote(tagId)
-            }
-
 
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.fillMaxWidth()) {

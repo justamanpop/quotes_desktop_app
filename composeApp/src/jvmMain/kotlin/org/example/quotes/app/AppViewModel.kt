@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale.getDefault
 
 data class AppViewModelState(
     val isAddQuoteModalOpen: Boolean = false,
@@ -141,6 +142,31 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         emitSnackbarMessage("Success: Tag successfully deleted!")
         fetchTags()
         removeDeletedTagForEachQuote(tagId)
+    }
+
+    fun deriveFilteredQuotes(): List<Quote> {
+        val searchTerm = state.value.searchTerm.lowercase(getDefault())
+        val tags = state.value.filterTags
+        val quotes = state.value.quotes
+
+        val filteredQuotes = quotes.filter { q ->
+            val matchesSearch = if (searchTerm.isBlank()) {
+                true
+            } else {
+                val lowerCaseContent = q.content.lowercase(getDefault())
+                val lowerCaseSource = q.source.lowercase(getDefault())
+                lowerCaseContent.contains(searchTerm) || lowerCaseSource.contains(searchTerm)
+            }
+
+            val matchesTags = if (tags.isEmpty()) {
+                true
+            } else {
+                q.tags.containsAll(tags)
+            }
+            matchesSearch && matchesTags
+        }
+
+        return filteredQuotes
     }
 
     fun syncUpdatedTagForEachQuote(idOfUpdatedTag: Int, newTagName: String) {
