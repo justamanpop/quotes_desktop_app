@@ -1,4 +1,4 @@
-package org.example.quotes.selectedTags
+package org.example.quotes.shared
 
 import Tag
 import androidx.compose.foundation.clickable

@@ -74,7 +74,6 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
     }
 
     override fun updateQuote(quote: Quote) {
-        println("quote to update is $quote")
         conn.execSQL("BEGIN TRANSACTION;")
         try {
             conn.prepare("UPDATE quotes SET content = ?, source = ? WHERE id = ?").use { statement ->

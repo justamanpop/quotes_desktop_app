@@ -1,4 +1,4 @@
-package org.example.quotes.quoteEditorModal
+package org.example.quotes.modals.quoteEditorModal
 
 import Quote
 import Tag
@@ -27,9 +27,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import moveFocusOnTab
-import org.example.quotes.filterQuotesModal.TagSearchableDropdown
-import org.example.quotes.selectedTags.SelectedTags
+import org.example.quotes.shared.TagSearchableDropdown
+import org.example.quotes.shared.SelectedTags
+import org.example.quotes.shared.moveFocusOnTab
 
 @Composable
 fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, tags: List<Tag>, onDismissRequest: () -> Unit) {

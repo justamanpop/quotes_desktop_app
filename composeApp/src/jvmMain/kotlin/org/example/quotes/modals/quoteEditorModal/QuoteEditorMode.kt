@@ -1,4 +1,4 @@
-package org.example.quotes.quoteEditorModal
+package org.example.quotes.modals.quoteEditorModal
 
 import Quote
 

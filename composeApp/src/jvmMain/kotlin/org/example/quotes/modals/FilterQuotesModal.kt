@@ -1,4 +1,4 @@
-package org.example.quotes.filterQuotesModal
+package org.example.quotes.modals
 
 import Tag
 import androidx.compose.foundation.layout.Arrangement
@@ -26,10 +26,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import moveFocusOnTab
-import org.example.quotes.tagEditorModal.TagEditorModal
-import org.example.quotes.selectedTags.SelectedTags
-import org.example.quotes.tagEditorModal.TagEditorMode
+import org.example.quotes.shared.TagSearchableDropdown
+import org.example.quotes.modals.tagEditorModal.TagEditorModal
+import org.example.quotes.shared.SelectedTags
+import org.example.quotes.modals.tagEditorModal.TagEditorMode
+import org.example.quotes.shared.moveFocusOnTab
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

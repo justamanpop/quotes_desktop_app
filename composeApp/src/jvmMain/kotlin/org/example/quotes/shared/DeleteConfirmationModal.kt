@@ -1,4 +1,4 @@
-package org.example.quotes.deleteConfirmationModal
+package org.example.quotes.shared
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button

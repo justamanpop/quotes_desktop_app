@@ -142,7 +142,6 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
     fun fetchTags() {
         try {
             val tags = appCore.getTags()
-            println(tags)
             _state.update { currState -> currState.copy(tags = tags) }
         } catch (error: Exception) {
             emitSnackbarMessage("Error: Unable to fetch tags, ${error.message}")

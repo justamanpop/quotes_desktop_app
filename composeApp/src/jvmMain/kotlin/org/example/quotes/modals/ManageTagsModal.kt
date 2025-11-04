@@ -1,4 +1,4 @@
-package org.example.quotes.manageTagsModal
+package org.example.quotes.modals
 
 import Tag
 import androidx.compose.foundation.layout.*
@@ -27,11 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import moveFocusOnTab
-import org.example.quotes.tagEditorModal.TagEditorModal
-import org.example.quotes.deleteConfirmationModal.DeleteConfirmationModal
-import org.example.quotes.filterQuotesModal.TagSearchableDropdown
-import org.example.quotes.tagEditorModal.TagEditorMode
+import org.example.quotes.modals.tagEditorModal.TagEditorModal
+import org.example.quotes.shared.DeleteConfirmationModal
+import org.example.quotes.shared.TagSearchableDropdown
+import org.example.quotes.modals.tagEditorModal.TagEditorMode
+import org.example.quotes.shared.moveFocusOnTab
 
 @Composable
 fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag) -> Unit, deleteTag: (tagId: Int) -> Unit, onDismissRequest: () -> Unit) {

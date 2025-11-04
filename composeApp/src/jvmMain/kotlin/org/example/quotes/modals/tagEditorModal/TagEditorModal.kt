@@ -1,4 +1,4 @@
-package org.example.quotes.tagEditorModal
+package org.example.quotes.modals.tagEditorModal
 
 import Tag
 import androidx.compose.foundation.layout.*
@@ -20,7 +20,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import moveFocusOnTab
+import org.example.quotes.shared.moveFocusOnTab
 
 @Composable
 fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {

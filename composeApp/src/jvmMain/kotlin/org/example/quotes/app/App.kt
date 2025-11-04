@@ -33,14 +33,14 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import constructSnackbarDataObject
-import getSnackbarColor
-import moveFocusOnTab
-import org.example.quotes.quoteEditorModal.QuoteEditorModal
-import org.example.quotes.filterQuotesModal.FilterQuotesModal
-import org.example.quotes.manageTagsModal.ManageTagsModal
-import org.example.quotes.quoteEditorModal.QuoteEditorMode
-import stripSnackbarMessage
+import org.example.quotes.shared.constructSnackbarDataObject
+import org.example.quotes.shared.getSnackbarColor
+import org.example.quotes.modals.quoteEditorModal.QuoteEditorModal
+import org.example.quotes.modals.FilterQuotesModal
+import org.example.quotes.modals.ManageTagsModal
+import org.example.quotes.modals.quoteEditorModal.QuoteEditorMode
+import org.example.quotes.shared.moveFocusOnTab
+import org.example.quotes.shared.stripSnackbarMessage
 
 @Composable
 fun App(viewModel: AppViewModel) {

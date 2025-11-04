@@ -1,6 +1,5 @@
-package org.example.quotes.tagEditorModal
+package org.example.quotes.modals.tagEditorModal
 
-import Quote
 import Tag
 
 sealed interface TagEditorMode {
