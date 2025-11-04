@@ -32,7 +32,6 @@ import org.example.quotes.tagEditorModal.TagEditorModal
 import org.example.quotes.deleteConfirmationModal.DeleteConfirmationModal
 import org.example.quotes.filterQuotesModal.TagSearchableDropdown
 import org.example.quotes.tagEditorModal.TagEditorMode
-import org.example.quotes.updateTagModal.UpdateTagModal
 
 @Composable
 fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: Int, newName: String) -> Unit, deleteTag: (tagId: Int) -> Unit, onDismissRequest: () -> Unit) {
@@ -161,8 +160,8 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: I
         if (openAddTagModal.value) {
             TagEditorModal(TagEditorMode.AddMode(addTag), ::hideAddTagModal)
         }
-        if (openUpdateTagModal.value) {
-            UpdateTagModal(selectedTag, ::updateTagInModal, ::hideUpdateTagModal)
+        if (openUpdateTagModal.value && selectedTag != null) {
+            TagEditorModal(TagEditorMode.EditMode(selectedTag, ::updateTagInModal), ::hideUpdateTagModal)
         }
 
         if (openDeleteTagConfirmationModal.value) {

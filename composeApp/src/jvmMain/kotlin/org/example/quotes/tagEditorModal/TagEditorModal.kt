@@ -20,7 +20,18 @@ import moveFocusOnTab
 
 @Composable
 fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
-    val tagName = remember { mutableStateOf("") }
+    val tagName = remember {
+        mutableStateOf(
+            when (tagEditorMode) {
+                is TagEditorMode.AddMode -> {
+                    ""
+                }
+                is TagEditorMode.EditMode -> {
+                    tagEditorMode.tag.name
+                }
+            }
+        )
+    }
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -47,27 +58,30 @@ fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(content = { Text("Create Tag") }, onClick = {
-                        when(tagEditorMode) {
+                    Button(onClick = {
+                        when (tagEditorMode) {
                             is TagEditorMode.AddMode -> {
                                 tagEditorMode.addTag(Tag(-1, tagName.value))
                             }
                             is TagEditorMode.EditMode -> {
-                               tagEditorMode.updateTag(tagEditorMode.tag.id, tagEditorMode.tag.name)
+                                tagEditorMode.updateTag(tagEditorMode.tag.id, tagName.value)
                             }
                         }
                         onDismissRequest()
-                    })
-                    Button( onClick = { onDismissRequest() }) {
-                        val buttonText = when(tagEditorMode) {
+                    }) {
+                        val buttonText = when (tagEditorMode) {
                             is TagEditorMode.AddMode -> {
                                 "Create Tag"
                             }
+
                             is TagEditorMode.EditMode -> {
                                 "Update Tag"
                             }
                         }
                         Text(buttonText)
+                    }
+                    Button(onClick = { onDismissRequest() }) {
+                        Text("Close")
                     }
                 }
             }
