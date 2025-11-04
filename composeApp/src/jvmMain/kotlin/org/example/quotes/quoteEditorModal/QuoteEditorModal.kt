@@ -32,9 +32,15 @@ import org.example.quotes.filterQuotesModal.TagSearchableDropdown
 import org.example.quotes.selectedTags.SelectedTags
 
 @Composable
-fun QuoteEditorModal(quote: Quote, updateQuote: (Quote) -> Unit, tags: List<Tag>, onDismissRequest: () -> Unit) {
-    var contentText = remember { mutableStateOf(quote.content) }
-    var sourceText = remember { mutableStateOf(quote.source) }
+fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, tags: List<Tag>, onDismissRequest: () -> Unit) {
+    var contentText by remember {
+        val content = quoteEditorMode.quote?.content ?: ""
+        mutableStateOf(TextFieldValue(content, TextRange(content.length)))
+    }
+    var sourceText by remember {
+        val source = quoteEditorMode.quote?.source ?: ""
+        mutableStateOf(TextFieldValue(source, TextRange(source.length)))
+    }
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -56,7 +62,7 @@ fun QuoteEditorModal(quote: Quote, updateQuote: (Quote) -> Unit, tags: List<Tag>
         dropdownTextFieldValue = value
     }
 
-    val selectedTags = remember { mutableStateOf(quote.tags.toSet()) }
+    val selectedTags = remember { mutableStateOf(quoteEditorMode.quote?.tags?.toSet() ?: setOf()) }
     fun unselectTag(tag: Tag) {
         selectedTags.value = selectedTags.value.minus(tag)
     }
@@ -82,14 +88,14 @@ fun QuoteEditorModal(quote: Quote, updateQuote: (Quote) -> Unit, tags: List<Tag>
                 modifier = Modifier.padding(16.dp).fillMaxWidth().moveFocusOnTab()
             ) {
                 OutlinedTextField(
-                    value = contentText.value,
-                    onValueChange = { v -> contentText.value = v },
+                    value = contentText,
+                    onValueChange = { contentText = it },
                     label = { Text("Content") },
                     modifier = Modifier.height(220.dp).fillMaxWidth().focusRequester(focusRequester).moveFocusOnTab()
                 )
                 OutlinedTextField(
-                    value = sourceText.value,
-                    onValueChange = { v -> sourceText.value = v },
+                    value = sourceText,
+                    onValueChange = { sourceText = it },
                     label = { Text("Source") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -105,16 +111,17 @@ fun QuoteEditorModal(quote: Quote, updateQuote: (Quote) -> Unit, tags: List<Tag>
                 SelectedTags(selectedTags.value, ::unselectTag)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(content = { Text("Update") }, onClick = {
-                        updateQuote(
-                            quote.copy(
-                                content = contentText.value,
-                                source = sourceText.value,
-                                tags = selectedTags.value.toList()
-                            )
-                        )
+                    Button(onClick = {
+                        val quote = Quote(-1, contentText.text, sourceText.text, tags = selectedTags.value.toList())
+                        quoteEditorMode.performAction(quote)
                         onDismissRequest()
-                    })
+                    }) {
+                        val buttonText = when (quoteEditorMode) {
+                            is QuoteEditorMode.AddMode -> "Create Quote"
+                            is QuoteEditorMode.EditMode -> "Update Quote"
+                        }
+                        Text(buttonText)
+                    }
                     Button(content = { Text("Close") }, onClick = { onDismissRequest() })
                 }
             }
