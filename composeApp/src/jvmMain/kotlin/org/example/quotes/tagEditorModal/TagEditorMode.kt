@@ -3,8 +3,19 @@ package org.example.quotes.tagEditorModal
 import Tag
 
 sealed interface TagEditorMode {
-    data class AddMode(val addTag: (Tag) -> Unit) : TagEditorMode
-    data class EditMode(val tag: Tag, val updateTag: (tag: Tag) -> Unit) : TagEditorMode
+    val tag: Tag?
+    fun performAction(tagToAddOrUpdate: Tag)
+    data class AddMode(val addTag: (Tag) -> Unit) : TagEditorMode {
+        override val tag: Tag? = null
+        override fun performAction(tagToAddOrUpdate: Tag) {
+            addTag(tagToAddOrUpdate)
+        }
+    }
+    data class EditMode(override val tag: Tag, val updateTag: (tag: Tag) -> Unit) : TagEditorMode {
+        override fun performAction(tagToAddOrUpdate: Tag) {
+            updateTag(tagToAddOrUpdate.copy(id = tag.id))
+        }
+    }
 }
 
 fun getInitialTagTextFieldValue(tagEditorMode: TagEditorMode): String {
