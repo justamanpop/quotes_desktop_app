@@ -156,10 +156,6 @@ fun App(viewModel: AppViewModel) {
                 )
             }
 
-            if (state.isAddQuoteModalOpen) {
-                AddQuoteModal(viewModel::addQuote, state.tags, viewModel::hideAddQuoteModal)
-            }
-
             if (state.isFilterQuotesModalOpen) {
                 FilterQuotesModal(
                     state.tags,
@@ -168,6 +164,10 @@ fun App(viewModel: AppViewModel) {
                     viewModel::addTag,
                     viewModel::hideFilterQuotesModal
                 )
+            }
+
+            if (state.isAddQuoteModalOpen) {
+                QuoteEditorModal(QuoteEditorMode.AddMode(viewModel::addQuote), state.tags, viewModel::hideAddQuoteModal)
             }
 
             val quoteToEdit = state.quoteClickedForEdit
