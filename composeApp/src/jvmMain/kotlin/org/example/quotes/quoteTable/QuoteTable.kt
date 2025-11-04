@@ -74,7 +74,7 @@ fun QuoteTable(
                                     quote.source,
                                     fontSize = 12.sp,
                                     color = Color.Gray,
-                                    modifier = Modifier.padding(start = 8.dp)
+                                    modifier = Modifier.padding(start = 8.dp, end = 24.dp).align(Alignment.Bottom),
                                 )
                                 quote.tags.forEach { tag ->
                                     Card(
@@ -86,7 +86,7 @@ fun QuoteTable(
                                         ),
                                         modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
                                     ) {
-                                        Text(tag.name, fontSize = 12.sp, modifier = Modifier.padding(2.dp))
+                                        Text(tag.name, fontSize = 12.sp, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp))
                                     }
                                 }
                             }
