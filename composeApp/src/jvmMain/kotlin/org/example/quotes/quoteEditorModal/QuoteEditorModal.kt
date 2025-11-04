@@ -34,11 +34,11 @@ import org.example.quotes.selectedTags.SelectedTags
 @Composable
 fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, tags: List<Tag>, onDismissRequest: () -> Unit) {
     var contentText by remember {
-        val content = quoteEditorMode.quote?.content ?: ""
+        val content = quoteEditorMode.getContent()
         mutableStateOf(TextFieldValue(content, TextRange(content.length)))
     }
     var sourceText by remember {
-        val source = quoteEditorMode.quote?.source ?: ""
+        val source = quoteEditorMode.getSource()
         mutableStateOf(TextFieldValue(source, TextRange(source.length)))
     }
 
@@ -116,11 +116,7 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, tags: List<Tag>, onDismis
                         quoteEditorMode.performAction(quote)
                         onDismissRequest()
                     }) {
-                        val buttonText = when (quoteEditorMode) {
-                            is QuoteEditorMode.AddMode -> "Create Quote"
-                            is QuoteEditorMode.EditMode -> "Update Quote"
-                        }
-                        Text(buttonText)
+                        Text(quoteEditorMode.getButtonText())
                     }
                     Button(content = { Text("Close") }, onClick = { onDismissRequest() })
                 }
