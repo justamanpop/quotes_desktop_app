@@ -25,10 +25,10 @@ class SqlLiteTagRepository(val conn: SQLiteConnection) : TagRepository {
         }
     }
 
-    override fun updateTag(tagId: Int, newName: String) {
+    override fun updateTag(tag: Tag) {
         conn.prepare("UPDATE tags set name = ? where id = ?").use { statement ->
-            statement.bindText(1, newName)
-            statement.bindInt(2, tagId)
+            statement.bindText(1, tag.name)
+            statement.bindInt(2, tag.id)
             statement.step()
         }
     }

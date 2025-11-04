@@ -160,16 +160,16 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         emitSnackbarMessage("Success: Tag successfully added!")
         fetchTags()
     }
-    fun updateTagName(tagId: Int, newName: String) {
+    fun updateTagName(tag: Tag) {
         try {
-            appCore.updateTag(tagId, newName)
+            appCore.updateTag(tag)
         } catch (error: Exception) {
             emitSnackbarMessage("Error: Unable to update tag, ${error.message}")
             return
         }
         emitSnackbarMessage("Success: Tag successfully updated!")
         fetchTags()
-        syncUpdatedTagForEachQuote(tagId, newName)
+        syncUpdatedTagForEachQuote(tag)
     }
     fun deleteTag(tagId: Int) {
         try {
@@ -185,11 +185,11 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
 
 
 
-    fun syncUpdatedTagForEachQuote(idOfUpdatedTag: Int, newTagName: String) {
+    fun syncUpdatedTagForEachQuote(updatedTag: Tag) {
         val updatedQuotes = state.value.quotes.map { quote ->
             quote.copy(tags = quote.tags.map { tag ->
-                if (tag.id == idOfUpdatedTag) {
-                    tag.copy(name = newTagName)
+                if (tag.id == updatedTag.id) {
+                    tag.copy(name = updatedTag.name)
                 } else {
                     tag
                 }

@@ -36,7 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import constructSnackbarDataObject
 import getSnackbarColor
 import moveFocusOnTab
-import org.example.quotes.addQuoteModal.AddQuoteModal
 import org.example.quotes.quoteEditorModal.QuoteEditorModal
 import org.example.quotes.filterQuotesModal.FilterQuotesModal
 import org.example.quotes.manageTagsModal.ManageTagsModal

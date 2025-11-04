@@ -34,7 +34,7 @@ import org.example.quotes.filterQuotesModal.TagSearchableDropdown
 import org.example.quotes.tagEditorModal.TagEditorMode
 
 @Composable
-fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: Int, newName: String) -> Unit, deleteTag: (tagId: Int) -> Unit, onDismissRequest: () -> Unit) {
+fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag) -> Unit, deleteTag: (tagId: Int) -> Unit, onDismissRequest: () -> Unit) {
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
@@ -76,8 +76,8 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: I
             setSelectedTag(tag)
         }
 
-        fun updateTagInModal(tagId: Int, newName: String) {
-            updateTag(tagId, newName)
+        fun updateTagInModal(tag: Tag) {
+            updateTag(tag)
             setDropdownInputValue("")
             setDropdownTextFieldState(TextFieldValue())
         }

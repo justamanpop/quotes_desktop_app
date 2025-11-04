@@ -28,10 +28,10 @@ class InMemoryTagRepository: TagRepository {
         fakeTags[tag.name] = tag.copy(id = maxId)
     }
 
-    override fun updateTag(tagId: Int, newName: String) {
-        val entry = fakeTags.values.find { t -> t.id == tagId }
+    override fun updateTag(tag: Tag) {
+        val entry = fakeTags.values.find { t -> t.id == tag.id }
         if (entry != null) {
-            fakeTags[newName] = Tag(entry.id, newName)
+            fakeTags[tag.name] = tag
             fakeTags.remove(entry.name)
         }
     }

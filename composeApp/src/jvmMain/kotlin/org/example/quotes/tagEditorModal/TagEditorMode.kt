@@ -4,7 +4,7 @@ import Tag
 
 sealed interface TagEditorMode {
     data class AddMode(val addTag: (Tag) -> Unit) : TagEditorMode
-    data class EditMode(val tag: Tag, val updateTag: (tagId: Int, newName: String) -> Unit) : TagEditorMode
+    data class EditMode(val tag: Tag, val updateTag: (tag: Tag) -> Unit) : TagEditorMode
 }
 
 fun getInitialTagTextFieldValue(tagEditorMode: TagEditorMode): String {
@@ -28,7 +28,7 @@ fun getOnAddOrEditButtonClickFunc(tagEditorMode: TagEditorMode, tagName: String)
         }
         is TagEditorMode.EditMode -> {
             {
-                tagEditorMode.updateTag(tagEditorMode.tag.id, tagName)
+                tagEditorMode.updateTag(Tag(tagEditorMode.tag.id, tagName))
             }
         }
     }
