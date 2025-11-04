@@ -25,11 +25,11 @@ import moveFocusOnTab
 @Composable
 fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
     var tagNameTextFieldValue by remember {
-        val initialVal = getInitialTagTextFieldValue(tagEditorMode)
+        val initialTagName = tagEditorMode.getInitialTagName()
         mutableStateOf(
             TextFieldValue(
-                text = initialVal,
-                selection = TextRange(initialVal.length)
+                text = initialTagName,
+                selection = TextRange(initialTagName.length)
             )
         )
     }
@@ -60,11 +60,10 @@ fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(onClick = {
-                        val addOrEditFunc = getOnAddOrEditButtonClickFunc(tagEditorMode, tagNameTextFieldValue.text)
-                        addOrEditFunc()
+                        tagEditorMode.performAction(Tag(-1, tagNameTextFieldValue.text))
                         onDismissRequest()
                     }) {
-                        Text(getOnAddOrEditButtonText(tagEditorMode))
+                        Text(tagEditorMode.getButtonText())
                     }
                     Button(onClick = { onDismissRequest() }) {
                         Text("Close")

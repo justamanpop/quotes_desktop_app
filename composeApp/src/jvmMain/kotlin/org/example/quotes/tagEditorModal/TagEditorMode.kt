@@ -1,57 +1,34 @@
 package org.example.quotes.tagEditorModal
 
+import Quote
 import Tag
 
 sealed interface TagEditorMode {
     val tag: Tag?
     fun performAction(tagToAddOrUpdate: Tag)
+    fun getInitialTagName(): String
+    fun getButtonText(): String
     data class AddMode(val addTag: (Tag) -> Unit) : TagEditorMode {
         override val tag: Tag? = null
         override fun performAction(tagToAddOrUpdate: Tag) {
             addTag(tagToAddOrUpdate)
+        }
+        override fun getInitialTagName(): String {
+            return ""
+        }
+        override fun getButtonText(): String {
+            return "Create Tag"
         }
     }
     data class EditMode(override val tag: Tag, val updateTag: (tag: Tag) -> Unit) : TagEditorMode {
         override fun performAction(tagToAddOrUpdate: Tag) {
             updateTag(tagToAddOrUpdate.copy(id = tag.id))
         }
-    }
-}
-
-fun getInitialTagTextFieldValue(tagEditorMode: TagEditorMode): String {
-    return when (tagEditorMode) {
-        is TagEditorMode.AddMode -> {
-            ""
+        override fun getInitialTagName(): String {
+            return tag.name
         }
-
-        is TagEditorMode.EditMode -> {
-            tagEditorMode.tag.name
-        }
-    }
-}
-
-fun getOnAddOrEditButtonClickFunc(tagEditorMode: TagEditorMode, tagName: String): () -> Unit {
-    return when (tagEditorMode) {
-        is TagEditorMode.AddMode -> {
-            {
-                tagEditorMode.addTag(Tag(-1, tagName))
-            }
-        }
-        is TagEditorMode.EditMode -> {
-            {
-                tagEditorMode.updateTag(Tag(tagEditorMode.tag.id, tagName))
-            }
-        }
-    }
-}
-
-fun getOnAddOrEditButtonText(tagEditorMode: TagEditorMode): String {
-    return when (tagEditorMode) {
-        is TagEditorMode.AddMode -> {
-            "Create Tag"
-        }
-        is TagEditorMode.EditMode -> {
-            "Update Tag"
+        override fun getButtonText(): String {
+            return "Update Tag"
         }
     }
 }

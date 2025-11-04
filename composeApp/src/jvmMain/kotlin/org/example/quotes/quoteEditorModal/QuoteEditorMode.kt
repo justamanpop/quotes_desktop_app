@@ -1,24 +1,23 @@
 package org.example.quotes.quoteEditorModal
 
 import Quote
-import Tag
 
 sealed interface QuoteEditorMode {
     val quote: Quote?
     fun performAction(quoteToAddOrUpdate: Quote)
+    fun getInitialContent(): String
+    fun getInitialSource(): String
     fun getButtonText(): String
-    fun getContent(): String
-    fun getSource(): String
 
     data class AddMode(val addQuote: (Quote) -> Unit): QuoteEditorMode {
         override val quote: Quote? = null
         override fun performAction(quoteToAddOrUpdate: Quote) {
             addQuote(quoteToAddOrUpdate)
         }
-        override fun getContent(): String {
+        override fun getInitialContent(): String {
             return ""
         }
-        override fun getSource(): String {
+        override fun getInitialSource(): String {
             return ""
         }
         override fun getButtonText(): String {
@@ -29,10 +28,10 @@ sealed interface QuoteEditorMode {
         override fun performAction(quoteToAddOrUpdate: Quote) {
             updateQuote(quoteToAddOrUpdate.copy(id = quote.id))
         }
-        override fun getContent(): String {
+        override fun getInitialContent(): String {
             return quote.content
         }
-        override fun getSource(): String {
+        override fun getInitialSource(): String {
             return quote.source
         }
         override fun getButtonText(): String {
