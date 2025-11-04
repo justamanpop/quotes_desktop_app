@@ -170,7 +170,6 @@ fun App(viewModel: AppViewModel) {
                     state.tags,
                     state.filterTags,
                     viewModel::updateFilterTags,
-                    viewModel::addTag,
                     viewModel::hideFilterQuotesModal
                 )
             }

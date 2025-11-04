@@ -67,10 +67,10 @@ fun QuoteTable(
                 item {
                     Row(modifier = Modifier.clickable(enabled = true, onClick = {
                         onRowClick(quote)
-                    }).pointerHoverIcon(PointerIcon.Hand).height(IntrinsicSize.Min)) {
+                    }).pointerHoverIcon(PointerIcon.Hand)) {
                         Column(modifier = Modifier.weight(14f)) {
                             Text(quote.content, fontSize = 24.sp, lineHeight = 32.sp, modifier = Modifier.padding(8.dp))
-                            Row {
+                            Row (){
                                 Text(
                                     quote.source,
                                     fontSize = 16.sp,

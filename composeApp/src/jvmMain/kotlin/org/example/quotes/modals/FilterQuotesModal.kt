@@ -38,7 +38,6 @@ fun FilterQuotesModal(
     tags: List<Tag>,
     existingTagFilters: Set<Tag>,
     setTagFilters: (Set<Tag>) -> Unit,
-    addTag: (Tag) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     val inputFieldFocusRequester = remember { FocusRequester() }
@@ -72,13 +71,6 @@ fun FilterQuotesModal(
         inputFieldFocusRequester.requestFocus()
     }
 
-
-    val openAddTagModal = remember { mutableStateOf(false) }
-    fun hideAddTagModal() {
-        openAddTagModal.value = false
-        inputFieldFocusRequester.requestFocus()
-    }
-
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
@@ -87,7 +79,7 @@ fun FilterQuotesModal(
             usePlatformDefaultWidth = false,
         ),
     ) {
-        Card(modifier = Modifier.width(660.dp)) {
+        Card(modifier = Modifier.width(600.dp)) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.padding(16.dp).fillMaxWidth().moveFocusOnTab()
@@ -100,19 +92,7 @@ fun FilterQuotesModal(
                         setDropdownInputValue,
                         ::selectTagFilter,
                         inputFieldFocusRequester,
-                    )
-                    Button(
-                        content = { Text("+ Create Tag") },
-                        onClick = {
-                            openAddTagModal.value = true
-                        },
-                        colors = ButtonColors(
-                            containerColor = Color(23, 176, 71),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color(23, 176, 71),
-                            disabledContentColor = Color.White,
-                        ),
-                        modifier = Modifier.padding(start = 24.dp)
+                        "Choose tag to filter"
                     )
                     SelectedTags(selectedTags.value, ::unselectTag, Modifier.padding(start = 12.dp))
                 }
@@ -138,10 +118,6 @@ fun FilterQuotesModal(
                     })
                 }
             }
-        }
-
-        if (openAddTagModal.value) {
-            TagEditorModal(TagEditorMode.AddMode(addTag), ::hideAddTagModal)
         }
     }
 }
