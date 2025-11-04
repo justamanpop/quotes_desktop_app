@@ -28,9 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import moveFocusOnTab
-import org.example.quotes.addTagModal.AddTagModal
+import org.example.quotes.tagEditorModal.TagEditorModal
 import org.example.quotes.deleteConfirmationModal.DeleteConfirmationModal
 import org.example.quotes.filterQuotesModal.TagSearchableDropdown
+import org.example.quotes.tagEditorModal.TagEditorMode
 import org.example.quotes.updateTagModal.UpdateTagModal
 
 @Composable
@@ -158,7 +159,7 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tagId: I
         }
 
         if (openAddTagModal.value) {
-            AddTagModal(addTag, ::hideAddTagModal)
+            TagEditorModal(TagEditorMode.AddMode(addTag), ::hideAddTagModal)
         }
         if (openUpdateTagModal.value) {
             UpdateTagModal(selectedTag, ::updateTagInModal, ::hideUpdateTagModal)

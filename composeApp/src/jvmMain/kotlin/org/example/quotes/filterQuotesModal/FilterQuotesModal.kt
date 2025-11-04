@@ -27,8 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import moveFocusOnTab
-import org.example.quotes.addTagModal.AddTagModal
+import org.example.quotes.tagEditorModal.TagEditorModal
 import org.example.quotes.selectedTags.SelectedTags
+import org.example.quotes.tagEditorModal.TagEditorMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -139,7 +140,7 @@ fun FilterQuotesModal(
         }
 
         if (openAddTagModal.value) {
-            AddTagModal(addTag, ::hideAddTagModal)
+            TagEditorModal(TagEditorMode.AddMode(addTag), ::hideAddTagModal)
         }
     }
 }

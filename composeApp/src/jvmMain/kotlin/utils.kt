@@ -12,6 +12,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
+import org.example.quotes.tagEditorModal.TagEditorMode
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 
@@ -58,13 +59,14 @@ fun stripSnackbarMessage(message: String): String {
 }
 
 fun constructSnackbarDataObject(message: String): SnackbarData {
-    return object: SnackbarData {
-        override val visuals = object: SnackbarVisuals {
+    return object : SnackbarData {
+        override val visuals = object : SnackbarVisuals {
             override val message = message
             override val actionLabel = null
             override val withDismissAction = false
             override val duration = SnackbarDuration.Short
         }
+
         override fun performAction() {}
         override fun dismiss() {}
     }

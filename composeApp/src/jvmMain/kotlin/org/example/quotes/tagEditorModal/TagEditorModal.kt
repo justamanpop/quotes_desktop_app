@@ -1,4 +1,4 @@
-package org.example.quotes.addTagModal
+package org.example.quotes.tagEditorModal
 
 import Tag
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,7 @@ import androidx.compose.ui.window.DialogProperties
 import moveFocusOnTab
 
 @Composable
-fun AddTagModal(addTag: (Tag) -> Unit, onDismissRequest: () -> Unit) {
+fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
     val tagName = remember { mutableStateOf("") }
 
     val focusRequester = remember { FocusRequester() }
@@ -48,10 +48,27 @@ fun AddTagModal(addTag: (Tag) -> Unit, onDismissRequest: () -> Unit) {
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(content = { Text("Create Tag") }, onClick = {
-                        addTag(Tag(-1, tagName.value))
+                        when(tagEditorMode) {
+                            is TagEditorMode.AddMode -> {
+                                tagEditorMode.addTag(Tag(-1, tagName.value))
+                            }
+                            is TagEditorMode.EditMode -> {
+                               tagEditorMode.updateTag(tagEditorMode.tag.id, tagEditorMode.tag.name)
+                            }
+                        }
                         onDismissRequest()
                     })
-                    Button(content = { Text("Close") }, onClick = { onDismissRequest() })
+                    Button( onClick = { onDismissRequest() }) {
+                        val buttonText = when(tagEditorMode) {
+                            is TagEditorMode.AddMode -> {
+                                "Create Tag"
+                            }
+                            is TagEditorMode.EditMode -> {
+                                "Update Tag"
+                            }
+                        }
+                        Text(buttonText)
+                    }
                 }
             }
         }
