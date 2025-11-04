@@ -2,7 +2,6 @@ package org.example.quotes.app
 
 import QuoteTable
 import SearchBar
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,11 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Filter
-import androidx.compose.material.icons.filled.Filter1
 import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.Tag
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -71,13 +66,13 @@ fun App(viewModel: AppViewModel) {
     MaterialTheme {
         Scaffold(
             snackbarHost = {
-                    SnackbarHost(hostState = snackbarState, snackbar = { snackbarData ->
-                        val containerColor = getSnackbarColor(snackbarData.visuals.message)
-                        val updatedSnackbarData =
-                            constructSnackbarDataObject(stripSnackbarMessage(snackbarData.visuals.message))
+                SnackbarHost(hostState = snackbarState, snackbar = { snackbarData ->
+                    val containerColor = getSnackbarColor(snackbarData.visuals.message)
+                    val updatedSnackbarData =
+                        constructSnackbarDataObject(stripSnackbarMessage(snackbarData.visuals.message))
 
-                        Snackbar(updatedSnackbarData, containerColor = containerColor)
-                    })
+                    Snackbar(updatedSnackbarData, containerColor = containerColor)
+                })
             }
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
@@ -119,6 +114,21 @@ fun App(viewModel: AppViewModel) {
                             Text(" Tag Filter", color = Color.White, fontSize = 24.sp)
                         }
                     }
+                    Button(
+                        onClick = {
+                            viewModel.showManageTagsModal()
+                        },
+                        colors = ButtonColors(
+                            containerColor = Color(52, 161, 235),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.Gray,
+                            disabledContentColor = Color.Gray
+                        ),
+                        modifier = Modifier.padding(top = 12.dp, start = 8.dp).pointerHoverIcon(PointerIcon.Hand)
+                    ) {
+                        Icon(Icons.Default.Edit, contentDescription = "manage tags")
+                        Text(" Manage Tags", color = Color.White, fontSize = 24.sp)
+                    }
 
                     Button(
                         onClick = {
@@ -136,23 +146,6 @@ fun App(viewModel: AppViewModel) {
                         },
                         modifier = Modifier.padding(top = 12.dp, start = 640.dp).pointerHoverIcon(PointerIcon.Hand)
                     )
-
-
-                    Button(
-                        onClick = {
-                            viewModel.showManageTagsModal()
-                        },
-                        colors = ButtonColors(
-                            containerColor = Color(52, 161, 235),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color.Gray,
-                            disabledContentColor = Color.Gray
-                        ),
-                        modifier = Modifier.padding(top = 12.dp, start = 8.dp).pointerHoverIcon(PointerIcon.Hand)
-                    ) {
-                        Icon(Icons.Default.Edit, contentDescription = "manage tags")
-                        Text(" Manage Tags", color = Color.White, fontSize = 24.sp)
-                    }
                 }
                 QuoteTable(
                     filteredQuotes,
@@ -175,12 +168,17 @@ fun App(viewModel: AppViewModel) {
             }
 
             if (state.isAddQuoteModalOpen) {
-                QuoteEditorModal(QuoteEditorMode.AddMode(viewModel::addQuote), state.tags, viewModel::hideAddQuoteModal)
+                QuoteEditorModal(QuoteEditorMode.AddMode(viewModel::addQuote), viewModel::addTag, state.tags, viewModel::hideAddQuoteModal)
             }
 
             val quoteToEdit = state.quoteClickedForEdit
             if (state.isEditQuoteModalOpen && quoteToEdit != null) {
-                QuoteEditorModal(QuoteEditorMode.EditMode(quoteToEdit, viewModel::updateQuote),  state.tags, viewModel::hideEditQuoteModal)
+                QuoteEditorModal(
+                    QuoteEditorMode.EditMode(quoteToEdit, viewModel::updateQuote),
+                    viewModel::addTag,
+                    state.tags,
+                    viewModel::hideEditQuoteModal,
+                )
             }
 
             if (state.isManageTagsModalOpen) {

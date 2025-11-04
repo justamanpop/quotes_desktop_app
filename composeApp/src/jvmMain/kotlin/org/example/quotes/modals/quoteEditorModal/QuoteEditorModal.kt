@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -22,17 +23,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import org.example.quotes.modals.tagEditorModal.TagEditorModal
+import org.example.quotes.modals.tagEditorModal.TagEditorMode
 import org.example.quotes.shared.TagSearchableDropdown
 import org.example.quotes.shared.SelectedTags
 import org.example.quotes.shared.moveFocusOnTab
 
 @Composable
-fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, tags: List<Tag>, onDismissRequest: () -> Unit) {
+fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, tags: List<Tag>, onDismissRequest: () -> Unit) {
     var contentText by remember {
         val content = quoteEditorMode.getInitialContent()
         mutableStateOf(TextFieldValue(content, TextRange(content.length)))
@@ -75,6 +79,12 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, tags: List<Tag>, onDismis
         inputFieldFocusRequester.requestFocus()
     }
 
+    val openAddTagModal = remember { mutableStateOf(false) }
+    fun hideAddTagModal() {
+        openAddTagModal.value = false
+        inputFieldFocusRequester.requestFocus()
+    }
+
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
@@ -100,14 +110,31 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, tags: List<Tag>, onDismis
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                TagSearchableDropdown(
-                    tags.minus(selectedTags.value),
-                    dropdownTextFieldValue,
-                    ::setDropdownTextFieldState,
-                    setDropdownInputValue,
-                    ::selectTagFilter,
-                    inputFieldFocusRequester,
-                )
+
+                Row {
+                    TagSearchableDropdown(
+                        tags.minus(selectedTags.value),
+                        dropdownTextFieldValue,
+                        ::setDropdownTextFieldState,
+                        setDropdownInputValue,
+                        ::selectTagFilter,
+                        inputFieldFocusRequester,
+                        "Add Tag"
+                    )
+                    Button(
+                        content = { Text("+ Create Tag") },
+                        onClick = {
+                            openAddTagModal.value = true
+                        },
+                        colors = ButtonColors(
+                            containerColor = Color(23, 176, 71),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color(23, 176, 71),
+                            disabledContentColor = Color.White,
+                        ),
+                        modifier = Modifier.padding(start = 96.dp, top = 12.dp)
+                    )
+                }
                 SelectedTags(selectedTags.value, ::unselectTag)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -122,5 +149,8 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, tags: List<Tag>, onDismis
                 }
             }
         }
+    }
+    if (openAddTagModal.value) {
+        TagEditorModal(TagEditorMode.AddMode(addTag), ::hideAddTagModal)
     }
 }

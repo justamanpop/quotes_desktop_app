@@ -92,7 +92,7 @@ fun FilterQuotesModal(
                         setDropdownInputValue,
                         ::selectTagFilter,
                         inputFieldFocusRequester,
-                        "Choose tag to filter"
+                        "Choose tags to filter"
                     )
                     SelectedTags(selectedTags.value, ::unselectTag, Modifier.padding(start = 12.dp))
                 }
