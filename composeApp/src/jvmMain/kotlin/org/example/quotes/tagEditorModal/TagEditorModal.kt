@@ -8,11 +8,15 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -20,18 +24,16 @@ import moveFocusOnTab
 
 @Composable
 fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
-    val tagName = remember {
+    var tagNameTextFieldValue by remember {
+        val initialVal = getInitialTagTextFieldValue(tagEditorMode)
         mutableStateOf(
-            when (tagEditorMode) {
-                is TagEditorMode.AddMode -> {
-                    ""
-                }
-                is TagEditorMode.EditMode -> {
-                    tagEditorMode.tag.name
-                }
-            }
+            TextFieldValue(
+                text = initialVal,
+                selection = TextRange(initialVal.length)
+            )
         )
     }
+
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -51,8 +53,8 @@ fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
                 modifier = Modifier.padding(16.dp).fillMaxWidth().moveFocusOnTab()
             ) {
                 OutlinedTextField(
-                    value = tagName.value,
-                    onValueChange = { v -> tagName.value = v },
+                    value = tagNameTextFieldValue,
+                    onValueChange = { v -> tagNameTextFieldValue = v },
                     label = { Text("Tag Name") },
                     modifier = Modifier.fillMaxWidth().focusRequester(focusRequester).moveFocusOnTab()
                 )
@@ -61,10 +63,11 @@ fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
                     Button(onClick = {
                         when (tagEditorMode) {
                             is TagEditorMode.AddMode -> {
-                                tagEditorMode.addTag(Tag(-1, tagName.value))
+                                tagEditorMode.addTag(Tag(-1, tagNameTextFieldValue.text))
                             }
+
                             is TagEditorMode.EditMode -> {
-                                tagEditorMode.updateTag(tagEditorMode.tag.id, tagName.value)
+                                tagEditorMode.updateTag(tagEditorMode.tag.id, tagNameTextFieldValue.text)
                             }
                         }
                         onDismissRequest()
