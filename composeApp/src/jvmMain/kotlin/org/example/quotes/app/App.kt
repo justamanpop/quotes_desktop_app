@@ -1,6 +1,5 @@
 package org.example.quotes.app
 
-import AppCore
 import QuoteTable
 import SearchBar
 import androidx.compose.foundation.layout.Column
@@ -38,7 +37,7 @@ import constructSnackbarDataObject
 import getSnackbarColor
 import moveFocusOnTab
 import org.example.quotes.addQuoteModal.AddQuoteModal
-import org.example.quotes.editQuoteModal.EditQuoteModal
+import org.example.quotes.quoteEditorModal.QuoteEditorModal
 import org.example.quotes.filterQuotesModal.FilterQuotesModal
 import org.example.quotes.manageTagsModal.ManageTagsModal
 import stripSnackbarMessage
@@ -172,7 +171,7 @@ fun App(viewModel: AppViewModel) {
 
             val quoteToEdit = state.quoteClickedForEdit
             if (state.isEditQuoteModalOpen && quoteToEdit != null) {
-                EditQuoteModal(quoteToEdit, viewModel::updateQuote, state.tags, viewModel::hideEditQuoteModal)
+                QuoteEditorModal(quoteToEdit, viewModel::updateQuote, state.tags, viewModel::hideEditQuoteModal)
             }
 
             if (state.isManageTagsModalOpen) {

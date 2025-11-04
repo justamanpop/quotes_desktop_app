@@ -34,7 +34,6 @@ fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
         )
     }
 
-
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -61,27 +60,11 @@ fun TagEditorModal(tagEditorMode: TagEditorMode, onDismissRequest: () -> Unit) {
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     Button(onClick = {
-                        when (tagEditorMode) {
-                            is TagEditorMode.AddMode -> {
-                                tagEditorMode.addTag(Tag(-1, tagNameTextFieldValue.text))
-                            }
-
-                            is TagEditorMode.EditMode -> {
-                                tagEditorMode.updateTag(tagEditorMode.tag.id, tagNameTextFieldValue.text)
-                            }
-                        }
+                        val addOrEditFunc = getOnAddOrEditButtonClickFunc(tagEditorMode, tagNameTextFieldValue.text)
+                        addOrEditFunc()
                         onDismissRequest()
                     }) {
-                        val buttonText = when (tagEditorMode) {
-                            is TagEditorMode.AddMode -> {
-                                "Create Tag"
-                            }
-
-                            is TagEditorMode.EditMode -> {
-                                "Update Tag"
-                            }
-                        }
-                        Text(buttonText)
+                        Text(getOnAddOrEditButtonText(tagEditorMode))
                     }
                     Button(onClick = { onDismissRequest() }) {
                         Text("Close")

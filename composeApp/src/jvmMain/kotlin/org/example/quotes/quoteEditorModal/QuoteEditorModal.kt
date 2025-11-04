@@ -1,4 +1,4 @@
-package org.example.quotes.editQuoteModal
+package org.example.quotes.quoteEditorModal
 
 import Quote
 import Tag
@@ -32,7 +32,7 @@ import org.example.quotes.filterQuotesModal.TagSearchableDropdown
 import org.example.quotes.selectedTags.SelectedTags
 
 @Composable
-fun EditQuoteModal(quote: Quote, updateQuote: (Quote) -> Unit, tags: List<Tag>, onDismissRequest: () -> Unit) {
+fun QuoteEditorModal(quote: Quote, updateQuote: (Quote) -> Unit, tags: List<Tag>, onDismissRequest: () -> Unit) {
     var contentText = remember { mutableStateOf(quote.content) }
     var sourceText = remember { mutableStateOf(quote.source) }
 
