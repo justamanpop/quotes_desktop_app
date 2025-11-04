@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.quotes.shared.DeleteConfirmationModal
@@ -72,7 +73,7 @@ fun QuoteTable(
                             Row {
                                 Text(
                                     quote.source,
-                                    fontSize = 12.sp,
+                                    fontSize = 16.sp,
                                     color = Color.Gray,
                                     modifier = Modifier.padding(start = 8.dp, end = 24.dp).align(Alignment.Bottom),
                                 )

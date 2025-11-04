@@ -17,7 +17,7 @@ fun SearchBar(onSearchTermChange: (String) -> Unit,  modifier: Modifier = Modifi
             onSearchTermChange(v)
             searchText.value = v
         },
-        placeholder = { Text("Search") },
+        placeholder = { Text("Search by quote or author") },
         leadingIcon = { Icon(Icons.Default.Search, "search") },
         modifier = modifier
     )

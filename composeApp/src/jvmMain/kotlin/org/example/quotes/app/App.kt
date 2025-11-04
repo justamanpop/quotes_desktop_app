@@ -2,6 +2,7 @@ package org.example.quotes.app
 
 import QuoteTable
 import SearchBar
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.Filter1
+import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -22,11 +27,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
@@ -93,20 +100,23 @@ fun App(viewModel: AppViewModel) {
                         },
                         modifier = Modifier.padding(top = 12.dp, start = 8.dp)
                     ) {
+                        var isTagFilterButtonFocused by remember { mutableStateOf(false) }
                         Button(
                             onClick = {
                                 viewModel.showFilterQuotesModal()
                             },
-                            colors = ButtonColors(
-                                containerColor = Color.LightGray,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isTagFilterButtonFocused) Color(0xFF8B8888) else Color.LightGray,
                                 contentColor = Color.White,
                                 disabledContainerColor = Color.LightGray,
                                 disabledContentColor = Color.Gray
                             ),
-                            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+                            modifier = Modifier
+                                .pointerHoverIcon(PointerIcon.Hand)
+                                .onFocusChanged { focusState -> isTagFilterButtonFocused = focusState.isFocused }
                         ) {
-                            Icon(Icons.Default.Tune, contentDescription = "filter")
-                            Text(" Filter", color = Color.White, fontSize = 24.sp)
+                            Icon(Icons.Default.FilterAlt, contentDescription = "filter")
+                            Text(" Tag Filter", color = Color.White, fontSize = 24.sp)
                         }
                     }
 
@@ -124,7 +134,7 @@ fun App(viewModel: AppViewModel) {
                             Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add quote")
                             Text(" Add Quote", color = Color.White, fontSize = 24.sp)
                         },
-                        modifier = Modifier.padding(top = 12.dp, start = 680.dp).pointerHoverIcon(PointerIcon.Hand)
+                        modifier = Modifier.padding(top = 12.dp, start = 640.dp).pointerHoverIcon(PointerIcon.Hand)
                     )
 
 
