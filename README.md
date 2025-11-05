@@ -10,8 +10,10 @@ That alone makes it pretty useful, but I can see how if I had more complicated b
 
 The app is feature complete, I wanted to just finish everything I wanted in a personal quotes app for me first. I have too many projects I abandoned early because I got hung up on polishing and perfecting instead of finishing.
 
+Update: A lot of cleanup and refactoring, both of code, and of UI display is also finished
+
 ### Next steps
-There's a lot of messy code and a not so polished UI, so the changes from now on will be focused on fixing that up
+Add tests. I haven't tried out tests in Jetpack Compose before, so this is where I learn. I'm sure refactoring would've been 10x easier with those in place
 
 ---
 ### Build and Run Desktop (JVM) Application
