@@ -13,6 +13,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
@@ -31,8 +32,8 @@ fun Modifier.moveFocusOnTab() = composed {
     }
 }
 
-fun Modifier.lightBorderIfFocused(isFocused: Boolean) = composed {
-    Modifier.border( 0.25f.dp, if(isFocused) Color.LightGray else Transparent)
+fun Modifier.lightBorderIfFocused(isFocused: Boolean, borderWidth: Dp = 1.dp) = composed {
+    Modifier.border( borderWidth, if(isFocused) Color.LightGray else Transparent)
 }
 
 fun copyToClipboard(text: String) {

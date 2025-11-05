@@ -105,7 +105,7 @@ fun App(viewModel: AppViewModel) {
                                 viewModel.showFilterQuotesModal()
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isTagFilterButtonFocused) Color(0xFF938E8E) else Color.LightGray,
+                                containerColor = if (isTagFilterButtonFocused) Color(0xFF767272) else Color.LightGray,
                                 contentColor = Color.White,
                                 disabledContainerColor = Color.LightGray,
                                 disabledContentColor = Color.Gray

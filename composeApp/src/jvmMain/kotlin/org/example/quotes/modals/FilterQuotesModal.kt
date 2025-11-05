@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -30,6 +31,7 @@ import org.example.quotes.shared.TagSearchableDropdown
 import org.example.quotes.modals.tagEditorModal.TagEditorModal
 import org.example.quotes.shared.SelectedTags
 import org.example.quotes.modals.tagEditorModal.TagEditorMode
+import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,25 +99,49 @@ fun FilterQuotesModal(
                     SelectedTags(selectedTags.value, ::unselectTag, Modifier.padding(start = 12.dp))
                 }
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    var isApplyFilterButtonFocused by remember { mutableStateOf(false) }
                     Button(
-                        content = { Text("Apply Filter") }, colors = ButtonColors(
-                            containerColor = Color(52, 161, 235),
+                        colors = ButtonColors(
+                            containerColor = if (isApplyFilterButtonFocused) Color(15, 81, 186) else Color(
+                                52,
+                                161,
+                                235
+                            ),
                             contentColor = Color.White,
                             disabledContainerColor = Color(52, 161, 235),
                             disabledContentColor = Color.White,
-                            ), onClick = {
+                        ),
+                        onClick = {
                             setTagFilters(selectedTags.value)
                             onDismissRequest()
-                        })
-                    Button(content = { Text("Reset All") }, colors = ButtonColors(
-                        containerColor = Color.Red,
-                        contentColor = Color.White,
-                        disabledContainerColor = Color.Red,
-                        disabledContentColor = Color.White,
-                    ), onClick = {
-                        setTagFilters(setOf())
-                        onDismissRequest()
-                    })
+                        },
+                        modifier = Modifier
+                            .onFocusChanged { focusState -> isApplyFilterButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isApplyFilterButtonFocused, 2.dp)
+                    ) {
+                        Text("Apply Filter")
+                    }
+
+
+                    var isResetButtonFocused by remember { mutableStateOf(false) }
+                    Button(
+                        colors = ButtonColors(
+                            containerColor = if (isResetButtonFocused) Color(173, 9, 9, 255) else Color.Red,
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.Red,
+                            disabledContentColor = Color.White,
+                        ),
+                        onClick = {
+                            setTagFilters(setOf())
+                            onDismissRequest()
+                        },
+                        modifier = Modifier
+                            .onFocusChanged { focusState -> isResetButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isResetButtonFocused, 2.dp)
+
+                    ) {
+                        Text("Reset All")
+                    }
                 }
             }
         }
