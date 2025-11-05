@@ -2,6 +2,7 @@ package org.example.quotes.app
 
 import QuoteTable
 import SearchBar
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
@@ -41,6 +44,7 @@ import org.example.quotes.modals.quoteEditorModal.QuoteEditorModal
 import org.example.quotes.modals.FilterQuotesModal
 import org.example.quotes.modals.ManageTagsModal
 import org.example.quotes.modals.quoteEditorModal.QuoteEditorMode
+import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 import org.example.quotes.shared.stripSnackbarMessage
 
@@ -101,7 +105,7 @@ fun App(viewModel: AppViewModel) {
                                 viewModel.showFilterQuotesModal()
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isTagFilterButtonFocused) Color(0xFF8B8888) else Color.LightGray,
+                                containerColor = if (isTagFilterButtonFocused) Color(0xFF938E8E) else Color.LightGray,
                                 contentColor = Color.White,
                                 disabledContainerColor = Color.LightGray,
                                 disabledContentColor = Color.Gray
@@ -109,33 +113,41 @@ fun App(viewModel: AppViewModel) {
                             modifier = Modifier
                                 .pointerHoverIcon(PointerIcon.Hand)
                                 .onFocusChanged { focusState -> isTagFilterButtonFocused = focusState.isFocused }
+                                .lightBorderIfFocused(isTagFilterButtonFocused)
                         ) {
                             Icon(Icons.Default.FilterAlt, contentDescription = "filter")
                             Text(" Tag Filter", color = Color.White, fontSize = 24.sp)
                         }
                     }
+
+
+                    var isManageTagsButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         onClick = {
                             viewModel.showManageTagsModal()
                         },
                         colors = ButtonColors(
-                            containerColor = Color(52, 161, 235),
+                            containerColor = if(isManageTagsButtonFocused) Color(15, 81, 186) else Color(52, 161, 235),
                             contentColor = Color.White,
                             disabledContainerColor = Color.Gray,
                             disabledContentColor = Color.Gray
                         ),
-                        modifier = Modifier.padding(top = 12.dp, start = 8.dp).pointerHoverIcon(PointerIcon.Hand)
+                        modifier = Modifier.padding(top = 12.dp, start = 8.dp)
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isManageTagsButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isManageTagsButtonFocused)
                     ) {
                         Icon(Icons.Default.Edit, contentDescription = "manage tags")
                         Text(" Manage Tags", color = Color.White, fontSize = 24.sp)
                     }
 
+                    var isAddQuoteButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         onClick = {
                             viewModel.showAddQuoteModal()
                         },
                         colors = ButtonColors(
-                            containerColor = Color(23, 176, 71),
+                            containerColor = if(isAddQuoteButtonFocused) Color(3, 104, 3, 255) else Color(23, 176, 71),
                             contentColor = Color.White,
                             disabledContainerColor = Color(23, 176, 71),
                             disabledContentColor = Color.Gray
@@ -144,7 +156,10 @@ fun App(viewModel: AppViewModel) {
                             Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add quote")
                             Text(" Add Quote", color = Color.White, fontSize = 24.sp)
                         },
-                        modifier = Modifier.padding(top = 12.dp, start = 640.dp).pointerHoverIcon(PointerIcon.Hand)
+                        modifier = Modifier.padding(top = 12.dp, start = 640.dp)
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isAddQuoteButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isAddQuoteButtonFocused)
                     )
                 }
                 QuoteTable(
@@ -168,7 +183,12 @@ fun App(viewModel: AppViewModel) {
             }
 
             if (state.isAddQuoteModalOpen) {
-                QuoteEditorModal(QuoteEditorMode.AddMode(viewModel::addQuote), viewModel::addTag, state.tags, viewModel::hideAddQuoteModal)
+                QuoteEditorModal(
+                    QuoteEditorMode.AddMode(viewModel::addQuote),
+                    viewModel::addTag,
+                    state.tags,
+                    viewModel::hideAddQuoteModal
+                )
             }
 
             val quoteToEdit = state.quoteClickedForEdit
