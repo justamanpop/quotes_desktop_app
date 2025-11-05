@@ -165,7 +165,7 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag
                         },
                         colors = ButtonColors(
                             contentColor = Color.White,
-                            containerColor = if(isDeleteTagButtonFocused) Color(156, 3, 3, 255) else Color(245, 1, 32, 255),
+                            containerColor = if(isDeleteTagButtonFocused) Color(156, 3, 3, 255) else Color(201, 9, 35, 255),
                             disabledContentColor = Color.White,
                             disabledContainerColor = Color.Gray
                         ),

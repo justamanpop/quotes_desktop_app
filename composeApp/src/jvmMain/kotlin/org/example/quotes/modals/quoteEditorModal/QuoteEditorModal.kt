@@ -23,7 +23,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -33,6 +36,7 @@ import org.example.quotes.modals.tagEditorModal.TagEditorModal
 import org.example.quotes.modals.tagEditorModal.TagEditorMode
 import org.example.quotes.shared.TagSearchableDropdown
 import org.example.quotes.shared.SelectedTags
+import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 
 @Composable
@@ -121,31 +125,66 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, ta
                         inputFieldFocusRequester,
                         "Add Tag"
                     )
+
+                    var isCreateTagButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         content = { Text("+ Create Tag") },
                         onClick = {
                             openAddTagModal.value = true
                         },
                         colors = ButtonColors(
-                            containerColor = Color(23, 176, 71),
+                            containerColor = if(isCreateTagButtonFocused) Color(3, 104, 3, 255)  else Color(23, 176, 71),
                             contentColor = Color.White,
                             disabledContainerColor = Color(23, 176, 71),
                             disabledContentColor = Color.White,
                         ),
                         modifier = Modifier.padding(start = 96.dp, top = 12.dp)
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isCreateTagButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isCreateTagButtonFocused, 2.dp)
                     )
                 }
                 SelectedTags(selectedTags.value, ::unselectTag)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Button(onClick = {
+                    var isCreateOrUpdateQuoteButtonFocused by remember { mutableStateOf(false) }
+                    Button(
+                        onClick = {
                         val quote = Quote(-1, contentText.text, sourceText.text, tags = selectedTags.value.toList())
                         quoteEditorMode.performAction(quote)
                         onDismissRequest()
-                    }) {
+                        },
+                        colors = ButtonColors(
+                            containerColor = if(isCreateOrUpdateQuoteButtonFocused) Color(15, 81, 186) else Color(52, 161, 235),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.Gray,
+                            disabledContentColor = Color.Gray
+                        ),
+                        modifier = Modifier
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isCreateOrUpdateQuoteButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isCreateOrUpdateQuoteButtonFocused, 2.dp)
+
+                    ) {
                         Text(quoteEditorMode.getButtonText())
                     }
-                    Button(content = { Text("Close") }, onClick = { onDismissRequest() })
+
+                    var isCloseButtonFocused by remember { mutableStateOf(false) }
+                    Button(
+                        onClick = { onDismissRequest() },
+                        colors = ButtonColors(
+                            containerColor = if(isCloseButtonFocused) Color(156, 3, 3, 255) else Color(201, 9, 35, 255),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color.Gray,
+                            disabledContentColor = Color.Gray
+                        ),
+                        modifier = Modifier
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isCloseButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isCloseButtonFocused, 2.dp)
+                    ) {
+                Text("Close")
+            }
                 }
             }
         }

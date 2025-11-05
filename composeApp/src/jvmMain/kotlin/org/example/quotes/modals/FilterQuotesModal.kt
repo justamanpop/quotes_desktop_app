@@ -126,7 +126,7 @@ fun FilterQuotesModal(
                     var isResetButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         colors = ButtonColors(
-                            containerColor = if(isResetButtonFocused) Color(156, 3, 3, 255) else Color(245, 1, 32, 255),
+                            containerColor = if(isResetButtonFocused) Color(156, 3, 3, 255) else Color(201, 9, 35, 255),
                             contentColor = Color.White,
                             disabledContainerColor = Color.Red,
                             disabledContentColor = Color.White,
