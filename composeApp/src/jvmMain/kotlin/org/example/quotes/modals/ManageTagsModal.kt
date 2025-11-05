@@ -12,12 +12,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
@@ -31,6 +33,7 @@ import org.example.quotes.modals.tagEditorModal.TagEditorModal
 import org.example.quotes.shared.DeleteConfirmationModal
 import org.example.quotes.shared.TagSearchableDropdown
 import org.example.quotes.modals.tagEditorModal.TagEditorMode
+import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 
 @Composable
@@ -42,7 +45,11 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag
             dismissOnClickOutside = true,
         ),
     ) {
+
         val inputFieldFocusRequester = remember { FocusRequester() }
+        LaunchedEffect(Unit) {
+            inputFieldFocusRequester.requestFocus()
+        }
 
         val openAddTagModal = remember { mutableStateOf(false) }
         fun hideAddTagModal() {
@@ -98,18 +105,25 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.padding(16.dp).fillMaxWidth().moveFocusOnTab()
             ) {
+                var isCreateTagButtonFocused by remember { mutableStateOf(false) }
                 Button(
-                    content = { Text("+ Create Tag") },
                     onClick = {
                         openAddTagModal.value = true
                     },
                     colors = ButtonColors(
-                        containerColor = Color(23, 176, 71),
+                        containerColor = if(isCreateTagButtonFocused) Color(3, 104, 3, 255)  else Color(23, 176, 71),
                         contentColor = Color.White,
                         disabledContainerColor = Color(23, 176, 71),
                         disabledContentColor = Color.White,
                     ),
-                )
+                    modifier = Modifier
+                        .pointerHoverIcon(PointerIcon.Hand)
+                        .onFocusChanged { focusState -> isCreateTagButtonFocused = focusState.isFocused }
+                        .lightBorderIfFocused(isCreateTagButtonFocused, 2.dp)
+                ) {
+                    Text("+ Create Tag")
+                }
+
                 HorizontalDivider()
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     TagSearchableDropdown(
@@ -121,34 +135,45 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag
                         inputFieldFocusRequester,
                         "Search Tags"
                     )
+
+
+                    var isEditTagButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         onClick = {
                             openUpdateTagModal.value = true
                         },
                         colors = ButtonColors(
-                            containerColor = Color(52, 161, 235),
+                            containerColor = if (isEditTagButtonFocused) Color(15, 81, 186) else Color(52, 161, 235),
                             contentColor = Color.White,
                             disabledContainerColor = Color.Gray,
                             disabledContentColor = Color.White
                         ),
                         enabled = selectedTag != null && (tags.find { t -> t.name == dropdownInputValue } != null),
-                        modifier = Modifier.padding(top = 16.dp, start = 16.dp).pointerHoverIcon(PointerIcon.Hand)
+                        modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isEditTagButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isEditTagButtonFocused, 2.dp)
                     ) {
                         Icon(Icons.Default.Edit, contentDescription = "edit")
                         Text(" Edit", color = Color.White, fontSize = 16.sp)
                     }
+
+                    var isDeleteTagButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         onClick = {
                             openDeleteTagConfirmationModal.value = true
                         },
                         colors = ButtonColors(
                             contentColor = Color.White,
-                            containerColor = Color(186, 22, 39),
+                            containerColor = if(isDeleteTagButtonFocused) Color(156, 3, 3, 255) else Color(245, 1, 32, 255),
                             disabledContentColor = Color.White,
                             disabledContainerColor = Color.Gray
                         ),
                         enabled = selectedTag != null && (tags.find { t -> t.name == dropdownInputValue } != null),
-                        modifier = Modifier.padding(top = 16.dp).pointerHoverIcon(PointerIcon.Hand)
+                        modifier = Modifier.padding(top = 16.dp)
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isDeleteTagButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isDeleteTagButtonFocused, 2.dp)
                     ) {
                         Icon(Icons.Default.Delete, contentDescription = "delete")
                         Text(" Delete", color = Color.White, fontSize = 16.sp)
