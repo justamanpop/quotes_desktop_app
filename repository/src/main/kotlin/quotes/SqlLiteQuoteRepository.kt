@@ -28,6 +28,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
                     tagsMap.getOrPut(quoteId) { mutableListOf() }.add(tag)
                 }
             }
+            statement.close()
         }
 
 
@@ -44,6 +45,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
                 statement.bindText(1, quote.content)
                 statement.bindText(2, quote.source)
                 statement.step()
+                statement.close()
             }
 
             var insertedQuoteId = -1
@@ -58,6 +60,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
                     statement.bindInt(1, insertedQuoteId)
                     statement.bindInt(2, tag.id)
                     statement.step()
+                    statement.close()
                 }
             }
             conn.execSQL("COMMIT;")
@@ -81,12 +84,14 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
                 statement.bindText(2, quote.source)
                 statement.bindInt(3, quote.id)
                 statement.step()
+                statement.close()
             }
 
 
             conn.prepare("DELETE FROM quote_tag_mapping where quote_id = ?").use { statement ->
                 statement.bindInt(1, quote.id)
                 statement.step()
+                statement.close()
             }
 
             quote.tags.forEach { tag ->
@@ -94,6 +99,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
                     statement.bindInt(1, quote.id)
                     statement.bindInt(2, tag.id)
                     statement.step()
+                    statement.close()
                 }
             }
 
@@ -110,11 +116,13 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
             conn.prepare("DELETE FROM quote_tag_mapping WHERE quote_id = ?").use { statement ->
                 statement.bindInt(1, quoteId)
                 statement.step()
+                statement.close()
             }
 
             conn.prepare("DELETE FROM quotes WHERE id = ?").use { statement ->
                 statement.bindInt(1, quoteId)
                 statement.step()
+                statement.close()
             }
             conn.execSQL("COMMIT;")
         } catch (e: Exception) {

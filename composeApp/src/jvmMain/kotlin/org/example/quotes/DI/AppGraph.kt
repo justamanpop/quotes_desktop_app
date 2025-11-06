@@ -12,6 +12,7 @@ import repository.quotes.SqlLiteQuoteRepository
 import repository.tags.SqlLiteTagRepository
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import java.io.File
 import repository.initializeDb
 
 @DependencyGraph
@@ -34,7 +35,12 @@ interface AppGraph {
     @Provides
     fun provideSqliteDbConnection(): SQLiteConnection {
         val dbName = "quotes.db"
-        val conn = BundledSQLiteDriver().open(dbName)
+        val pathPrefix = ".local/state/quotes/"
+        val dbFile = File(System.getProperty("user.home"), pathPrefix + dbName)
+
+        dbFile.parentFile.mkdirs() // Create parent directories if they don't exist
+
+        val conn = BundledSQLiteDriver().open(dbFile.absolutePath)
         initializeDb(conn)
         return conn
     }

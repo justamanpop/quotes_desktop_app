@@ -41,3 +41,7 @@ fun copyToClipboard(text: String) {
     val stringSelection = StringSelection(text)
     clipboard.setContents(stringSelection, null)
 }
+
+fun createDirUnderHomeIfNotExists(pathPrefix: String) {
+
+}

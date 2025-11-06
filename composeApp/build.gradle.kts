@@ -45,8 +45,11 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.example.quotes"
+            packageName = "Quote Manager"
             packageVersion = "1.0.0"
+            linux {
+                iconFile.set(project.file("quotes.png"))
+            }
         }
     }
 }
