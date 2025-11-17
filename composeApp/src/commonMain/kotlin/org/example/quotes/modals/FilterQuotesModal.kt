@@ -28,9 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.example.quotes.shared.TagSearchableDropdown
-import org.example.quotes.modals.tagEditorModal.TagEditorModal
 import org.example.quotes.shared.SelectedTags
-import org.example.quotes.modals.tagEditorModal.TagEditorMode
 import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 
