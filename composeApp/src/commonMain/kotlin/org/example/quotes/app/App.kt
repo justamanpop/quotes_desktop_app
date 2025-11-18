@@ -76,7 +76,8 @@ fun App(viewModel: AppViewModel) {
                 })
             }
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
+            scaffoldPadding ->
+            Column(modifier = Modifier.fillMaxSize().padding(scaffoldPadding)) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SearchBar(
                         viewModel::updateSearchTerm,
