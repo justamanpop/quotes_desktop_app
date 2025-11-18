@@ -13,7 +13,6 @@ import repository.tags.SqlLiteTagRepository
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.example.quotes.shared.getQuoteDirPath
-import java.io.File
 import repository.initializeDb
 import java.nio.file.Paths
 
@@ -36,6 +35,7 @@ interface AppGraph {
 
     @Provides
     fun provideSqliteDbConnection(): SQLiteConnection {
+        //TODO make it generic expected and put actual values for 
         val dbName = "quotes.db"
         val fullPath = Paths.get(getQuoteDirPath(), dbName)
 

@@ -38,3 +38,4 @@ fun Modifier.lightBorderIfFocused(isFocused: Boolean, borderWidth: Dp = 1.dp) = 
 }
 
 expect fun copyToClipboard(text: String)
+expect fun getQuoteDirPath(): String

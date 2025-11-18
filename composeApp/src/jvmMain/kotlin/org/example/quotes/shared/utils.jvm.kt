@@ -10,7 +10,7 @@ actual fun copyToClipboard(text: String) {
     clipboard.setContents(stringSelection, null)
 }
 
-fun getQuoteDirPath(): String {
+actual fun getQuoteDirPath(): String {
     val os = System.getProperty("os.name").lowercase()
     val home = System.getProperty("user.home")
 
