@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dev.zacsweers.metro.createGraph
 import org.example.quotes.DI.AppGraph
-
 import org.example.quotes.app.App
+
 import org.example.quotes.app.AppViewModel
 
 
