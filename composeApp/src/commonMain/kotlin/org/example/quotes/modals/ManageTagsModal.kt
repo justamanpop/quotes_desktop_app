@@ -37,7 +37,13 @@ import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 
 @Composable
-fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag) -> Unit, deleteTag: (tagId: Int) -> Unit, onDismissRequest: () -> Unit) {
+fun ManageTagsModal(
+    tags: List<Tag>,
+    addTag: (Tag) -> Unit,
+    updateTag: (tag: Tag) -> Unit,
+    deleteTag: (tagId: Int) -> Unit,
+    onDismissRequest: () -> Unit
+) {
     Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
@@ -88,6 +94,7 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag
             setDropdownInputValue("")
             setDropdownTextFieldState(TextFieldValue())
         }
+
         fun deleteTagInModal(tagId: Int) {
             deleteTag(tagId)
             setDropdownInputValue("")
@@ -111,7 +118,7 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag
                         openAddTagModal.value = true
                     },
                     colors = ButtonColors(
-                        containerColor = if(isCreateTagButtonFocused) Color(3, 104, 3, 255)  else Color(23, 176, 71),
+                        containerColor = if (isCreateTagButtonFocused) Color(3, 104, 3, 255) else Color(23, 176, 71),
                         contentColor = Color.White,
                         disabledContainerColor = Color(23, 176, 71),
                         disabledContentColor = Color.White,
@@ -125,18 +132,16 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag
                 }
 
                 HorizontalDivider()
+                TagSearchableDropdown(
+                    tags,
+                    dropdownTextFieldValue,
+                    ::setDropdownTextFieldState,
+                    setDropdownInputValue,
+                    ::selectTag,
+                    inputFieldFocusRequester,
+                    "Search Tags"
+                )
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    TagSearchableDropdown(
-                        tags,
-                        dropdownTextFieldValue,
-                        ::setDropdownTextFieldState,
-                        setDropdownInputValue,
-                        ::selectTag,
-                        inputFieldFocusRequester,
-                        "Search Tags"
-                    )
-
-
                     var isEditTagButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         onClick = {
@@ -165,7 +170,12 @@ fun ManageTagsModal(tags: List<Tag>, addTag: (Tag) -> Unit, updateTag: (tag: Tag
                         },
                         colors = ButtonColors(
                             contentColor = Color.White,
-                            containerColor = if(isDeleteTagButtonFocused) Color(156, 3, 3, 255) else Color(201, 9, 35, 255),
+                            containerColor = if (isDeleteTagButtonFocused) Color(156, 3, 3, 255) else Color(
+                                201,
+                                9,
+                                35,
+                                255
+                            ),
                             disabledContentColor = Color.White,
                             disabledContainerColor = Color.Gray
                         ),
