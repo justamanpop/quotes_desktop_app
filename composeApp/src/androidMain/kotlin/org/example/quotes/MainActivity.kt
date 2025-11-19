@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dev.zacsweers.metro.createGraph
+import dev.zacsweers.metro.createGraphFactory
 import org.example.quotes.DI.AppGraph
 import org.example.quotes.app.App
 
@@ -16,9 +17,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val graph = createGraph<AppGraph>()
-        val appViewModel = AppViewModel(graph.appCore)
+        val ctx = applicationContext
+        val graph = createGraphFactory<AppGraph.Factory>().create(ctx)
 
+        val appViewModel = AppViewModel(graph.appCore)
         setContent {
             App(appViewModel)
         }
