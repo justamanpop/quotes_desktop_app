@@ -84,18 +84,16 @@ fun FilterQuotesModal(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier.padding(16.dp).fillMaxWidth().moveFocusOnTab()
             ) {
-                Row {
-                    TagSearchableDropdown(
-                        tags.minus(selectedTags.value),
-                        dropdownTextFieldValue,
-                        ::setDropdownTextFieldState,
-                        setDropdownInputValue,
-                        ::selectTagFilter,
-                        inputFieldFocusRequester,
-                        "Choose tags to filter"
-                    )
-                    SelectedTags(selectedTags.value, ::unselectTag, Modifier.padding(start = 12.dp))
-                }
+                TagSearchableDropdown(
+                    tags.minus(selectedTags.value),
+                    dropdownTextFieldValue,
+                    ::setDropdownTextFieldState,
+                    setDropdownInputValue,
+                    ::selectTagFilter,
+                    inputFieldFocusRequester,
+                    "Choose tags to filter"
+                )
+                SelectedTags(selectedTags.value, ::unselectTag, Modifier.padding(start = 12.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     var isApplyFilterButtonFocused by remember { mutableStateOf(false) }
                     Button(
@@ -124,7 +122,12 @@ fun FilterQuotesModal(
                     var isResetButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         colors = ButtonColors(
-                            containerColor = if(isResetButtonFocused) Color(156, 3, 3, 255) else Color(201, 9, 35, 255),
+                            containerColor = if (isResetButtonFocused) Color(156, 3, 3, 255) else Color(
+                                201,
+                                9,
+                                35,
+                                255
+                            ),
                             contentColor = Color.White,
                             disabledContainerColor = Color.Red,
                             disabledContentColor = Color.White,
