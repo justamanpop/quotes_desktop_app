@@ -1,4 +1,4 @@
-This is a Kotlin Multiplatform project targeting only the Desktop (JVM).
+This is a Kotlin Multiplatform project targeting the Desktop (JVM) and Android.
 
 ### Summary
 This is a quote management application, where you can CRUD quotes. It also supports associating multiple tags with quotes, CRUD for tags, and filtering quotes by tags.
@@ -10,7 +10,7 @@ That alone makes it pretty useful, but I can see how if I had more complicated b
 
 The app is feature complete, I wanted to just finish everything I wanted in a personal quotes app for me first. I have too many projects I abandoned early because I got hung up on polishing and perfecting instead of finishing.
 
-Update: A lot of cleanup and refactoring, both of code, and of UI display is also finished
+Update: A lot of cleanup and refactoring, both of code and of UI display is also finished
 
 ### Next steps
 Add tests. I haven't tried out tests in Jetpack Compose before, so this is where I learn. I'm sure refactoring would've been 10x easier with those in place
