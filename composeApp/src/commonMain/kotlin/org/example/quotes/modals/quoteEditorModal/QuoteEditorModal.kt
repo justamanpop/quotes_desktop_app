@@ -40,7 +40,12 @@ import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 
 @Composable
-fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, tags: List<Tag>, onDismissRequest: () -> Unit) {
+fun QuoteEditorModal(
+    quoteEditorMode: QuoteEditorMode,
+    addTag: (Tag) -> Unit,
+    tags: List<Tag>,
+    onDismissRequest: () -> Unit
+) {
     var contentText by remember {
         val content = quoteEditorMode.getInitialContent()
         mutableStateOf(TextFieldValue(content, TextRange(content.length)))
@@ -49,6 +54,9 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, ta
         val source = quoteEditorMode.getInitialSource()
         mutableStateOf(TextFieldValue(source, TextRange(source.length)))
     }
+
+    var isContentError by remember { mutableStateOf(false) }
+    var isSourceError by remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -103,13 +111,21 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, ta
             ) {
                 OutlinedTextField(
                     value = contentText,
-                    onValueChange = { contentText = it },
+                    onValueChange = {
+                        contentText = it
+                        isContentError = contentText.text.isEmpty()
+                    },
+                    isError = isContentError,
                     label = { Text("Content") },
                     modifier = Modifier.height(220.dp).fillMaxWidth().focusRequester(focusRequester).moveFocusOnTab()
                 )
                 OutlinedTextField(
                     value = sourceText,
-                    onValueChange = { sourceText = it },
+                    onValueChange = {
+                        sourceText = it
+                        isSourceError = sourceText.text.isEmpty()
+                    },
+                    isError = isSourceError,
                     label = { Text("Source") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -133,12 +149,16 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, ta
                             openAddTagModal.value = true
                         },
                         colors = ButtonColors(
-                            containerColor = if(isCreateTagButtonFocused) Color(3, 104, 3, 255)  else Color(23, 176, 71),
+                            containerColor = if (isCreateTagButtonFocused) Color(3, 104, 3, 255) else Color(
+                                23,
+                                176,
+                                71
+                            ),
                             contentColor = Color.White,
                             disabledContainerColor = Color(23, 176, 71),
                             disabledContentColor = Color.White,
                         ),
-                        modifier = Modifier.padding(start = 96.dp, top = 12.dp)
+                        modifier = Modifier.padding(start = 12.dp, top = 12.dp)
                             .pointerHoverIcon(PointerIcon.Hand)
                             .onFocusChanged { focusState -> isCreateTagButtonFocused = focusState.isFocused }
                             .lightBorderIfFocused(isCreateTagButtonFocused, 2.dp)
@@ -150,16 +170,21 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, ta
                     var isCreateOrUpdateQuoteButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         onClick = {
-                        val quote = Quote(-1, contentText.text, sourceText.text, tags = selectedTags.value.toList())
-                        quoteEditorMode.performAction(quote)
-                        onDismissRequest()
+                            val quote = Quote(-1, contentText.text, sourceText.text, tags = selectedTags.value.toList())
+                            quoteEditorMode.performAction(quote)
+                            onDismissRequest()
                         },
                         colors = ButtonColors(
-                            containerColor = if(isCreateOrUpdateQuoteButtonFocused) Color(15, 81, 186) else Color(52, 161, 235),
+                            containerColor = if (isCreateOrUpdateQuoteButtonFocused) Color(15, 81, 186) else Color(
+                                52,
+                                161,
+                                235
+                            ),
                             contentColor = Color.White,
                             disabledContainerColor = Color.Gray,
-                            disabledContentColor = Color.Gray
+                            disabledContentColor = Color.White
                         ),
+                        enabled = contentText.text != "" && sourceText.text != "",
                         modifier = Modifier
                             .pointerHoverIcon(PointerIcon.Hand)
                             .onFocusChanged { focusState -> isCreateOrUpdateQuoteButtonFocused = focusState.isFocused }
@@ -173,7 +198,12 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, ta
                     Button(
                         onClick = { onDismissRequest() },
                         colors = ButtonColors(
-                            containerColor = if(isCloseButtonFocused) Color(156, 3, 3, 255) else Color(201, 9, 35, 255),
+                            containerColor = if (isCloseButtonFocused) Color(156, 3, 3, 255) else Color(
+                                201,
+                                9,
+                                35,
+                                255
+                            ),
                             contentColor = Color.White,
                             disabledContainerColor = Color.Gray,
                             disabledContentColor = Color.Gray
@@ -183,8 +213,8 @@ fun QuoteEditorModal(quoteEditorMode: QuoteEditorMode, addTag: (Tag) -> Unit, ta
                             .onFocusChanged { focusState -> isCloseButtonFocused = focusState.isFocused }
                             .lightBorderIfFocused(isCloseButtonFocused, 2.dp)
                     ) {
-                Text("Close")
-            }
+                        Text("Close")
+                    }
                 }
             }
         }
