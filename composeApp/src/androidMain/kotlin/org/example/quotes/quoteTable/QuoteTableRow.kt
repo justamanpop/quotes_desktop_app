@@ -42,48 +42,32 @@ actual fun QuoteTableRow(
     copyToClipboard: (String) -> Unit,
     onDeleteClick: () -> Unit,
 ) {
-    Row(modifier = Modifier.clickable(enabled = true, onClick = {
-        onRowClick(quote)
-    }).pointerHoverIcon(PointerIcon.Hand)) {
-        Column(modifier = Modifier.weight(14f)) {
-            Text(
-                quote.content,
-                fontSize = 24.sp,
-                lineHeight = 32.sp,
-                modifier = Modifier.padding(8.dp)
-            )
-            Row() {
-                Text(
-                    quote.source,
-                    fontSize = 16.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(start = 8.dp, end = 24.dp).align(Alignment.Bottom),
-                )
-                quote.tags.forEach { tag ->
-                    Card(
-                        colors = CardColors(
-                            containerColor = Color.LightGray,
-                            contentColor = Color(64, 126, 201),
-                            disabledContainerColor = Color.LightGray,
-                            disabledContentColor = Color.White,
-                        ),
-                        modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
-                    ) {
-                        Text(
-                            tag.name,
-                            fontSize = 12.sp,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                        )
-                    }
-                }
-            }
-        }
+    Column(
+        modifier = Modifier
+            .clickable(enabled = true, onClick = {
+                onRowClick(quote)
+            })
+            .pointerHoverIcon(PointerIcon.Hand)
+    ) {
+        Text(
+            quote.content,
+            fontSize = 24.sp,
+            lineHeight = 32.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+        Text(
+            quote.source,
+            fontSize = 16.sp,
+            color = Color.Gray,
+            modifier = Modifier
+                .padding(start = 8.dp, end = 24.dp)
+        )
 
         Row(
-            Modifier.weight(1f).fillMaxHeight().padding(2.dp),
-            verticalAlignment = Alignment.CenterVertically
+            Modifier
+                .fillMaxHeight()
+                .padding(top=1.dp),
         ) {
-
             var isCopyQuoteButtonFocused by remember { mutableStateOf(false) }
             Button(
                 onClick = {
@@ -96,8 +80,8 @@ actual fun QuoteTableRow(
                     disabledContentColor = Color.White,
                     disabledContainerColor = Color.LightGray
                 ),
-                contentPadding = PaddingValues(8.dp),
-                modifier = Modifier.padding(top = 8.dp, end = 8.dp)
+                modifier = Modifier
+                    .padding(top = 4.dp, start = 8.dp)
                     .pointerHoverIcon(
                         PointerIcon.Hand
                     )
@@ -110,7 +94,9 @@ actual fun QuoteTableRow(
                 Icon(
                     Icons.Default.ContentCopy,
                     contentDescription = "copy",
-                    modifier = Modifier.height(24.dp).width(24.dp)
+                    modifier = Modifier
+                        .height(18.dp)
+                        .width(18.dp)
                 )
             }
 
@@ -128,8 +114,8 @@ actual fun QuoteTableRow(
                     disabledContentColor = Color.White,
                     disabledContainerColor = Color(186, 22, 39),
                 ),
-                contentPadding = PaddingValues(8.dp),
-                modifier = Modifier.padding(top = 8.dp, end = 16.dp)
+                modifier = Modifier
+                    .padding(top = 4.dp, start = 8.dp)
                     .pointerHoverIcon(
                         PointerIcon.Hand
                     )
@@ -140,9 +126,32 @@ actual fun QuoteTableRow(
                 Icon(
                     Icons.Default.Delete,
                     contentDescription = "delete",
-                    modifier = Modifier.height(24.dp).width(24.dp)
+                    modifier = Modifier
+                        .height(18.dp)
+                        .width(18.dp)
                 )
             }
         }
+        Row {
+            quote.tags.forEach { tag ->
+                Card(
+                    colors = CardColors(
+                        containerColor = Color.LightGray,
+                        contentColor = Color(64, 126, 201),
+                        disabledContainerColor = Color.LightGray,
+                        disabledContentColor = Color.White,
+                    ),
+                    modifier = Modifier.padding(start = 4.dp, bottom = 2.dp, top = 4.dp)
+                ) {
+                    Text(
+                        tag.name,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                    )
+                }
+            }
+        }
     }
+
+
 }
