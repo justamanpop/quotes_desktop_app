@@ -4,8 +4,10 @@ import QuoteTable
 import SearchBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -75,15 +77,18 @@ actual fun App(viewModel: AppViewModel) {
                     Snackbar(updatedSnackbarData, containerColor = containerColor)
                 })
             }
-        ) {
-            scaffoldPadding ->
-            Column(modifier = Modifier.fillMaxSize().padding(scaffoldPadding)) {
+        ) { scaffoldPadding ->
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(scaffoldPadding)) {
+                SearchBar(
+                    viewModel::updateSearchTerm,
+                    Modifier
+                        .padding(12.dp, 12.dp, 12.dp, 0.dp)
+                        .fillMaxWidth()
+                        .moveFocusOnTab()
+                )
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    SearchBar(
-                        viewModel::updateSearchTerm,
-                        Modifier.padding(12.dp, 12.dp, 12.dp, 0.dp).width(600.dp).focusRequester(focusRequester)
-                            .moveFocusOnTab()
-                    )
                     BadgedBox(
                         badge = {
                             if (state.filterTags.isNotEmpty()) {
@@ -114,7 +119,7 @@ actual fun App(viewModel: AppViewModel) {
                                 .lightBorderIfFocused(isTagFilterButtonFocused)
                         ) {
                             Icon(Icons.Default.FilterAlt, contentDescription = "filter")
-                            Text(" Tag Filter", color = Color.White, fontSize = 24.sp)
+                            Text(" Tag Filter", color = Color.White, fontSize = 16.sp)
                         }
                     }
 
@@ -125,41 +130,44 @@ actual fun App(viewModel: AppViewModel) {
                             viewModel.showManageTagsModal()
                         },
                         colors = ButtonColors(
-                            containerColor = if(isManageTagsButtonFocused) Color(15, 81, 186) else Color(52, 161, 235),
+                            containerColor = if (isManageTagsButtonFocused) Color(15, 81, 186) else Color(52, 161, 235),
                             contentColor = Color.White,
                             disabledContainerColor = Color.Gray,
                             disabledContentColor = Color.Gray
                         ),
-                        modifier = Modifier.padding(top = 12.dp, start = 8.dp)
+                        modifier = Modifier
+                            .padding(top = 12.dp, start = 8.dp)
                             .pointerHoverIcon(PointerIcon.Hand)
                             .onFocusChanged { focusState -> isManageTagsButtonFocused = focusState.isFocused }
                             .lightBorderIfFocused(isManageTagsButtonFocused)
                     ) {
                         Icon(Icons.Default.Edit, contentDescription = "manage tags")
-                        Text(" Manage Tags", color = Color.White, fontSize = 24.sp)
+                        Text(" Manage Tags", color = Color.White, fontSize = 16.sp)
                     }
-
-                    var isAddQuoteButtonFocused by remember { mutableStateOf(false) }
-                    Button(
-                        onClick = {
-                            viewModel.showAddQuoteModal()
-                        },
-                        colors = ButtonColors(
-                            containerColor = if(isAddQuoteButtonFocused) Color(3, 104, 3, 255) else Color(23, 176, 71),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color(23, 176, 71),
-                            disabledContentColor = Color.Gray
-                        ),
-                        content = {
-                            Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add quote")
-                            Text(" Add Quote", color = Color.White, fontSize = 24.sp)
-                        },
-                        modifier = Modifier.padding(top = 12.dp, start = 640.dp)
-                            .pointerHoverIcon(PointerIcon.Hand)
-                            .onFocusChanged { focusState -> isAddQuoteButtonFocused = focusState.isFocused }
-                            .lightBorderIfFocused(isAddQuoteButtonFocused)
-                    )
                 }
+
+                Spacer(Modifier.height(12.dp))
+                var isAddQuoteButtonFocused by remember { mutableStateOf(false) }
+                Button(
+                    onClick = {
+                        viewModel.showAddQuoteModal()
+                    },
+                    colors = ButtonColors(
+                        containerColor = if (isAddQuoteButtonFocused) Color(3, 104, 3, 255) else Color(23, 176, 71),
+                        contentColor = Color.White,
+                        disabledContainerColor = Color(23, 176, 71),
+                        disabledContentColor = Color.Gray
+                    ),
+                    content = {
+                        Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add quote")
+                        Text(" Add Quote", color = Color.White, fontSize = 16.sp)
+                    },
+                    modifier = Modifier
+                        .padding(top = 12.dp, start = 8.dp)
+                        .pointerHoverIcon(PointerIcon.Hand)
+                        .onFocusChanged { focusState -> isAddQuoteButtonFocused = focusState.isFocused }
+                        .lightBorderIfFocused(isAddQuoteButtonFocused)
+                )
                 QuoteTable(
                     filteredQuotes,
                     { q ->
@@ -167,7 +175,9 @@ actual fun App(viewModel: AppViewModel) {
                     },
                     viewModel::deleteQuote,
                     viewModel::showSnackbarMessage,
-                    Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)
+                    Modifier
+                        .fillMaxSize()
+                        .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
                 )
             }
 
