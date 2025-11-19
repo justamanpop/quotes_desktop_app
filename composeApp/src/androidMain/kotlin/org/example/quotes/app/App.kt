@@ -2,6 +2,7 @@ package org.example.quotes.app
 
 import QuoteTable
 import SearchBar
+import android.content.ClipData
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +35,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,6 +54,11 @@ import org.example.quotes.shared.stripSnackbarMessage
 actual fun App(viewModel: AppViewModel) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val filteredQuotes by viewModel.filteredQuotes.collectAsStateWithLifecycle()
+
+    val clipboard = LocalClipboard.current
+    fun copyToClipboard(text: String) {
+        clipboard.nativeClipboard.setPrimaryClip(ClipData.newPlainText("", text))
+    }
 
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
@@ -78,9 +86,11 @@ actual fun App(viewModel: AppViewModel) {
                 })
             }
         ) { scaffoldPadding ->
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(scaffoldPadding)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(scaffoldPadding)
+            ) {
                 SearchBar(
                     viewModel::updateSearchTerm,
                     Modifier
@@ -175,6 +185,7 @@ actual fun App(viewModel: AppViewModel) {
                     },
                     viewModel::deleteQuote,
                     viewModel::showSnackbarMessage,
+                    ::copyToClipboard,
                     Modifier
                         .fillMaxSize()
                         .padding(start = 12.dp, end = 12.dp, bottom = 12.dp)

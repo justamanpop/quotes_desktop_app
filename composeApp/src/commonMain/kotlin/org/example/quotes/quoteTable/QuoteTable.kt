@@ -39,7 +39,6 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.example.quotes.shared.DeleteConfirmationModal
-import org.example.quotes.shared.copyToClipboard
 import org.example.quotes.shared.lightBorderIfFocused
 import kotlin.collections.forEach
 
@@ -49,6 +48,7 @@ fun QuoteTable(
     onRowClick: (Quote) -> Unit,
     deleteQuote: (quoteId: Int) -> Unit,
     showSnackbar: (message: String) -> Unit,
+    copyToClipboard: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val openDeleteQuoteConfirmationModal = remember { mutableStateOf(false) }

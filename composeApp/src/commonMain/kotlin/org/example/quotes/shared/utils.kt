@@ -37,5 +37,4 @@ fun Modifier.lightBorderIfFocused(isFocused: Boolean, borderWidth: Dp = 1.dp) = 
     Modifier.border(borderWidth, if (isFocused) Color.LightGray else Transparent)
 }
 
-expect fun copyToClipboard(text: String)
 expect fun getQuoteDirPath(): String

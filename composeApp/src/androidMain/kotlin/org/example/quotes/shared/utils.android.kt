@@ -2,9 +2,6 @@ package org.example.quotes.shared
 
 import java.io.File
 
-actual fun copyToClipboard(text: String) {
-}
-
 actual fun getQuoteDirPath(): String {
     val os = System.getProperty("os.name").lowercase()
     val home = System.getProperty("user.home")

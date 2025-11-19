@@ -4,7 +4,7 @@ import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
 
-actual fun copyToClipboard(text: String) {
+fun copyToClipboard(text: String) {
     val clipboard = Toolkit.getDefaultToolkit().systemClipboard
     val stringSelection = StringSelection(text)
     clipboard.setContents(stringSelection, null)

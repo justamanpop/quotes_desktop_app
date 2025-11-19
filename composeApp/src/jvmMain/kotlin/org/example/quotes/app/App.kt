@@ -41,6 +41,7 @@ import org.example.quotes.modals.quoteEditorModal.QuoteEditorModal
 import org.example.quotes.modals.FilterQuotesModal
 import org.example.quotes.modals.ManageTagsModal
 import org.example.quotes.modals.quoteEditorModal.QuoteEditorMode
+import org.example.quotes.shared.copyToClipboard
 import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 import org.example.quotes.shared.stripSnackbarMessage
@@ -167,6 +168,7 @@ actual fun App(viewModel: AppViewModel) {
                     },
                     viewModel::deleteQuote,
                     viewModel::showSnackbarMessage,
+                    ::copyToClipboard,
                     Modifier.fillMaxSize().padding(12.dp, 12.dp, 12.dp, 12.dp)
                 )
             }
