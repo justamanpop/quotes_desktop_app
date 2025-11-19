@@ -131,7 +131,6 @@ fun QuoteEditorModal(
                 )
 
 
-                Row {
                     TagSearchableDropdown(
                         tags.minus(selectedTags.value),
                         dropdownTextFieldValue,
@@ -141,29 +140,6 @@ fun QuoteEditorModal(
                         inputFieldFocusRequester,
                         "Add Tag"
                     )
-
-                    var isCreateTagButtonFocused by remember { mutableStateOf(false) }
-                    Button(
-                        content = { Text("+ Create Tag") },
-                        onClick = {
-                            openAddTagModal.value = true
-                        },
-                        colors = ButtonColors(
-                            containerColor = if (isCreateTagButtonFocused) Color(3, 104, 3, 255) else Color(
-                                23,
-                                176,
-                                71
-                            ),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color(23, 176, 71),
-                            disabledContentColor = Color.White,
-                        ),
-                        modifier = Modifier.padding(start = 12.dp, top = 12.dp)
-                            .pointerHoverIcon(PointerIcon.Hand)
-                            .onFocusChanged { focusState -> isCreateTagButtonFocused = focusState.isFocused }
-                            .lightBorderIfFocused(isCreateTagButtonFocused, 2.dp)
-                    )
-                }
                 SelectedTags(selectedTags.value, ::unselectTag)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
