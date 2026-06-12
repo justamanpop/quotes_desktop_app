@@ -1,3 +1,4 @@
+import kotlinx.serialization.json.Json
 import ports.driven.QuoteRepository
 import ports.driven.TagRepository
 import ports.driving.ForExports
@@ -43,6 +44,6 @@ class AppCore(private val quoteRepository: QuoteRepository, private val tagRepos
 
     override fun exportQuotesToJson(): String {
         val quotes = quoteRepository.getQuotes()
-        return ""
+        return Json.encodeToString(quotes)
     }
 }

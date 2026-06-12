@@ -13,8 +13,6 @@ repositories {
 
 dependencies {
     implementation(project(":core"))
-    implementation(libs.androidx.sqlite.bundled)
-    implementation(libs.androidx.sqlite)
     testImplementation(kotlin("test"))
 }
 
