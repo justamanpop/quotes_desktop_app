@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.composeHotReload)
     alias(libs.plugins.metro)
 }
 
@@ -18,12 +17,18 @@ kotlin {
         }
     }
 
-    jvm()
+    jvm() {
+        compilations.all {
+           compilerOptions.configure {
+               jvmTarget.set(JvmTarget.JVM_24)
+           }
+        }
+    }
 
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core"))
-            implementation(project(":repository"))
+            implementation(project(":AndroidSqliteRepository"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

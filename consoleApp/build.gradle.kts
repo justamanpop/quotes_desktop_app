@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization") version "2.2.0"
 }
 
 group = "org.example"
@@ -11,13 +10,16 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.kotlinx.serialization.json)
+    implementation(project(":core"))
+    implementation(project(":repository"))
+    implementation(project(":core"))
     testImplementation(kotlin("test"))
+}
+
+kotlin {
+    jvmToolchain(24)
 }
 
 tasks.test {
     useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(24)
 }

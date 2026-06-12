@@ -1,9 +1,10 @@
 import ports.driven.QuoteRepository
 import ports.driven.TagRepository
+import ports.driving.ForExports
 import ports.driving.ForQuotes
 import ports.driving.ForTags
 
-class AppCore(private val quoteRepository: QuoteRepository, private val tagRepository: TagRepository): ForQuotes, ForTags {
+class AppCore(private val quoteRepository: QuoteRepository, private val tagRepository: TagRepository): ForQuotes, ForTags, ForExports {
     override fun getQuotes(): List<Quote> {
         return quoteRepository.getQuotes()
     }
@@ -38,5 +39,10 @@ class AppCore(private val quoteRepository: QuoteRepository, private val tagRepos
 
     override fun deleteTag(tagId: Int) {
         tagRepository.deleteTag(tagId)
+    }
+
+    override fun exportQuotesToJson(): String {
+        val quotes = quoteRepository.getQuotes()
+        return ""
     }
 }

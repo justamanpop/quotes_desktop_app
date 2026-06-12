@@ -214,6 +214,9 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         _state.update { currState -> currState.copy(filterTags = filterTags) }
     }
 
+    fun exportQuotes() {
+
+    }
 
     fun showAddQuoteModal() {
         _state.update { currState -> currState.copy(isAddQuoteModalOpen = true) }

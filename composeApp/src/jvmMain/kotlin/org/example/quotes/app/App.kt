@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -76,8 +77,7 @@ actual fun App(viewModel: AppViewModel) {
                     Snackbar(updatedSnackbarData, containerColor = containerColor)
                 })
             }
-        ) {
-            scaffoldPadding ->
+        ) { scaffoldPadding ->
             Column(modifier = Modifier.fillMaxSize().padding(scaffoldPadding)) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SearchBar(
@@ -126,7 +126,7 @@ actual fun App(viewModel: AppViewModel) {
                             viewModel.showManageTagsModal()
                         },
                         colors = ButtonColors(
-                            containerColor = if(isManageTagsButtonFocused) Color(15, 81, 186) else Color(52, 161, 235),
+                            containerColor = if (isManageTagsButtonFocused) Color(15, 81, 186) else Color(52, 161, 235),
                             contentColor = Color.White,
                             disabledContainerColor = Color.Gray,
                             disabledContentColor = Color.Gray
@@ -146,7 +146,7 @@ actual fun App(viewModel: AppViewModel) {
                             viewModel.showAddQuoteModal()
                         },
                         colors = ButtonColors(
-                            containerColor = if(isAddQuoteButtonFocused) Color(3, 104, 3, 255) else Color(23, 176, 71),
+                            containerColor = if (isAddQuoteButtonFocused) Color(3, 104, 3, 255) else Color(23, 176, 71),
                             contentColor = Color.White,
                             disabledContainerColor = Color(23, 176, 71),
                             disabledContentColor = Color.Gray
@@ -155,10 +155,31 @@ actual fun App(viewModel: AppViewModel) {
                             Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add quote")
                             Text(" Add Quote", color = Color.White, fontSize = 24.sp)
                         },
-                        modifier = Modifier.padding(top = 12.dp, start = 640.dp)
+                        modifier = Modifier.padding(top = 12.dp, start = 400.dp)
                             .pointerHoverIcon(PointerIcon.Hand)
                             .onFocusChanged { focusState -> isAddQuoteButtonFocused = focusState.isFocused }
                             .lightBorderIfFocused(isAddQuoteButtonFocused)
+                    )
+
+                    var isExportButtonFocused by remember { mutableStateOf(false) }
+                    Button(
+                        onClick = {
+//                            viewModel.showExportModal()
+                        },
+                        colors = ButtonColors(
+                            containerColor = if (isExportButtonFocused) Color(0xFF6F6A6A) else Color(0xFF615F5F),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color(23, 176, 71),
+                            disabledContentColor = Color.Gray
+                        ),
+                        content = {
+                            Icon(Icons.Default.Upload, contentDescription = "export")
+                            Text("Export", color = Color.White, fontSize = 24.sp)
+                        },
+                        modifier = Modifier.padding(top = 12.dp, start = 50.dp)
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isExportButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isExportButtonFocused)
                     )
                 }
                 QuoteTable(

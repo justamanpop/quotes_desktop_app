@@ -35,3 +35,5 @@ plugins {
 include(":composeApp")
 include(":core")
 include(":repository")
+include("consoleApp")
+include("AndroidSqliteRepository")
