@@ -264,4 +264,8 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         _state.update { currState -> currState.copy(isManageTagsModalOpen = false) }
         requestFocus()
     }
+
+    fun getJsonExport(): String {
+        return appCore.exportQuotesToJson()
+    }
 }

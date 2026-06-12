@@ -3,6 +3,8 @@ package org.example.quotes.shared
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 
 fun copyToClipboard(text: String) {
     val clipboard = Toolkit.getDefaultToolkit().systemClipboard
@@ -65,4 +67,9 @@ fun ensureOneInstanceOfAppRunning() {
         lockFileChannel.close()
         lockFile.delete()
     })
+}
+
+actual fun writeFile(contents: String) {
+    val file = File("quotes.json")
+    file.writeText(contents)
 }

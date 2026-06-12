@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
+import java.nio.file.Path
 
 fun Modifier.moveFocusOnTab() = composed {
     val focusManager = LocalFocusManager.current
@@ -36,5 +37,7 @@ fun Modifier.moveFocusOnTab() = composed {
 fun Modifier.lightBorderIfFocused(isFocused: Boolean, borderWidth: Dp = 1.dp) = composed {
     Modifier.border(borderWidth, if (isFocused) Color.LightGray else Transparent)
 }
+
+expect fun writeFile(contents: String)
 
 expect fun getQuoteDirPath(): String

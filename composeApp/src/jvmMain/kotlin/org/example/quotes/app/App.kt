@@ -233,7 +233,9 @@ actual fun App(viewModel: AppViewModel) {
                 )
             }
             if (state.isExportModalOpen) {
-                ExportModal(viewModel::hideExportModal)
+                ExportModal(
+                    viewModel::getJsonExport, viewModel::showSnackbarMessage, viewModel::hideExportModal
+                )
             }
         }
     }
