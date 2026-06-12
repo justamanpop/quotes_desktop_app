@@ -21,6 +21,7 @@ data class AppViewModelState(
     val isAddQuoteModalOpen: Boolean = false,
     val isFilterQuotesModalOpen: Boolean = false,
     val isManageTagsModalOpen: Boolean = false,
+    val isExportModalOpen: Boolean = false,
 
     val isEditQuoteModalOpen: Boolean = false,
     val quoteClickedForEdit: Quote? = null,
@@ -234,6 +235,15 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
 
     fun hideFilterQuotesModal() {
         _state.update { currState -> currState.copy(isFilterQuotesModalOpen = false) }
+        requestFocus()
+    }
+
+    fun showExportModal() {
+        _state.update { currState -> currState.copy(isExportModalOpen = true) }
+    }
+
+    fun hideExportModal() {
+        _state.update { currState -> currState.copy(isExportModalOpen = false) }
         requestFocus()
     }
 

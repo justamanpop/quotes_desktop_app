@@ -36,6 +36,7 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.example.quotes.modals.ExportModal
 import org.example.quotes.shared.constructSnackbarDataObject
 import org.example.quotes.shared.getSnackbarColor
 import org.example.quotes.modals.quoteEditorModal.QuoteEditorModal
@@ -164,7 +165,7 @@ actual fun App(viewModel: AppViewModel) {
                     var isExportButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         onClick = {
-//                            viewModel.showExportModal()
+                            viewModel.showExportModal()
                         },
                         colors = ButtonColors(
                             containerColor = if (isExportButtonFocused) Color(0xFF6F6A6A) else Color(0xFF615F5F),
@@ -230,6 +231,9 @@ actual fun App(viewModel: AppViewModel) {
                     viewModel::deleteTag,
                     viewModel::hideManageTagsModal
                 )
+            }
+            if (state.isExportModalOpen) {
+                ExportModal(viewModel::hideExportModal)
             }
         }
     }
