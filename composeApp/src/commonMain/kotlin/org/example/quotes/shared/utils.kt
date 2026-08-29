@@ -38,6 +38,6 @@ fun Modifier.lightBorderIfFocused(isFocused: Boolean, borderWidth: Dp = 1.dp) = 
     Modifier.border(borderWidth, if (isFocused) Color.LightGray else Transparent)
 }
 
-expect fun writeFile(contents: String)
+expect fun writeFile(fileName: String, contents: String)
 
 expect fun getQuoteDirPath(): String

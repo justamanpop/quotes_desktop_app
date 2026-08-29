@@ -37,6 +37,24 @@ class InMemoryQuoteRepository : QuoteRepository {
         fakeQuotes = fakeQuotes.filterNot { q -> q.id == quoteId }
     }
 
+    override fun importQuotes(quotes: List<Quote>, overwrite: Boolean) {
+        if(overwrite) {
+            fakeQuotes = quotes
+            maxId = fakeQuotes.maxBy { it.id }.id
+            return
+        }
+
+        quotes.forEach { newQuote ->
+            val foundQuote = fakeQuotes.find { q -> q.id == newQuote.id }
+            if(foundQuote == null) {
+               fakeQuotes += newQuote.copy(id = maxId + 1)
+                maxId += 1
+            } else {
+               fakeQuotes = fakeQuotes.map { existingQuote -> if (existingQuote.id == newQuote.id) newQuote else existingQuote }
+            }
+        }
+    }
+
     private var fakeQuotes = listOf<Quote>(
         Quote(
             1, "No price is too great to pay for the privilege of owning yourself", "Friedrich Nietzsche",

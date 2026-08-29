@@ -1,11 +1,11 @@
 import kotlinx.serialization.json.Json
 import ports.driven.QuoteRepository
 import ports.driven.TagRepository
-import ports.driving.ForExports
+import ports.driving.ForSync
 import ports.driving.ForQuotes
 import ports.driving.ForTags
 
-class AppCore(private val quoteRepository: QuoteRepository, private val tagRepository: TagRepository): ForQuotes, ForTags, ForExports {
+class AppCore(private val quoteRepository: QuoteRepository, private val tagRepository: TagRepository): ForQuotes, ForTags, ForSync {
     override fun getQuotes(): List<Quote> {
         return quoteRepository.getQuotes()
     }
@@ -45,5 +45,10 @@ class AppCore(private val quoteRepository: QuoteRepository, private val tagRepos
     override fun exportQuotesToJson(): String {
         val quotes = quoteRepository.getQuotes()
         return Json.encodeToString(quotes)
+    }
+
+    override fun importFromJson(jsonString: String, overwrite: Boolean) {
+        val quotes: List<Quote> = Json.decodeFromString(jsonString)
+        quoteRepository.importQuotes(quotes, overwrite)
     }
 }

@@ -5,6 +5,7 @@ import Quote
 import Tag
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,13 +16,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.Locale.getDefault
 
 data class AppViewModelState(
     val isAddQuoteModalOpen: Boolean = false,
     val isFilterQuotesModalOpen: Boolean = false,
     val isManageTagsModalOpen: Boolean = false,
-    val isExportModalOpen: Boolean = false,
+    val isSyncModalOpen: Boolean = false,
 
     val isEditQuoteModalOpen: Boolean = false,
     val quoteClickedForEdit: Quote? = null,
@@ -45,6 +47,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
             _snackbarMessage.emit(message)
         }
     }
+
     fun showSnackbarMessage(message: String) {
         emitSnackbarMessage(message)
     }
@@ -64,8 +67,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         }
     }
 
-    val filteredQuotes = state.map {
-            state ->
+    val filteredQuotes = state.map { state ->
         val searchTerm = state.searchTerm.lowercase(getDefault())
         val tags = state.filterTags
         val quotes = state.quotes
@@ -75,6 +77,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = _state.value.quotes
     )
+
     fun deriveFilteredQuotes(searchTerm: String, tags: Set<Tag>, quotes: List<Quote>): List<Quote> {
         val filteredQuotes = quotes.filter { q ->
             val matchesSearch = if (searchTerm.isBlank()) {
@@ -105,6 +108,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
             return
         }
     }
+
     fun addQuote(quote: Quote) {
         try {
             appCore.addQuote(quote)
@@ -117,6 +121,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         fetchQuotes()
         requestFocus()
     }
+
     fun updateQuote(quote: Quote) {
         try {
             appCore.updateQuote(quote)
@@ -129,6 +134,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         fetchQuotes()
         requestFocus()
     }
+
     fun deleteQuote(quoteId: Int) {
         try {
             appCore.deleteQuote(quoteId)
@@ -160,6 +166,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         emitSnackbarMessage("Success: Tag successfully added!")
         fetchTags()
     }
+
     fun updateTagName(tag: Tag) {
         try {
             appCore.updateTag(tag)
@@ -171,6 +178,7 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         fetchTags()
         syncUpdatedTagForEachQuote(tag)
     }
+
     fun deleteTag(tagId: Int) {
         try {
             appCore.deleteTag(tagId)
@@ -182,7 +190,6 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         fetchTags()
         removeDeletedTagForEachQuote(tagId)
     }
-
 
 
     fun syncUpdatedTagForEachQuote(updatedTag: Tag) {
@@ -238,12 +245,12 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         requestFocus()
     }
 
-    fun showExportModal() {
-        _state.update { currState -> currState.copy(isExportModalOpen = true) }
+    fun showSyncModal() {
+        _state.update { currState -> currState.copy(isSyncModalOpen = true) }
     }
 
-    fun hideExportModal() {
-        _state.update { currState -> currState.copy(isExportModalOpen = false) }
+    fun hideSyncModal() {
+        _state.update { currState -> currState.copy(isSyncModalOpen = false) }
         requestFocus()
     }
 
@@ -265,7 +272,13 @@ class AppViewModel(private val appCore: AppCore) : ViewModel() {
         requestFocus()
     }
 
-    fun getJsonExport(): String {
+    fun getJsonToExport(): String {
         return appCore.exportQuotesToJson()
+    }
+
+    fun importFromJson(fileStringContents: String, overwrite: Boolean) {
+        appCore.importFromJson(fileStringContents, overwrite)
+        fetchQuotes()
+        fetchTags()
     }
 }

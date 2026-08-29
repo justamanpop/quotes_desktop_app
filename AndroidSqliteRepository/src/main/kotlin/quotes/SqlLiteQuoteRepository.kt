@@ -122,4 +122,8 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection) : QuoteRepository {
             throw e;
         }
     }
+
+    override fun importQuotes(quotes: List<Quote>, overwrite: Boolean) {
+        TODO("Not yet implemented")
+    }
 }

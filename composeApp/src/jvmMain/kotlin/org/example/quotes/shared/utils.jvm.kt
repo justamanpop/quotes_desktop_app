@@ -69,7 +69,7 @@ fun ensureOneInstanceOfAppRunning() {
     })
 }
 
-actual fun writeFile(contents: String) {
-    val file = File("quotes.json")
+actual fun writeFile(fileName: String, contents: String) {
+    val file = File(fileName)
     file.writeText(contents)
 }

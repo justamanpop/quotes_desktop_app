@@ -29,6 +29,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core"))
             implementation(project(":AndroidSqliteRepository"))
+            implementation(project(":repository"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -37,10 +38,13 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
+            implementation(libs.material.icons.extended)
 
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.androidx.sqlite)
+
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -86,13 +90,13 @@ kotlin {
 compose.desktop {
     application {
         mainClass = "org.example.quotes.MainKt"
-
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Quote Manager"
             packageVersion = "1.0.0"
             linux {
                 iconFile.set(project.file("quotes.png"))
+                modules("jdk.security.auth")
             }
         }
     }

@@ -1,1 +1,47 @@
-[{"id":5,"content":"It is better to be hated for what you are than to be loved for what you are not","source":"Autumn Leaves - Andre Gide","tags":[{"id":4,"name":"Congruence"}]},{"id":6,"content":"This above all: to thine own self be true, And it must follow, as the night the day, Thou canst not then be false to any man.","source":"William Shakespeare","tags":[{"id":3,"name":"William Shakespeare"},{"id":4,"name":"Congruence"}]},{"id":7,"content":"If we are to live, we must take risks. Else our lives become deaths in all but name. There is no struggle too vast, no odds too overwhelming, for even should we fail, should we fall, we will know that we have lived.","source":"Anomander Rake","tags":[{"id":1,"name":"Malazan"},{"id":6,"name":"Inspirational"}]},{"id":8,"content":"Ambition is not a dirty word. Piss on compromise. Go for the throat.","source":"Gardens of the Moon - Steven Erikson","tags":[{"id":1,"name":"Malazan"},{"id":5,"name":"Defiance"},{"id":6,"name":"Inspirational"}]},{"id":9,"content":"The individual has always had to struggle to keep from being overwhelmed by the tribe. If you try it, you will be lonely often, and sometimes frightened.  No price is too great to pay for the privilege of owning yourself","source":"Friedrich Nietzsche","tags":[{"id":4,"name":"Congruence"},{"id":7,"name":"Nietzsche"}]},{"id":10,"content":"All the world's a stage, and all the men and women merely players","source":"William Shakespeare","tags":[{"id":3,"name":"William Shakespeare"},{"id":8,"name":"No one cares"}]},{"id":11,"content":"“There is no such thing as a good influence, Mr. Gray. All influence is immoral—immoral from the scientific point of view.”\n\n“Why?”\n\n“Because to influence a person is to give him one’s own soul. He does not think his natural thoughts, or burn with his natural passions. His virtues are not real to him. His sins, if there are such things as sins, are borrowed. He becomes an echo of some one else’s music, an actor of a part that has not been written for him. The aim of life is self-development. To realize one’s nature perfectly—that is what each of us is here for. People are afraid of themselves, nowadays. They have forgotten the highest of all duties, the duty that one owes to one’s self. Of course, they are charitable. They feed the hungry and clothe the beggar. But their own souls starve, and are naked. Courage has gone out of our race. Perhaps we never really had it. The terror of society, which is the basis of morals, the terror of God, which is the secret of religion—these are the two things that govern us.","source":"Henry Wotton - The Picture of Dorian Grey ","tags":[{"id":2,"name":"Dorian Grey"},{"id":4,"name":"Congruence"}]},{"id":13,"content":"“It’s the ignorant who find a cause and cling to it, for within that is the illusion of significance.”","source":"Deadhouse Gates - Steven Erikson","tags":[{"id":1,"name":"Malazan"},{"id":9,"name":"Purpose"}]},{"id":14,"content":"Develop interest in life as you see it; in people, things, literature, music—the world is so rich, simply throbbing with rich treasures, beautiful souls and interesting people. Forget yourself.","source":"Henry Miller","tags":[{"id":10,"name":"Beauty"},{"id":11,"name":"Mindfulness"}]},{"id":15,"content":"“... I thought how tragic it would be if you were wasted. For there is such a little time that your youth will last — such a little time. The common hill-flowers wither, but they blossom again. The laburnum will be as yellow next June as it is now. In a month there will be purple stars on the clematis, and year after year the green night of its leaves will hold its purple stars. But we never get back our youth. The pulse of joy that beats in us at twenty becomes sluggish. Our limbs fail, our senses rot. We degenerate into hideous puppets, haunted by the memory of the passions of which we were too much afraid, and the exquisite temptations that we had not the courage to yield to. Youth! Youth! There is absolutely nothing in the world but youth!“","source":"Henry Wotton - The Picture of Dorian Grey","tags":[{"id":2,"name":"Dorian Grey"},{"id":4,"name":"Congruence"}]},{"id":16,"content":"Till shade is gone, till water is gone, into the Shadow with teeth bared, screaming defiance with the last breath, to spit in Sightblinder’s eye on the last Day.","source":"Wheel of Time","tags":[{"id":5,"name":"Defiance"},{"id":6,"name":"Inspirational"}]},{"id":17,"content":"“My solitude doesn’t depend on the presence or absence of people; on the contrary, I hate who steals my solitude without, in exchange, offering me true company.“","source":"Friedrich Nietzsche","tags":[{"id":7,"name":"Nietzsche"},{"id":12,"name":"Solitude"}]},{"id":18,"content":"Until you realize that you don't need anything... you will continue to be a slave to everything","source":"Friedrich Nietzsche","tags":[{"id":7,"name":"Nietzsche"},{"id":13,"name":"Detachment"}]},{"id":19,"content":"And those who were seen dancing were thought to be insane by those who could not hear the music.","source":"Friedrich Nietzsche ","tags":[{"id":7,"name":"Nietzsche"},{"id":10,"name":"Beauty"}]},{"id":20,"content":"“there is a loneliness in this world so great\nthat you can see it in the slow movement of\nthe hands of a clock.\n\npeople so tired\nmutilated\neither by love or no love.\n\npeople just are not good to each other\none on one.\n\nthe rich are not good to the rich\nthe poor are not good to the poor.\n\nwe are afraid.\n\nour educational system tells us\nthat we can all be\nbig-ass winners.\n\nit hasn't told us\nabout the gutters\nor the suicides.\n\nor the terror of one person\naching in one place\nalone\n\nuntouched\nunspoken to\n\nwatering a plant.” ","source":"Charles Bukowski","tags":[{"id":14,"name":"Charles Bukowski"}]},{"id":21,"content":"\n“There's nothing to mourn about death any more than there is to mourn about the growing of a flower. What is terrible is not death but the lives people live or don't live up until their death. They don't honor their own lives, they piss on their lives. They shit them away. Dumb fuckers. They concentrate too much on fucking, movies, money, family, fucking. Their minds are full of cotton. They swallow God without thinking, they swallow country without thinking. Soon they forget how to think, they let others think for them. Their brains are stuffed with cotton. They look ugly, they talk ugly, they walk ugly. Play them the great music of the centuries and they can't hear it. Most people's deaths are a sham. There's nothing left to die.” ","source":"Charles Bukowski","tags":[{"id":9,"name":"Purpose"},{"id":14,"name":"Charles Bukowski"}]},{"id":22,"content":"Imprisonment begins in the mind","source":"Baphomet - WoTR","tags":[{"id":5,"name":"Defiance"}]}]
+[
+  {
+    "id": 1,
+    "content": "XX No price is too great to pay for the privilege of owning yourself",
+    "source": "Friedrich Nietzschexx",
+    "tags": [
+      {
+        "id": 8,
+        "name": "Nietzsche"
+      },
+      {
+        "id": 5,
+        "name": "Congruence"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "content": "“It’s the ignorant who find a cause and cling to it, for within that is the illusion of significance.”",
+    "source": "Deadhouse Gates - Steven Erikson",
+    "tags": [
+      {
+        "id": 1,
+        "name": "Malazan"
+      },
+      {
+        "id": 6,
+        "name": "Purpose"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "content": "Randomo",
+    "source": "Randy Randoxic",
+    "tags": [
+      {
+        "id": 8,
+        "name": "Nietzsche"
+      },
+      {
+        "id": 5,
+        "name": "Congruence"
+      }
+    ]
+  }
+]

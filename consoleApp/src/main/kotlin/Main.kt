@@ -1,6 +1,7 @@
 package org.example
 
 import AppCore
+import ports.driving.ForSync
 import repository.quotes.InMemoryQuoteRepository
 import repository.tags.InMemoryTagRepository
 
@@ -9,7 +10,8 @@ import repository.tags.InMemoryTagRepository
 fun main() {
     val quoteRepository = InMemoryQuoteRepository()
     val tagRepository = InMemoryTagRepository()
-    val app = AppCore(quoteRepository, tagRepository)
+
+    val app: ForSync = AppCore(quoteRepository, tagRepository)
 
     val json = app.exportQuotesToJson()
     println(json)

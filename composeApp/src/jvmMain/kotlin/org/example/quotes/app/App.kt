@@ -12,7 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -162,26 +162,25 @@ actual fun App(viewModel: AppViewModel) {
                             .lightBorderIfFocused(isAddQuoteButtonFocused)
                     )
 
-                    var isExportButtonFocused by remember { mutableStateOf(false) }
+                    var isSyncButtonFocused by remember { mutableStateOf(false) }
                     Button(
                         onClick = {
-                            viewModel.showExportModal()
+                            viewModel.showSyncModal()
                         },
                         colors = ButtonColors(
-                            containerColor = if (isExportButtonFocused) Color(0xFF6F6A6A) else Color(0xFF615F5F),
+                            containerColor = if (isSyncButtonFocused) Color(0xFF6F6A6A) else Color(0xFF615F5F),
                             contentColor = Color.White,
                             disabledContainerColor = Color(23, 176, 71),
                             disabledContentColor = Color.Gray
                         ),
-                        content = {
-                            Icon(Icons.Default.Upload, contentDescription = "export")
-                            Text("Export", color = Color.White, fontSize = 24.sp)
-                        },
                         modifier = Modifier.padding(top = 12.dp, start = 50.dp)
                             .pointerHoverIcon(PointerIcon.Hand)
-                            .onFocusChanged { focusState -> isExportButtonFocused = focusState.isFocused }
-                            .lightBorderIfFocused(isExportButtonFocused)
-                    )
+                            .onFocusChanged { focusState -> isSyncButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isSyncButtonFocused)
+                    ) {
+                        Icon(Icons.Default.Sync, contentDescription = "sync")
+                        Text("Sync", color = Color.White, fontSize = 24.sp)
+                    }
                 }
                 QuoteTable(
                     filteredQuotes,
@@ -232,9 +231,9 @@ actual fun App(viewModel: AppViewModel) {
                     viewModel::hideManageTagsModal
                 )
             }
-            if (state.isExportModalOpen) {
+            if (state.isSyncModalOpen) {
                 ExportModal(
-                    viewModel::getJsonExport, viewModel::showSnackbarMessage, viewModel::hideExportModal
+                    viewModel::getJsonToExport, viewModel::importFromJson, viewModel::showSnackbarMessage, viewModel::hideSyncModal
                 )
             }
         }
