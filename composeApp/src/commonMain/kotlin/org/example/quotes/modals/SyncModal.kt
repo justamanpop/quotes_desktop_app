@@ -78,7 +78,7 @@ fun ExportModal(
                     onClick = {
                         val jsonString = getExportJson()
                         writeFile("quotes.json", jsonString)
-                        emitSnackbarMessage("Success: Quotes successfully exported as JSON")
+                        emitSnackbarMessage("Success: Quotes successfully exported to quotes.json")
                         onDismissRequest()
                     },
                     colors = ButtonColors(
@@ -113,9 +113,9 @@ fun ExportModal(
                         .onFocusChanged { focusState -> isImportJsonButtonFocused = focusState.isFocused }
                         .lightBorderIfFocused(isImportJsonButtonFocused)
                 ) {
-                    Text("Import (merge)", color = Color.White, fontSize = 24.sp)
+                    Text("Import (append)", color = Color.White, fontSize = 24.sp)
                 }
-                Text("This will replace all existing quotes with same id as of any imported quotes, but keep the rest of the current data")
+                Text("This will add non duplicate quotes to existing list of quotes")
 
                 var isImportOverwriteJsonButtonFocused by remember { mutableStateOf(false) }
                 Button(
@@ -140,7 +140,7 @@ fun ExportModal(
                 ) {
                     Text("Import (overwrite)", color = Color.White, fontSize = 24.sp)
                 }
-                Text("⚠\uFE0F All current data will be lost and replaced with imported data")
+                Text("⚠\uFE0F All the currnet quotes will be lost and replaced with imported quotes")
 
                 Spacer(Modifier.height(8.dp))
             }

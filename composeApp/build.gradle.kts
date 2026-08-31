@@ -28,8 +28,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core"))
-            implementation(project(":AndroidSqliteRepository"))
-            implementation(project(":repository"))
+            implementation(project(":sqliteRepository"))
+            implementation(project(":inMemoryRepository"))
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
