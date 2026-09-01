@@ -1,0 +1,194 @@
+package repository.quotes
+
+import Quote
+import Tag
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
+import ports.driven.QuoteRepository
+import ports.driven.TagRepository
+
+class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagRepository) : QuoteRepository {
+    override fun getQuotes(): List<Quote> {
+        val quotesMap = mutableMapOf<Int, Quote>()
+        val tagsMap = mutableMapOf<Int, MutableList<Tag>>()
+        conn.prepare(
+            "SELECT * FROM quotes LEFT JOIN quote_tag_mapping ON quotes.id = quote_tag_mapping.quote_id LEFT JOIN tags ON quote_tag_mapping.tag_id = tags.id"
+        ).use { statement ->
+            while (statement.step()) {
+                val quoteId = statement.getInt(0)
+                val quoteContent = statement.getText(1)
+                val quoteSource = statement.getText(2)
+
+                quotesMap.getOrPut(quoteId) { Quote(quoteId, quoteContent, quoteSource) }
+
+                val tagId = statement.getInt(5)
+                val tagName = statement.getText(6)
+                val tag = Tag(tagId, tagName)
+
+                if (tagId != 0) {
+                    tagsMap.getOrPut(quoteId) { mutableListOf() }.add(tag)
+                }
+            }
+        }
+
+
+        val res = quotesMap.values.map { quote ->
+            quote.copy(tags = tagsMap[quote.id] ?: emptyList())
+        }
+        return res
+    }
+
+    override fun addQuote(quote: Quote) {
+        conn.execSQL("BEGIN TRANSACTION;")
+        try {
+            addQuoteQuery(quote)
+            conn.execSQL("COMMIT;")
+        } catch (e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
+        }
+    }
+
+    override fun addQuotes(quotes: List<Quote>) {
+        quotes.forEach { quote ->
+            addQuote(quote)
+        }
+    }
+
+    override fun updateQuote(quote: Quote) {
+        conn.execSQL("BEGIN TRANSACTION;")
+        try {
+            conn.prepare("UPDATE quotes SET content = ?, source = ? WHERE id = ?").use { statement ->
+                statement.bindText(1, quote.content)
+                statement.bindText(2, quote.source)
+                statement.bindInt(3, quote.id)
+                statement.step()
+            }
+
+
+            conn.prepare("DELETE FROM quote_tag_mapping where quote_id = ?").use { statement ->
+                statement.bindInt(1, quote.id)
+                statement.step()
+            }
+
+            quote.tags.forEach { tag ->
+                conn.prepare("INSERT INTO quote_tag_mapping(quote_id, tag_id) VALUES (?, ?)").use { statement ->
+                    statement.bindInt(1, quote.id)
+                    statement.bindInt(2, tag.id)
+                    statement.step()
+                }
+            }
+
+            conn.execSQL("COMMIT;")
+        } catch (e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
+        }
+    }
+
+    override fun deleteQuote(quoteId: Int) {
+        conn.execSQL("BEGIN TRANSACTION;")
+        try {
+            conn.prepare("DELETE FROM quote_tag_mapping WHERE quote_id = ?").use { statement ->
+                statement.bindInt(1, quoteId)
+                statement.step()
+            }
+
+            conn.prepare("DELETE FROM quotes WHERE id = ?").use { statement ->
+                statement.bindInt(1, quoteId)
+                statement.step()
+            }
+            conn.execSQL("COMMIT;")
+        } catch (e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
+        }
+    }
+
+    override fun importQuotes(quotes: List<Quote>, overwrite: Boolean) {
+        if (overwrite) {
+            conn.execSQL("BEGIN TRANSACTION;")
+            try {
+                clearDBQueries()
+                quotes.forEach { quote ->
+                    quote.tags.forEach { tag -> tagRepository.addTag(tag) }
+                    addQuoteQuery(quote)
+                }
+                conn.execSQL("COMMIT;")
+            } catch (e: Exception) {
+                conn.execSQL("ROLLBACK;")
+                throw e;
+            }
+            return
+        }
+
+        conn.execSQL("BEGIN TRANSACTION;")
+        try {
+            quotes.forEach { quote ->
+                quote.tags.forEach { tag ->
+                    try {
+                        tagRepository.addTag(tag)
+                    } catch (_: IllegalArgumentException) {
+                        //tag already exists, do nothing
+                    }
+                }
+                upsertQuoteQuery(quote)
+            }
+            conn.execSQL("COMMIT;")
+        } catch (e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
+        }
+
+    }
+
+    /**
+     * Does not do transactions, that is to be handled by calling function
+     */
+    private fun clearDBQueries() {
+        conn.prepare("DELETE FROM quote_tag_mapping").use { statement ->
+            statement.step()
+        }
+        conn.prepare("DELETE FROM tags").use { statement ->
+            statement.step()
+        }
+        conn.prepare("DELETE FROM quotes").use { statement ->
+            statement.step()
+        }
+    }
+
+    /**
+     * Does not do transactions, that is to be handled by calling function
+     */
+    private fun addQuoteQuery(quote: Quote) {
+        conn.prepare("INSERT INTO quotes(content, source) VALUES(?, ?)").use { statement ->
+            statement.bindText(1, quote.content)
+            statement.bindText(2, quote.source)
+            statement.step()
+        }
+
+        var insertedQuoteId = -1
+        conn.prepare("SELECT last_insert_rowid();").use { statement ->
+            while (statement.step()) {
+                insertedQuoteId = statement.getInt(0)
+            }
+        }
+
+        quote.tags.forEach { tag ->
+            conn.prepare("INSERT INTO quote_tag_mapping(quote_id, tag_id) VALUES(?, ?)").use { statement ->
+                statement.bindInt(1, insertedQuoteId)
+                statement.bindInt(2, tag.id)
+                statement.step()
+            }
+        }
+    }
+
+    private fun upsertQuoteQuery(quote: Quote) {
+        conn.prepare("INSERT OR REPLACE INTO quotes(id, content, source) VALUES(?, ?, ?)").use { statement ->
+            statement.bindInt(1, quote.id)
+            statement.bindText(1, quote.content)
+            statement.bindText(2, quote.source)
+            statement.step()
+        }
+    }
+}

@@ -26,10 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import io.github.vinceglb.filekit.absolutePath
-import io.github.vinceglb.filekit.dialogs.FileKitMode
-import io.github.vinceglb.filekit.dialogs.FileKitPickerException
-import io.github.vinceglb.filekit.dialogs.FileKitType
 import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 import org.example.quotes.shared.writeFile

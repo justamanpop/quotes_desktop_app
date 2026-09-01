@@ -1,8 +1,8 @@
 [
   {
-    "id": 1,
-    "content": "XX No price is too great to pay for the privilege of owning yourself",
-    "source": "Friedrich Nietzschexx",
+    "id": 2,
+    "content": "No price is too great to pay for the privilege of owning yourselfX",
+    "source": "Friedrich Nietzsche",
     "tags": [
       {
         "id": 8,
@@ -15,13 +15,21 @@
     ]
   },
   {
-    "id": 7,
-    "content": "“It’s the ignorant who find a cause and cling to it, for within that is the illusion of significance.”",
-    "source": "Deadhouse Gates - Steven Erikson",
+    "id": 4,
+    "content": "If we are to live, we must take risks. Else our lives become deaths in all but name. There is no struggle too vast, no odds too overwhelming, for even should we fail, should we fall, we will know that we have lived.",
+    "source": "Anomander RakeZ",
     "tags": [
       {
         "id": 1,
         "name": "Malazan"
+      },
+      {
+        "id": 2,
+        "name": "Inspirational"
+      },
+      {
+        "id": 3,
+        "name": "Defiance"
       },
       {
         "id": 6,
@@ -30,17 +38,13 @@
     ]
   },
   {
-    "id": 11,
-    "content": "Randomo",
-    "source": "Randy Randoxic",
+    "id": 9,
+    "content": "Develop interest in life as you see it; in people, things, literature, music—the world is so rich, simply throbbing with rich treasures, beautiful souls and interesting people. Forget yourself.",
+    "source": "Henry Miller",
     "tags": [
       {
-        "id": 8,
-        "name": "Nietzsche"
-      },
-      {
-        "id": 5,
-        "name": "Congruence"
+        "id": 10,
+        "name": "Beauty"
       }
     ]
   }

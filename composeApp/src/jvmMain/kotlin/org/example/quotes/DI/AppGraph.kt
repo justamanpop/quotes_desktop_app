@@ -11,8 +11,10 @@ import ports.driven.TagRepository
 
 import repository.quotes.SqlLiteQuoteRepository
 import repository.quotes.InMemoryQuoteRepository
+import repository.quotes.seedQuotes
 import repository.tags.SqlLiteTagRepository
 import repository.tags.InMemoryTagRepository
+import repository.quotes.seedTags
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.example.quotes.shared.getQuoteDirPath
@@ -24,14 +26,14 @@ interface AppGraph {
     val appCore: AppCore
 
     @Provides
-    fun provideQuoteRepository(conn: SQLiteConnection): QuoteRepository {
+    fun provideQuoteRepository(conn: SQLiteConnection, tagRepository: TagRepository): QuoteRepository {
 //        return SqlLiteQuoteRepository(conn)
-        return InMemoryQuoteRepository()
+        return InMemoryQuoteRepository(tagRepository, seedQuotes)
     }
     @Provides
     fun provideTagRepository(conn: SQLiteConnection): TagRepository {
 //        return SqlLiteTagRepository(conn)
-        return InMemoryTagRepository()
+        return InMemoryTagRepository(seedTags.values.toList())
     }
     @Provides
     fun provideAppCore(quoteRepository: QuoteRepository, tagRepository: TagRepository): AppCore {

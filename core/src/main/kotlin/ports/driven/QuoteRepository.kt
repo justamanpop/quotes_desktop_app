@@ -8,5 +8,5 @@ interface QuoteRepository {
     fun addQuotes(quotes: List<Quote>)
     fun updateQuote(quote: Quote)
     fun deleteQuote(quoteId: Int)
-    fun importQuotes(quotes: List<Quote>, overwrite: Boolean)
+    fun importQuotes(quotesToImport: List<Quote>, overwrite: Boolean)
 }

@@ -8,5 +8,5 @@ interface TagRepository {
 
     fun updateTag(tag: Tag)
     fun deleteTag(tagId: Int)
-    fun importTags(tags: List<Tag>, overwrite: Boolean)
+    fun importTags(tagsToImport: List<Tag>, overwrite: Boolean)
 }

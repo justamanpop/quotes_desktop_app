@@ -15,7 +15,7 @@ class InMemoryTagRepository(initialTags: List<Tag> = emptyList()): TagRepository
         if (fakeTags.containsKey(tag.name)) {
             throw IllegalArgumentException("Tag with name ${tag.name} already exists")
         }
-        maxId +=1;
+        maxId +=1
         fakeTags[tag.name] = tag.copy(id = maxId)
     }
 
@@ -34,16 +34,16 @@ class InMemoryTagRepository(initialTags: List<Tag> = emptyList()): TagRepository
         }
     }
 
-    override fun importTags(tags: List<Tag>, overwrite: Boolean) {
+    override fun importTags(tagsToImport: List<Tag>, overwrite: Boolean) {
         if(overwrite) {
-            importTagsWithOverride(tags)
+            importTagsWithOverride(tagsToImport)
             return
         }
 
-        tags.forEach {
+        tagsToImport.forEach {
             tagToInsert ->
                 if(!fakeTags.containsKey(tagToInsert.name)) {
-                    maxId +=1;
+                    maxId +=1
                     fakeTags[tagToInsert.name] = tagToInsert.copy(id = maxId)
                 }
         }
@@ -54,7 +54,7 @@ class InMemoryTagRepository(initialTags: List<Tag> = emptyList()): TagRepository
         maxId = 0
         tags.forEach {
             tagToInsert ->
-            maxId +=1;
+            maxId +=1
             fakeTags[tagToInsert.name] = tagToInsert.copy(id = maxId)
         }
     }
