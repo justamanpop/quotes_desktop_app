@@ -1,5 +1,7 @@
 package org.example.quotes.shared
 
+import android.content.ContentValues
+import android.provider.MediaStore
 import java.io.File
 
 actual fun getQuoteDirPath(): String {
@@ -14,5 +16,17 @@ actual fun getQuoteDirPath(): String {
 }
 
 actual fun writeFile(fileName: String, contents: String) {
-//    val appContext = AppContext.context
+    val ctx = AppContext.context
+    val contentValues = ContentValues().apply {
+        put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+        put(MediaStore.Downloads.MIME_TYPE, "application/json")
+    }
+    val uri = ctx.contentResolver.insert(
+        MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues
+    )
+    uri?.let {
+        ctx.contentResolver.openOutputStream(it)?.use { stream ->
+            stream.write(contents.toByteArray())
+        }
+    }
 }

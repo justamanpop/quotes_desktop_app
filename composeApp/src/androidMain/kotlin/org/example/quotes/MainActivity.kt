@@ -9,6 +9,7 @@ import org.example.quotes.DI.AppGraph
 import org.example.quotes.app.App
 
 import org.example.quotes.app.AppViewModel
+import org.example.quotes.shared.AppContext
 
 
 class MainActivity : ComponentActivity() {
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val ctx = applicationContext
+        AppContext.init(ctx)
         val graph = createGraphFactory<AppGraph.Factory>().create(ctx)
 
         val appViewModel = AppViewModel(graph.appCore)
