@@ -43,7 +43,7 @@ Edit an existing quote by clicking on the quote row
 
 
 ### Next steps
-Import/export from/to JSON or CSV.
+Add sync support to Android
 
 ---
 ### Build and Run Desktop (JVM) Application
