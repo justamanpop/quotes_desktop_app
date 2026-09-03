@@ -15,10 +15,6 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import java.awt.Toolkit
-import java.awt.datatransfer.StringSelection
-import java.io.File
-import java.nio.file.Path
 
 fun Modifier.moveFocusOnTab() = composed {
     val focusManager = LocalFocusManager.current

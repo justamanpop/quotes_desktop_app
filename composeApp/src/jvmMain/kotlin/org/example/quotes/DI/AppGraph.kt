@@ -19,6 +19,7 @@ import org.example.quotes.shared.getQuoteDirPath
 import repository.initializeDb
 import java.nio.file.Paths
 
+@Suppress("unused")
 @DependencyGraph
 @SingleIn(AppScope::class)
 interface AppGraph {

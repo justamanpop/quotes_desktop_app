@@ -1,12 +1,12 @@
 package org.example.quotes.shared
 
-import android.content.Context
+import android.app.Application
 
 object AppContext {
-    lateinit var context: Context
+    lateinit var application: Application
         private set
 
-    fun init(context: Context) {
-        this.context = context
+    fun init(context: Application) {
+        this.application = context
     }
 }

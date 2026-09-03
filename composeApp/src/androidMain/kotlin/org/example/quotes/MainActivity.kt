@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val ctx = applicationContext
-        AppContext.init(ctx)
+        AppContext.init(application)
         val graph = createGraphFactory<AppGraph.Factory>().create(ctx)
 
         val appViewModel = AppViewModel(graph.appCore)
