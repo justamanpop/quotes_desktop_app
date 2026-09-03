@@ -41,3 +41,5 @@ fun Modifier.lightBorderIfFocused(isFocused: Boolean, borderWidth: Dp = 1.dp) = 
 expect fun writeFile(fileName: String, contents: String)
 
 expect fun getQuoteDirPath(): String
+
+expect val isAndroid: Boolean

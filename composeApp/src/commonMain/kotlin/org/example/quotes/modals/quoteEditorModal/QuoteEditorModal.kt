@@ -36,6 +36,7 @@ import org.example.quotes.modals.tagEditorModal.TagEditorModal
 import org.example.quotes.modals.tagEditorModal.TagEditorMode
 import org.example.quotes.shared.TagSearchableDropdown
 import org.example.quotes.shared.SelectedTags
+import org.example.quotes.shared.isAndroid
 import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
 
@@ -62,7 +63,6 @@ fun QuoteEditorModal(
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
-
 
     val (dropdownInputValue, setDropdownInputValue) = remember { mutableStateOf("") }
     var dropdownTextFieldValue by remember {
@@ -139,30 +139,32 @@ fun QuoteEditorModal(
                         setDropdownInputValue,
                         ::selectTagFilter,
                         inputFieldFocusRequester,
-                        "Add Tag"
+                        "Add Tag to Quote"
                     )
 
-                    var isCreateTagButtonFocused by remember { mutableStateOf(false) }
-                    Button(
-                        content = { Text("+ Create Tag") },
-                        onClick = {
-                            openAddTagModal.value = true
-                        },
-                        colors = ButtonColors(
-                            containerColor = if (isCreateTagButtonFocused) Color(3, 104, 3, 255) else Color(
-                                23,
-                                176,
-                                71
+                    if (!isAndroid) {
+                        var isCreateTagButtonFocused by remember { mutableStateOf(false) }
+                        Button(
+                            content = { Text("+ Create New Tag") },
+                            onClick = {
+                                openAddTagModal.value = true
+                            },
+                            colors = ButtonColors(
+                                containerColor = if (isCreateTagButtonFocused) Color(3, 104, 3, 255) else Color(
+                                    23,
+                                    176,
+                                    71
+                                ),
+                                contentColor = Color.White,
+                                disabledContainerColor = Color(23, 176, 71),
+                                disabledContentColor = Color.White,
                             ),
-                            contentColor = Color.White,
-                            disabledContainerColor = Color(23, 176, 71),
-                            disabledContentColor = Color.White,
-                        ),
-                        modifier = Modifier.padding(start = 12.dp, top = 12.dp)
-                            .pointerHoverIcon(PointerIcon.Hand)
-                            .onFocusChanged { focusState -> isCreateTagButtonFocused = focusState.isFocused }
-                            .lightBorderIfFocused(isCreateTagButtonFocused, 2.dp)
-                    )
+                            modifier = Modifier.padding(start = 12.dp, top = 12.dp)
+                                .pointerHoverIcon(PointerIcon.Hand)
+                                .onFocusChanged { focusState -> isCreateTagButtonFocused = focusState.isFocused }
+                                .lightBorderIfFocused(isCreateTagButtonFocused, 2.dp)
+                        )
+                    }
                 }
                 SelectedTags(selectedTags.value, ::unselectTag)
 

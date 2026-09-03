@@ -73,3 +73,5 @@ actual fun writeFile(fileName: String, contents: String) {
     val file = File(downloads, fileName)
     file.writeText(contents)
 }
+
+actual val isAndroid: Boolean = false

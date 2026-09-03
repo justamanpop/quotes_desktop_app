@@ -1,20 +1,15 @@
 package org.example.quotes.shared
 
 import android.content.ContentValues
+import android.os.Build
 import android.provider.MediaStore
-import java.io.File
+import androidx.annotation.RequiresApi
 
 actual fun getQuoteDirPath(): String {
-    val os = System.getProperty("os.name").lowercase()
-    val home = System.getProperty("user.home")
-
-    return when {
-        os.contains("win") -> File(System.getenv("APPDATA"), "Quote Manager").absolutePath
-        os.contains("mac") -> File(home, "Library/Application Support/Quote Manager").absolutePath
-        else -> File(home, ".local/state/quotes").absolutePath
-    }
+    return AppContext.context.filesDir.absolutePath
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 actual fun writeFile(fileName: String, contents: String) {
     val ctx = AppContext.context
     val contentValues = ContentValues().apply {
@@ -30,3 +25,5 @@ actual fun writeFile(fileName: String, contents: String) {
         }
     }
 }
+
+actual val isAndroid: Boolean = true
