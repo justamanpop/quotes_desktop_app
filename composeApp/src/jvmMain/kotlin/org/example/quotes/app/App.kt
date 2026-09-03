@@ -36,7 +36,7 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.example.quotes.modals.ExportModal
+import org.example.quotes.modals.SyncModal
 import org.example.quotes.shared.constructSnackbarDataObject
 import org.example.quotes.shared.getSnackbarColor
 import org.example.quotes.modals.quoteEditorModal.QuoteEditorModal
@@ -232,7 +232,7 @@ actual fun App(viewModel: AppViewModel) {
                 )
             }
             if (state.isSyncModalOpen) {
-                ExportModal(
+                SyncModal(
                     viewModel::getJsonToExport, viewModel::importFromJson, viewModel::showSnackbarMessage, viewModel::hideSyncModal
                 )
             }

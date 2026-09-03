@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExportModal(
+fun SyncModal(
     getExportJson: () -> String,
     importJson: (String, Boolean) -> Unit,
     emitSnackbarMessage: (String) -> Unit,
@@ -51,9 +51,13 @@ fun ExportModal(
             return@rememberFilePickerLauncher
         }
         scope.launch {
-            val contents = file.readString()
-            emitSnackbarMessage("file of name ${file.name} is chosen")
-            importJson(contents, overwriteImport)
+            try {
+                val contents = file.readString()
+                importJson(contents, overwriteImport)
+                emitSnackbarMessage("Success: imported from file ${file.name}")
+            } catch(e: Exception) {
+                emitSnackbarMessage("Error: unable to import quotes: ${e.message}")
+            }
             onDismissRequest()
         }
     }
@@ -72,9 +76,14 @@ fun ExportModal(
                 var isExportJsonButtonFocused by remember { mutableStateOf(false) }
                 Button(
                     onClick = {
-                        val jsonString = getExportJson()
-                        writeFile("quotes.json", jsonString)
-                        emitSnackbarMessage("Success: Quotes successfully exported to quotes.json")
+                        try {
+                            val jsonString = getExportJson()
+                            writeFile("quotes.json", jsonString)
+                            emitSnackbarMessage("Success: Quotes successfully exported to quotes.json in downloads directory")
+                        } catch(e: Exception) {
+                            emitSnackbarMessage("Error: unable to export quotes: ${e.message}")
+                        }
+
                         onDismissRequest()
                     },
                     colors = ButtonColors(

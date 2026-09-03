@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -42,6 +44,7 @@ import org.example.quotes.shared.getSnackbarColor
 import org.example.quotes.modals.quoteEditorModal.QuoteEditorModal
 import org.example.quotes.modals.FilterQuotesModal
 import org.example.quotes.modals.ManageTagsModal
+import org.example.quotes.modals.SyncModal
 import org.example.quotes.modals.quoteEditorModal.QuoteEditorMode
 import org.example.quotes.shared.lightBorderIfFocused
 import org.example.quotes.shared.moveFocusOnTab
@@ -154,27 +157,48 @@ actual fun App(viewModel: AppViewModel) {
                 }
 
                 Spacer(Modifier.height(12.dp))
-                var isAddQuoteButtonFocused by remember { mutableStateOf(false) }
-                Button(
-                    onClick = {
-                        viewModel.showAddQuoteModal()
-                    },
-                    colors = ButtonColors(
-                        containerColor = if (isAddQuoteButtonFocused) Color(3, 104, 3, 255) else Color(23, 176, 71),
-                        contentColor = Color.White,
-                        disabledContainerColor = Color(23, 176, 71),
-                        disabledContentColor = Color.Gray
-                    ),
-                    content = {
-                        Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add quote")
-                        Text(" Add Quote", color = Color.White, fontSize = 16.sp)
-                    },
-                    modifier = Modifier
-                        .padding(top = 12.dp, start = 8.dp)
-                        .pointerHoverIcon(PointerIcon.Hand)
-                        .onFocusChanged { focusState -> isAddQuoteButtonFocused = focusState.isFocused }
-                        .lightBorderIfFocused(isAddQuoteButtonFocused)
-                )
+                Row(modifier = Modifier.padding(top = 12.dp, start = 8.dp)) {
+                    var isAddQuoteButtonFocused by remember { mutableStateOf(false) }
+                    Button(
+                        onClick = {
+                            viewModel.showAddQuoteModal()
+                        },
+                        colors = ButtonColors(
+                            containerColor = if (isAddQuoteButtonFocused) Color(3, 104, 3, 255) else Color(23, 176, 71),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color(23, 176, 71),
+                            disabledContentColor = Color.Gray
+                        ),
+                        content = {
+                            Icon(Icons.AutoMirrored.Default.NoteAdd, contentDescription = "add quote")
+                            Text(" Add Quote", color = Color.White, fontSize = 16.sp)
+                        },
+                        modifier = Modifier
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isAddQuoteButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isAddQuoteButtonFocused)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    var isSyncButtonFocused by remember { mutableStateOf(false) }
+                    Button(
+                        onClick = {
+                            viewModel.showSyncModal()
+                        },
+                        colors = ButtonColors(
+                            containerColor = if (isSyncButtonFocused) Color(0xFF6F6A6A) else Color(0xFF615F5F),
+                            contentColor = Color.White,
+                            disabledContainerColor = Color(23, 176, 71),
+                            disabledContentColor = Color.Gray
+                        ),
+                        modifier = Modifier
+                            .pointerHoverIcon(PointerIcon.Hand)
+                            .onFocusChanged { focusState -> isSyncButtonFocused = focusState.isFocused }
+                            .lightBorderIfFocused(isSyncButtonFocused)
+                    ) {
+                        Icon(Icons.Default.Sync, contentDescription = "sync")
+                        Text("Sync", color = Color.White, fontSize = 24.sp)
+                    }
+                }
                 QuoteTable(
                     filteredQuotes,
                     { q ->
@@ -224,6 +248,11 @@ actual fun App(viewModel: AppViewModel) {
                     viewModel::updateTagName,
                     viewModel::deleteTag,
                     viewModel::hideManageTagsModal
+                )
+            }
+            if (state.isSyncModalOpen) {
+                SyncModal(
+                    viewModel::getJsonToExport, viewModel::importFromJson, viewModel::showSnackbarMessage, viewModel::hideSyncModal
                 )
             }
         }

@@ -1,14 +1,12 @@
 package org.example.quotes.quoteTable
 
 import Quote
-import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -34,7 +32,7 @@ fun QuoteTable(
         openDeleteQuoteConfirmationModal.value = false
     }
 
-    val quoteIdToDelete: MutableState<Int?> = remember { mutableStateOf(null) };
+    val quoteIdToDelete: MutableState<Int?> = remember { mutableStateOf(null) }
 
     Box(modifier = modifier) {
         val state = rememberLazyListState()
@@ -53,9 +51,9 @@ fun QuoteTable(
                 }
             }
         }
-        VerticalScrollbar(
+        PlatformVerticalScrollbar(
             modifier = Modifier.align(Alignment.TopEnd).fillMaxHeight(),
-            adapter = rememberScrollbarAdapter(state)
+            scrollState = state
         )
     }
     if (openDeleteQuoteConfirmationModal.value) {

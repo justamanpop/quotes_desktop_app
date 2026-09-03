@@ -118,7 +118,7 @@ class SqlLiteQuoteRepositoryTest {
         val quotesToImport = listOf(
             Quote(1, "c1New", "s1New"),
             Quote(22, "c2New", "s2New", listOf(tagsToImport[0], tagsToImport[1])),
-            Quote(3, "c3New", "s3New", tags = listOf(tagsToImport[2]))
+            Quote(3, "c3New", "s3New", tags = listOf(tagsToImport[1], tagsToImport[2]))
         )
 
         //act

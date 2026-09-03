@@ -13,11 +13,14 @@ import repository.quotes.SqlLiteQuoteRepository
 import repository.tags.SqlLiteTagRepository
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.SingleIn
 import org.example.quotes.shared.getQuoteDirPath
 import repository.initializeDb
 import java.nio.file.Paths
 
 @DependencyGraph
+@SingleIn(AppScope::class)
 interface AppGraph {
     val appCore: AppCore
 
@@ -34,6 +37,7 @@ interface AppGraph {
         return AppCore(quoteRepository, tagRepository)
     }
 
+    @SingleIn(AppScope::class)
     @Provides
     fun provideSqliteDbConnection(): SQLiteConnection {
         //TODO make it generic expected and put actual values for 

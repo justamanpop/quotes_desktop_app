@@ -4,18 +4,20 @@ import AppCore
 import android.content.Context
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 import ports.driven.QuoteRepository
 import ports.driven.TagRepository
 import repository.initializeDb
 import repository.quotes.SqlLiteQuoteRepository
 import repository.tags.SqlLiteTagRepository
 import java.io.File
-import java.io.IOException
 
 
 @DependencyGraph
+@SingleIn(AppScope::class)
 interface AppGraph {
     val context: Context
     @DependencyGraph.Factory
@@ -26,8 +28,8 @@ interface AppGraph {
     val appCore: AppCore
 
     @Provides
-    fun provideQuoteRepository(conn: SQLiteConnection): QuoteRepository {
-        return SqlLiteQuoteRepository(conn)
+    fun provideQuoteRepository(conn: SQLiteConnection, tagRepository: TagRepository): QuoteRepository {
+        return SqlLiteQuoteRepository(conn, tagRepository)
     }
     @Provides
     fun provideTagRepository(conn: SQLiteConnection): TagRepository {
@@ -39,6 +41,7 @@ interface AppGraph {
     }
 
     @Provides
+    @SingleIn(AppScope::class)
     fun provideSqliteDbConnection(): SQLiteConnection {
         val dbName = "quotes.db"
         val fullPath = File(context.filesDir, dbName).absolutePath

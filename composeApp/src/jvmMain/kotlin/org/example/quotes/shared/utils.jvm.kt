@@ -70,6 +70,8 @@ fun ensureOneInstanceOfAppRunning() {
 }
 
 actual fun writeFile(fileName: String, contents: String) {
-    val file = File(fileName)
+    val downloads = File(System.getProperty("user.home"), "Downloads")
+    downloads.mkdirs()
+    val file = File(downloads, fileName)
     file.writeText(contents)
 }

@@ -178,7 +178,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
         }
 
         try {
-            quotes.flatMap { q -> q.tags }.forEach { tag -> tagRepository.addTag(tag) }
+            quotes.flatMap { it.tags }.distinctBy { it.name }.forEach { tagRepository.addTag(it) }
             val newTags = tagRepository.getTags()
 
             quotes.forEach { quote ->

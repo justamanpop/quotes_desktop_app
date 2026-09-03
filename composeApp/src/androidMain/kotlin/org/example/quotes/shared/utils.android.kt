@@ -12,3 +12,7 @@ actual fun getQuoteDirPath(): String {
         else -> File(home, ".local/state/quotes").absolutePath
     }
 }
+
+actual fun writeFile(fileName: String, contents: String) {
+//    val appContext = AppContext.context
+}
