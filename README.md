@@ -12,8 +12,38 @@ The app is feature complete, I wanted to just finish everything I wanted in a pe
 
 Update: A lot of cleanup and refactoring, both of code and of UI display is also finished
 
+#### Showcase
+Main screen
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/bfe57906-7ea5-4a4c-92ce-0a4df0a6da24" />
+Note that each quote row has two buttons, one to copy the quote and one to delete it(asks for confirmation first)
+
+Searching to find a quote (searches quote text and source)
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/77e3a841-56b7-43b7-9ab3-ce0482418a31" />
+
+
+Filtering by tags
+
+Select tags to filter by
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/60aeff10-f892-4313-a6f1-b5c6a1fe3054" />
+
+Then click apply filter. Filtered quotes look like this
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0fba8d5a-2219-4cbd-9a83-9b45ad98db45" />
+
+All tag filters can be reset in the tag filter modal
+
+
+Add/edit/delete tags
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/67ee50cd-b0f1-4068-8eb2-dd2b55500d0d" />
+
+Add a new quote
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/9df349cb-ecc0-4584-9377-cea5b0714a2a" />
+
+Edit an existing quote by clicking on the quote row
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/4b40ba09-fa14-4147-8a02-76b0cc97c889" />
+
+
 ### Next steps
-Add tests. I haven't tried out tests in Jetpack Compose before, so this is where I learn. I'm sure refactoring would've been 10x easier with those in place
+Import/export from/to JSON or CSV.
 
 ---
 ### Build and Run Desktop (JVM) Application
