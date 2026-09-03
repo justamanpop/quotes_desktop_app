@@ -55,7 +55,7 @@ class InMemoryQuoteRepository(
 
         if (overwrite) {
             tagRepository.importTags(importedTags, overwrite = true)
-            importQuotesWithOverride(quotesToImport)
+            importQuotesWithOverride(quotesToImport, tagRepository.getTags())
             return
         }
 
@@ -104,12 +104,12 @@ class InMemoryQuoteRepository(
         fakeQuotes = mergedQuotes
     }
 
-    private fun importQuotesWithOverride(quotes: List<Quote>) {
+    private fun importQuotesWithOverride(quotes: List<Quote>, tags: List<Tag>) {
         fakeQuotes = listOf()
         maxId = 0
         quotes.forEach { quoteToInsert ->
             maxId += 1
-            fakeQuotes += quoteToInsert.copy(id = maxId)
+            fakeQuotes += quoteToInsert.copy(id = maxId, tags = quoteToInsert.tags.map { t -> tags.find { it.name == t.name }!! })
         }
     }
 

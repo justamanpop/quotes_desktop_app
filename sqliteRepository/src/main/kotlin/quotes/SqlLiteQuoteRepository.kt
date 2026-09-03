@@ -56,6 +56,13 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
     }
 
     override fun updateQuote(quote: Quote) {
+        conn.prepare("select id from quotes WHERE id = ?").use { statement ->
+            statement.bindInt(1, quote.id)
+            if (!statement.step()) {
+                throw IllegalArgumentException("Quote with given ID not found")
+            }
+        }
+
         conn.execSQL("BEGIN TRANSACTION;")
         try {
             conn.prepare("UPDATE quotes SET content = ?, source = ? WHERE id = ?").use { statement ->
@@ -87,6 +94,13 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
     }
 
     override fun deleteQuote(quoteId: Int) {
+        conn.prepare("select id from quotes WHERE id = ?").use { statement ->
+            statement.bindInt(1, quoteId)
+            if (!statement.step()) {
+                throw IllegalArgumentException("Quote with given ID not found")
+            }
+        }
+
         conn.execSQL("BEGIN TRANSACTION;")
         try {
             conn.prepare("DELETE FROM quote_tag_mapping WHERE quote_id = ?").use { statement ->
@@ -105,34 +119,46 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
         }
     }
 
-    override fun importQuotes(quotes: List<Quote>, overwrite: Boolean) {
+    override fun importQuotes(quotesToImport: List<Quote>, overwrite: Boolean) {
         if (overwrite) {
-            conn.execSQL("BEGIN TRANSACTION;")
-            try {
-                clearDBQueries()
-                quotes.forEach { quote ->
-                    quote.tags.forEach { tag -> tagRepository.addTag(tag) }
-                    addQuoteQuery(quote)
-                }
-                conn.execSQL("COMMIT;")
-            } catch (e: Exception) {
-                conn.execSQL("ROLLBACK;")
-                throw e;
-            }
+            importWithOverwrite(quotesToImport)
             return
         }
 
+        val existingTags = tagRepository.getTags()
+        val importTags = quotesToImport.flatMap { q -> q.tags }
+
         conn.execSQL("BEGIN TRANSACTION;")
+
+        importTags.distinctBy { it.name }.forEach { tag ->
+            if (existingTags.find { et -> et.name == tag.name } == null) {
+                tagRepository.addTag(tag)
+            }
+        }
+        val newTags = tagRepository.getTags()
+        val existingQuotes = getQuotes()
+
         try {
-            quotes.forEach { quote ->
-                quote.tags.forEach { tag ->
-                    try {
-                        tagRepository.addTag(tag)
-                    } catch (_: IllegalArgumentException) {
-                        //tag already exists, do nothing
-                    }
+            quotesToImport.forEach { quoteToImport ->
+                val existingQuoteMatch =
+                    existingQuotes.find { existingQuote -> existingQuote.source == quoteToImport.source && existingQuote.content == quoteToImport.content }
+                if (existingQuoteMatch == null) {
+                    val quoteWithUpdatedTags =
+                        quoteToImport.copy(tags = quoteToImport.tags.map { t -> newTags.find { it.name == t.name }!! })
+                    addQuoteQuery(quoteWithUpdatedTags)
+                } else {
+                    val tagIdToMapToQuote = quoteToImport.tags
+                        .asSequence()
+                        .mapNotNull { t ->
+                            newTags.find { it.name == t.name }
+                        }
+                        //if part of existing quote, no need to add quote tag mapping
+                        .filter { t -> existingQuoteMatch.tags.find { it.name == t.name } == null }
+                        .distinctBy { it.name }
+                        .map { it.id }
+                        .toList()
+                    addQuoteTagMappingsQuery(existingQuoteMatch.id, tagIdToMapToQuote)
                 }
-                upsertQuoteQuery(quote)
             }
             conn.execSQL("COMMIT;")
         } catch (e: Exception) {
@@ -140,6 +166,31 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
             throw e;
         }
 
+    }
+
+    private fun importWithOverwrite(quotes: List<Quote>) {
+        conn.execSQL("BEGIN TRANSACTION;")
+        try {
+            clearDBQueries()
+        } catch (e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
+        }
+
+        try {
+            quotes.flatMap { q -> q.tags }.forEach { tag -> tagRepository.addTag(tag) }
+            val newTags = tagRepository.getTags()
+
+            quotes.forEach { quote ->
+                val quoteWithUpdatedTags =
+                    quote.copy(tags = quote.tags.map { t -> newTags.find { it.name == t.name }!! })
+                addQuoteQuery(quoteWithUpdatedTags)
+            }
+            conn.execSQL("COMMIT;")
+        } catch (e: Exception) {
+            conn.execSQL("ROLLBACK;")
+            throw e;
+        }
     }
 
     /**
@@ -183,12 +234,14 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
         }
     }
 
-    private fun upsertQuoteQuery(quote: Quote) {
-        conn.prepare("INSERT OR REPLACE INTO quotes(id, content, source) VALUES(?, ?, ?)").use { statement ->
-            statement.bindInt(1, quote.id)
-            statement.bindText(1, quote.content)
-            statement.bindText(2, quote.source)
-            statement.step()
+    private fun addQuoteTagMappingsQuery(quoteId: Int, tagIds: List<Int>) {
+        tagIds.forEach { tagId ->
+            conn.prepare("INSERT INTO quote_tag_mapping(quote_id, tag_id) VALUES(?, ?)").use { statement ->
+                statement.bindInt(1, quoteId)
+                statement.bindInt(2, tagId)
+                statement.step()
+            }
+
         }
     }
 }

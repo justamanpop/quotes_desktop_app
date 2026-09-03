@@ -2,16 +2,22 @@ package repository.quotes
 
 import Quote
 import Tag
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import repository.initializeDb
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import repository.tags.InMemoryTagRepository
+import repository.tags.SqlLiteTagRepository
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class InMemoryQuoteRepositoryTest {
+class SqlLiteQuoteRepositoryTest {
+    private lateinit var quoteRepository: SqlLiteQuoteRepository
+    private lateinit var tagRepository: SqlLiteTagRepository
+
     private val seedTags = listOf(Tag(1, "Tag1"), Tag(2, "Tag2"), Tag(3, "Tag3"))
     private val seedQuotes = listOf(
         Quote(id = 1, source = "s1", content = "c1", tags = listOf(seedTags[0])),
@@ -19,12 +25,18 @@ class InMemoryQuoteRepositoryTest {
         Quote(id = 3, source = "s3", content = "c3", tags = seedTags)
     )
 
+    @BeforeEach
+    fun setup() {
+        val conn = BundledSQLiteDriver().open(":memory:")
+        initializeDb(conn)
+        tagRepository = SqlLiteTagRepository(conn)
+        quoteRepository = SqlLiteQuoteRepository(conn, tagRepository)
+        seedTags.forEach { tagRepository.addTag(it) }
+        quoteRepository.addQuotes(seedQuotes)
+    }
+
     @Test
     fun `get quotes returns seeded values from fresh repositories with no changes`() {
-        //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         //act
         val quotes = quoteRepository.getQuotes()
 
@@ -39,9 +51,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `after adding a quote, getting quotes returns existing quotes + added quote`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         val quoteToAdd = Quote(4, "c4", "s4", listOf())
 
         //act
@@ -56,9 +65,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `updating a quote modifies particular quote and does not touch other quotes`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, listOf(seedQuotes[0], seedQuotes[1]))
-
         val updatedQuote1 = Quote(seedQuotes[0].id, "cUpdated", "sUpdated", listOf(seedTags[0]))
 
         //act
@@ -66,7 +72,7 @@ class InMemoryQuoteRepositoryTest {
         val quotes = quoteRepository.getQuotes()
 
         //assert
-        assertEquals(2, quotes.size)
+        assertEquals(seedQuotes.size, quotes.size)
         assertContains(quotes, updatedQuote1)
         assertContains(quotes, seedQuotes[1])
     }
@@ -74,9 +80,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `updating a quote that does not exist throws an exception`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, listOf(seedQuotes[0], seedQuotes[1]))
-
         val updatedQuote1 = Quote(99, "cUpdated", "sUpdated", listOf(seedTags[0]))
 
         //act, assert
@@ -88,26 +91,19 @@ class InMemoryQuoteRepositoryTest {
 
     @Test
     fun `deleting a quote deletes that particular quote and does not touch other quotes`() {
-        //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, listOf(seedQuotes[0], seedQuotes[1]))
-
         //act
         quoteRepository.deleteQuote(seedQuotes[0].id)
         val quotes = quoteRepository.getQuotes()
 
         //assert
-        assertEquals(1, quotes.size)
+        assertEquals(seedQuotes.size - 1, quotes.size)
         assertFalse(quotes.contains(seedQuotes[0]))
         assertContains(quotes, seedQuotes[1])
+        assertContains(quotes, seedQuotes[2])
     }
 
     @Test
     fun `deleting a quote that does not exist throws an exception`() {
-        //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, listOf(seedQuotes[0], seedQuotes[1]))
-
         //act, assert
         val exception = assertThrows<IllegalArgumentException> {
             quoteRepository.deleteQuote(99)
@@ -118,16 +114,12 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `import quotes with overwrite completely replaces existing quotes and tags`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         val tagsToImport = listOf(Tag(1, "Tag1"), Tag(12, "Tag2"), Tag(3, "TagUber"))
         val quotesToImport = listOf(
             Quote(1, "c1New", "s1New"),
             Quote(22, "c2New", "s2New", listOf(tagsToImport[0], tagsToImport[1])),
             Quote(3, "c3New", "s3New", tags = listOf(tagsToImport[2]))
         )
-
 
         //act
         quoteRepository.importQuotes(quotesToImport, true)
@@ -154,9 +146,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `import quotes without overwrite does not create new tag if a tag with same name exists, and keeps old tag id`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         val tagsToImport = listOf(Tag(9, seedTags[0].name), Tag(10, seedTags[1].name))
         val newQuotes = listOf(Quote(20, "cnew", "snew", tagsToImport))
 
@@ -173,9 +162,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `import quotes without overwrite creates new tag if a tag with same name does not exist, gives it next id in sequence`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         val tagsToImport = listOf(Tag(9, "TagNew1"), Tag(10, "TagNew2"))
         val newQuotes = listOf(Quote(20, "cnew", "snew", tagsToImport))
 
@@ -194,9 +180,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `import quotes without overwrite creates new quote if a quote with same source and content does not exist, gives it next id in sequence`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         val tagsToImport = listOf(Tag(9, "TagNew1"), Tag(10, "TagNew2"))
         val newQuotes = listOf(Quote(20, "cnew", "snew", tagsToImport), Quote(22, "cnew2", "snew2", tagsToImport))
 
@@ -215,9 +198,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `import quotes without overwrite does not create new quote if a quote with same source and content exists, keeping old id`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         val newQuotes = listOf(
             Quote(20, seedQuotes[0].content, seedQuotes[0].source, listOf()),
             Quote(22, seedQuotes[1].content, seedQuotes[1].source, listOf())
@@ -236,9 +216,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `import quotes without overwrite does not create new quote if a quote with same source and content exists, but keeps tags from both imported as well as existing quote`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         val tagsToImport = listOf(Tag(9, "TagNew1"), Tag(10, "TagNew2"))
         val newQuotes = listOf(
             Quote(20, seedQuotes[0].content, seedQuotes[0].source, tagsToImport),
@@ -254,7 +231,6 @@ class InMemoryQuoteRepositoryTest {
 
         val newQuote1 = quotes.find { q -> q.source == newQuotes[0].source && q.content == newQuotes[0].content }
         val newQuote2 = quotes.find { q -> q.source == newQuotes[1].source && q.content == newQuotes[1].content }
-
         assertNotNull(newQuote1)
         assertNotNull(newQuote2)
 
@@ -268,9 +244,6 @@ class InMemoryQuoteRepositoryTest {
     @Test
     fun `import quotes without overwrite does not create new quote if a quote with same source and content exists, and does not create duplicate tag if existing and imported quote share tag of same name`() {
         //arrange
-        val tagRepository = InMemoryTagRepository(seedTags)
-        val quoteRepository = InMemoryQuoteRepository(tagRepository, seedQuotes)
-
         val tagsToImport = listOf(Tag(10, "TagNew2"))
         val newQuotes = listOf(
             Quote(20, seedQuotes[0].content, seedQuotes[0].source, tagsToImport + seedTags[0]),
