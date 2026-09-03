@@ -3,8 +3,6 @@ package org.example.quotes.shared
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
 
 fun copyToClipboard(text: String) {
     val clipboard = Toolkit.getDefaultToolkit().systemClipboard
@@ -42,7 +40,7 @@ fun ensureOneInstanceOfAppRunning() {
     try {
         lockFileChannel = java.io.RandomAccessFile(lockFile, "rw").channel
         appLock = lockFileChannel.tryLock()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         javax.swing.JOptionPane.showMessageDialog(
             null,
             "An unexpected error occurred while trying to lock the application file.",

@@ -45,7 +45,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
             conn.execSQL("COMMIT;")
         } catch (e: Exception) {
             conn.execSQL("ROLLBACK;")
-            throw e;
+            throw e
         }
     }
 
@@ -89,7 +89,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
             conn.execSQL("COMMIT;")
         } catch (e: Exception) {
             conn.execSQL("ROLLBACK;")
-            throw e;
+            throw e
         }
     }
 
@@ -115,7 +115,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
             conn.execSQL("COMMIT;")
         } catch (e: Exception) {
             conn.execSQL("ROLLBACK;")
-            throw e;
+            throw e
         }
     }
 
@@ -163,7 +163,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
             conn.execSQL("COMMIT;")
         } catch (e: Exception) {
             conn.execSQL("ROLLBACK;")
-            throw e;
+            throw e
         }
 
     }
@@ -174,7 +174,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
             clearDBQueries()
         } catch (e: Exception) {
             conn.execSQL("ROLLBACK;")
-            throw e;
+            throw e
         }
 
         try {
@@ -189,7 +189,7 @@ class SqlLiteQuoteRepository(val conn: SQLiteConnection, val tagRepository: TagR
             conn.execSQL("COMMIT;")
         } catch (e: Exception) {
             conn.execSQL("ROLLBACK;")
-            throw e;
+            throw e
         }
     }
 
