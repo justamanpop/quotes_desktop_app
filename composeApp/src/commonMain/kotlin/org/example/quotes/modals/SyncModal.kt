@@ -111,7 +111,7 @@ fun ExportModal(
                 ) {
                     Text("Import (append)", color = Color.White, fontSize = 24.sp)
                 }
-                Text("This will add non duplicate quotes to existing list of quotes")
+                Text("Adds non-duplicate quotes to existing quotes and merges tags")
 
                 var isImportOverwriteJsonButtonFocused by remember { mutableStateOf(false) }
                 Button(
@@ -136,7 +136,7 @@ fun ExportModal(
                 ) {
                     Text("Import (overwrite)", color = Color.White, fontSize = 24.sp)
                 }
-                Text("⚠\uFE0F All the currnet quotes will be lost and replaced with imported quotes")
+                Text("⚠\uFE0F Existing quotes will be lost and replaced with imported quotes")
 
                 Spacer(Modifier.height(8.dp))
             }

@@ -1,6 +1,6 @@
 package org.example.quotes.app
 
-import QuoteTable
+import org.example.quotes.quoteTable.QuoteTable
 import SearchBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
