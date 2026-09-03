@@ -16,6 +16,7 @@ import repository.tags.SqlLiteTagRepository
 import java.io.File
 
 
+@Suppress("unused")
 @DependencyGraph
 @SingleIn(AppScope::class)
 interface AppGraph {
